@@ -14,36 +14,35 @@ namespace CbInsights.Clients
 
         public async Task<ApiResult<Order>> GetOrderByIdAsync(int orderId)
         {
-            return await Get<Order>($"orders/{orderId}");            
+            return await GetAsync<Order>($"orders/{orderId}");            
         }
 
         public async Task<ApiResult<Order>> GetOrderAsync(int id)
         {
-            return await Get<Order>($"{id}");
+            return await GetAsync<Order>($"{id}");
         }
 
         public async Task<ApiResult<List<Order>>> GetCustomerOrdersAsync(int customerId)
         {
             string path = $"api//customers//{customerId}// orders";
-            return await Get<List<Order>>(path);
+            return await GetAsync<List<Order>>(path);
         }
 
-        //public async Task<ApiResult<int>> CreateOrder(Order order)
-        //{
-        //    var id = _ordersRepository.InsertOrder(order);
-        //    return Ok(new OrderCreateResult { Id = id });
-        //}
+        public async Task<ApiResult<int>> CreateOrder(Order order)
+        {
+            string path = $"api//customers//{order.CustomerId}// orders";
+            return await PostAsync<int>(path, order);
+        }
 
-        //[HttpPut("{id}")]
-        //public async Task UpdateOrder([FromRoute]int id, [FromBody] Order order)
-        //{
-        //    _ordersRepository.UpdateOrder(order);
-        //}
+        public async Task<ApiResult<string>> UpdateOrder(Order order)
+        {
+            string path = $"api//customers//{order.CustomerId}// orders";
+            return await PutAsync<string>(path, order);
+        }
 
-        //[HttpDelete("{id}")]
-        //public async Task DeleteOrder(int id)
-        //{
-        //    _ordersRepository.DeleteOrder(id);
-        //}
+        public async Task<ApiResult<string>> DeleteOrderAsync(int id)
+        {
+            return await DeleteAsync<string>($"{id}");
+        }
     }
 }

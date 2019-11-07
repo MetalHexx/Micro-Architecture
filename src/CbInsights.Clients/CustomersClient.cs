@@ -12,7 +12,7 @@ namespace CbInsights.Clients
 
         public async Task<ApiResult<Customer>> GetCustomerByIdAsync(int id)
         {
-            return await Get<Customer>($"{id}");
+            return await GetAsync<Customer>($"{id}");
         }
     }
 }

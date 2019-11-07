@@ -18,29 +18,29 @@ namespace CbInsights.Clients
             _client.BaseAddress = new Uri(baseAddress);
         }
 
-        protected Task<ApiResult<T>> GetAsync<T>(string path)
+        protected Task<ApiResult<ResponseType>> GetAsync<ResponseType>(string path)
         {
-            return HandleRequestAsync<T>(path, HttpMethod.Get);
+            return HandleRequestAsync<ResponseType>(path, HttpMethod.Get);
         }
 
-        protected async Task<ApiResult<T>> PostAsync<T>(string path, T content)
-        {
-            var sContent = JsonConvert.SerializeObject(content);
-            return await HandleRequestAsync<T>(path, HttpMethod.Post, sContent);
-        }
-
-        protected async Task<ApiResult<T>> PutAsync<T>(string path, T content)
+        protected async Task<ApiResult<ResponseType>> PostAsync<ResponseType>(string path, object content)
         {
             var sContent = JsonConvert.SerializeObject(content);
-            return await HandleRequestAsync<T>(path, HttpMethod.Put, sContent);
+            return await HandleRequestAsync<ResponseType>(path, HttpMethod.Post, sContent);
         }
 
-        protected Task<ApiResult<T>> Delete<T>(string path)
+        protected async Task<ApiResult<ResponseType>> PutAsync<ResponseType>(string path, object content)
         {
-            return HandleRequestAsync<T>(path, HttpMethod.Delete);
+            var sContent = JsonConvert.SerializeObject(content);
+            return await HandleRequestAsync<ResponseType>(path, HttpMethod.Put, sContent);
         }
 
-        protected async Task<ApiResult<T>> HandleRequestAsync<T>(string path, HttpMethod method, string content = null)
+        protected Task<ApiResult<ResponseType>> DeleteAsync<ResponseType>(string path)
+        {
+            return HandleRequestAsync<ResponseType>(path, HttpMethod.Delete);
+        }
+
+        protected async Task<ApiResult<ResponseType>> HandleRequestAsync<ResponseType>(string path, HttpMethod method, string content = null)
         {
             using (_client)
             using (var response = await SendRequestAsync(path, method, content))
@@ -49,18 +49,18 @@ namespace CbInsights.Clients
 
                 if (response.IsSuccessStatusCode == false)
                 {
-                    return new ApiResult<T>
+                    return new ApiResult<ResponseType>
                     {
                         StatusCode = (int)response.StatusCode,
                         Content = resContent,
                         IsSuccess = false
                     };
                 }
-                return new ApiResult<T>
+                return new ApiResult<ResponseType>
                 {
                     StatusCode = (int)response.StatusCode,
                     Content = resContent,
-                    ContentObject = JsonConvert.DeserializeObject<T>(resContent),
+                    ContentObject = JsonConvert.DeserializeObject<ResponseType>(resContent),
                     IsSuccess = false
                 };
             }

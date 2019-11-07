@@ -18,7 +18,7 @@ namespace CbInsights.Clients
             _client.BaseAddress = new Uri(baseAddress);
         }
 
-        protected Task<ApiResult<T>> Get<T>(string path)
+        protected Task<ApiResult<T>> GetAsync<T>(string path)
         {
             return HandleRequestAsync<T>(path, HttpMethod.Get);
         }

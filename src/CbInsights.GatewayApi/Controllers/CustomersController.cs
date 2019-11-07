@@ -24,11 +24,44 @@ namespace CbInsights.GatewayApi.Controllers
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
             var result = await _customerClient.GetCustomerByIdAsync(id);
-                       
+
             if (result.StatusCode == 404)
             {
                 return NotFound();
             }
+            return Ok(result.Content);
+        }
+
+        [HttpGet()]
+        public async Task<ActionResult<Customer>> GetCustomers()
+        {
+            var result = await _customerClient.GetCustomersAsync();
+
+            if (result.StatusCode == 404)
+            {
+                return NotFound();
+            }
+            return Ok(result.Content);
+        }
+
+        [HttpPost()]
+        public async Task<ActionResult<Customer>> CreateCustomer([FromBody]Customer customer)
+        {
+            var result = await _customerClient.CreateCustomerAsync(customer);
+            return Ok(result.Content);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Customer>> UpdateCustomer(int id, [FromBody]Customer customer)
+        {
+            var result = await _customerClient.UpdateCustomerAsync(customer);
+            return Ok(result.Content);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Customer>> DeleteCustomer(int id)
+        {
+            var result = await _customerClient.DeleteCustomerAsync(id);
             return Ok(result.Content);
         }
     }

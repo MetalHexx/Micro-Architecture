@@ -6,6 +6,9 @@ using CbInsights.Domain;
 
 namespace CbInsights.OrdersApi.Repository
 {
+
+    //TODO: Update repository to return a status object and return a not found if the object
+    //wasn't there
     public class OrdersRepository : IOrdersRepository
     {
         private List<Order> _orders;
@@ -75,12 +78,17 @@ namespace CbInsights.OrdersApi.Repository
 
         public void DeleteOrder(int orderId)
         {
-            throw new NotImplementedException();
+            var order = _orders.FirstOrDefault(o => o.OrderId == orderId);
+            
+            if(order != null)
+            {
+                _orders.Remove(order);
+            }
         }
 
         public Order GetOrderById(int orderId)
         {
-            return _orders.SingleOrDefault(o => o.OrderId == orderId);
+            return _orders.SingleOrDefault(o => o.OrderId.Value == orderId);
         }
 
         public IEnumerable<Order> GetOrdersByCustomerId(int customerId)
@@ -93,7 +101,7 @@ namespace CbInsights.OrdersApi.Repository
             order.OrderId = _currentId;
             _orders.Add(order);
             _currentId++;
-            return order.OrderId;
+            return order.OrderId.Value;
         }
 
         public void UpdateOrder(Order order)

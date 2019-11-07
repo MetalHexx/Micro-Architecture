@@ -28,13 +28,13 @@ namespace CbInsights.Clients
             return await GetAsync<List<Order>>(path);
         }
 
-        public async Task<ApiResult<int>> CreateOrder(Order order)
+        public async Task<ApiResult<int>> CreateOrderAsync(Order order)
         {
             string path = $"api//customers//{order.CustomerId}// orders";
             return await PostAsync<int>(path, order);
         }
 
-        public async Task<ApiResult<string>> UpdateOrder(Order order)
+        public async Task<ApiResult<string>> UpdateOrderAsync(Order order)
         {
             string path = $"api//customers//{order.CustomerId}// orders";
             return await PutAsync<string>(path, order);

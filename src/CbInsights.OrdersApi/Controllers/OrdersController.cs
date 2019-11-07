@@ -45,10 +45,10 @@ namespace CbInsights.OrdersApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OrderCreateResult>> CreateOrder([FromBody] Order order)
+        public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
         {
             var id = _ordersRepository.InsertOrder(order);
-            return Ok(new OrderCreateResult { Id = id });
+            return Ok(new IdResult { Id = id });
         }
 
         [HttpPut("{id}")]

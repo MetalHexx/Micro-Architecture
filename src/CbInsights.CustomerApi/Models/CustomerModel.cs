@@ -17,7 +17,7 @@ namespace CbInsights.CustomerApi.Models
 
         public CustomerModel(Customer customer)
         {
-            Id = customer.Id;
+            Id = customer.Id.Value;
             FirstName = customer.FirstName;
             LastName = customer.LastName;
         }

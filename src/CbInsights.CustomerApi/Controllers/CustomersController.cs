@@ -45,10 +45,10 @@ namespace CbInsights.CustomerApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerCreateResult>> CreateCustomer([FromBody] Customer customer)
+        public async Task<ActionResult<IdResult>> CreateCustomer([FromBody] Customer customer)
         {
             var id = _customerRepo.InsertCustomer(customer);
-            return Ok(new CustomerCreateResult { Id = id });
+            return Ok(new IdResult { Id = id });
         }
 
         [HttpPut("{id}")]

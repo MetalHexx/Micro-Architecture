@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace CbInsights.CustomerApi.Repository
 {
+    //TODO: Update repository to return a status object and return a not found if the object
+    //wasn't there
     public class CustomerRepository: ICustomerRespository
     {
         private List<Customer> _customers;
@@ -55,7 +57,7 @@ namespace CbInsights.CustomerApi.Repository
             customer.Id = _currentId;
             _customers.Add(customer);
             _currentId++;
-            return customer.Id;
+            return customer.Id.Value;
         }
 
         public void UpdateCustomer(Customer customer)

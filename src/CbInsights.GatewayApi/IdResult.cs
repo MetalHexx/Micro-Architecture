@@ -1,6 +1,6 @@
 ﻿namespace CbInsights.CustomerApi.Models
 {
-    public class CustomerCreateResult
+    public class IdResult
     {
         public int Id { get; set; }
     }

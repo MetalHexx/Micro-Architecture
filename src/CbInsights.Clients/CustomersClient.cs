@@ -28,7 +28,7 @@ namespace CbInsights.Clients
 
         public async Task<ApiResult<int>> UpdateCustomerAsync(Customer customer)
         {
-            return await PutAsync<int>("", customer);
+            return await PutAsync<int>($"{customer.Id}", customer);
         }
 
         public async Task<ApiResult<string>> DeleteCustomerAsync(int id)

@@ -18,15 +18,26 @@ namespace CbInsights.Clients
             _client.BaseAddress = new Uri(baseAddress);
         }
 
-        protected Task<ApiResult<T>> Get<T>(int id)
+        protected Task<ApiResult<T>> Get<T>(string path)
         {
-            return HandleRequestAsync<T>($"{id}", HttpMethod.Get);
+            return HandleRequestAsync<T>(path, HttpMethod.Get);
         }
 
         protected async Task<ApiResult<T>> PostAsync<T>(string path, T content)
         {
             var sContent = JsonConvert.SerializeObject(content);
             return await HandleRequestAsync<T>(path, HttpMethod.Post, sContent);
+        }
+
+        protected async Task<ApiResult<T>> PutAsync<T>(string path, T content)
+        {
+            var sContent = JsonConvert.SerializeObject(content);
+            return await HandleRequestAsync<T>(path, HttpMethod.Put, sContent);
+        }
+
+        protected Task<ApiResult<T>> Delete<T>(string path)
+        {
+            return HandleRequestAsync<T>(path, HttpMethod.Delete);
         }
 
         protected async Task<ApiResult<T>> HandleRequestAsync<T>(string path, HttpMethod method, string content = null)

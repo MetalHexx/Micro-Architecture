@@ -8,11 +8,11 @@ namespace CbInsights.Clients
 {
     public class CustomersClient: ClientBase
     {
-        public CustomersClient(HttpClient client) : base(client, "http://localhost:5000/api/customers/") { }
+        public CustomersClient(HttpClient client) : base(client, "http://localhost:5001/api/customers/") { }
 
         public async Task<ApiResult<Customer>> GetCustomerByIdAsync(int id)
         {
-            return await SendRequest<Customer>($"{id}", HttpMethod.Get);
+            return await Get<Customer>($"{id}");
         }
     }
 }

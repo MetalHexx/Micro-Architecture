@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CbInsights.Core\CbInsights.Core.csproj" />
     <ProjectReference Include="..\CbInsights.Domain\CbInsights.Domain.csproj" />
   </ItemGroup>
 

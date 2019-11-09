@@ -10,7 +10,7 @@ namespace CbInsights.Clients
 {
     public class OrdersClient: ClientBase
     {
-        public OrdersClient(HttpClient client): base(client, "http://localhost:5000/api/") { }
+        public OrdersClient(HttpClient client): base(client, "http://localhost:5002/api/") { }
 
         public async Task<ApiResult<Order>> GetOrderByIdAsync(int orderId)
         {

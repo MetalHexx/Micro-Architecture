@@ -1,31 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.Core;
-using CbInsights.CustomerApi.Models;
-using CbInsights.CustomerApi.Repository;
 using CbInsights.Domain;
+using CbInsights.ProductsApi.Models;
+using CbInsights.ProductsApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CbInsights.CustomerApi.Controllers
+namespace CbInsights.ProductsApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        private readonly ICustomerRespository _customerRepo;
+        private readonly IProductRepository _productRepo;
 
-        public CustomersController(ICustomerRespository customerRepo)
+        public ProductsController(IProductRepository productRepo)
         {
-            _customerRepo = customerRepo;
+            _productRepo = productRepo;
         }
         [HttpGet()]
-        public async Task<ActionResult<Customer>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByIds([FromQuery(Name = "ids")] List<int> ids)
         {
-            var result = _customerRepo.GetCustomers();
-
+            var result = _productRepo.GetProductsByIds(ids);
             switch (result.Type)
             {
                 case RepoResultType.NotFound:
@@ -38,9 +39,9 @@ namespace CbInsights.CustomerApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerById(int id)
+        public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            var result = _customerRepo.GetCustomer(id);
+            var result = _productRepo.GetProductById(id);
 
             switch (result.Type)
             {
@@ -53,10 +54,10 @@ namespace CbInsights.CustomerApi.Controllers
             };
         }
 
-        [HttpPost]
-        public async Task<ActionResult<IdResult>> CreateCustomer([FromBody] Customer customer)
-        {
-            var result = _customerRepo.InsertCustomer(customer);
+        [HttpPost()]
+        public async Task<ActionResult<IdResult>> CreateProduct([FromBody, Required]Product product)
+        {           
+            var result = _productRepo.UpdateProduct(product);
 
             switch (result.Type)
             {
@@ -69,10 +70,12 @@ namespace CbInsights.CustomerApi.Controllers
             };
         }
 
+
+
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCustomer([FromRoute]int id, [FromBody] Customer customer)
+        public async Task<ActionResult> UpdateProduct(int id, [FromBody, Required]Product product)
         {
-            var result = _customerRepo.UpdateCustomer(customer);
+            var result = _productRepo.UpdateProduct(product);
 
             switch (result.Type)
             {
@@ -86,9 +89,10 @@ namespace CbInsights.CustomerApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCustomer(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
-            var result = _customerRepo.DeleteCustomer(id);
+            var result = _productRepo.DeleteProduct(id);
+
             switch (result.Type)
             {
                 case RepoResultType.NotFound:
@@ -97,7 +101,7 @@ namespace CbInsights.CustomerApi.Controllers
                     return Ok();
                 default:
                     return BadRequest();
-            };            
+            };
         }
     }
 }

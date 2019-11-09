@@ -1,4 +1,5 @@
-﻿using CbInsights.Domain;
+﻿using CbInsights.Core;
+using CbInsights.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,11 @@ namespace CbInsights.CustomerApi.Repository
 {
     //TODO: Update repository to return a status object and return a not found if the object
     //wasn't there
-    public class CustomerRepository: ICustomerRespository
+    public class CustomerRepository: RepositoryBase<Customer>, ICustomerRespository
     {
-        private List<Customer> _customers;
-        private int _currentId = 2;
-
         public CustomerRepository()
         {
-            _customers = new List<Customer>()
+            _items = new List<Customer>()
             {
                 new Customer
                 {
@@ -32,42 +30,32 @@ namespace CbInsights.CustomerApi.Repository
             };
         }
 
-        public void DeleteCustomer(int id)
+        public RepoResult<Customer> DeleteCustomer(int id)
         {
-            var customer = _customers.SingleOrDefault(c => c.Id == id);
+            return base.DeleteItem(id);
+        }
 
-            if (customer != null)
+        public RepoResult<IEnumerable<Customer>> GetCustomers()
+        {
+            return new RepoResult<IEnumerable<Customer>>(_items)
             {
-                _customers.Remove(customer);
-            }
+                Type = RepoResultType.Success
+            };
         }
 
-        public IEnumerable<Customer> GetCustomers()
+        public RepoResult<Customer> GetCustomer(int id)
         {
-            return _customers;
+            return base.GetItemById(id);
         }
 
-        public Customer GetCustomer(int id)
+        public RepoResult<Customer> InsertCustomer(Customer customer)
         {
-            return _customers.SingleOrDefault(c => c.Id == id);
+            return base.InsertItem(customer);
         }
 
-        public int InsertCustomer(Customer customer)
+        public RepoResult<Customer> UpdateCustomer(Customer customer)
         {
-            customer.Id = _currentId;
-            _customers.Add(customer);
-            _currentId++;
-            return customer.Id.Value;
-        }
-
-        public void UpdateCustomer(Customer customer)
-        {
-            var repoCustomer = _customers.SingleOrDefault(c => c.Id == customer.Id);
-            if(repoCustomer != null)
-            {
-                _customers.Remove(repoCustomer);
-            }
-            _customers.Add(customer);
+            return base.UpdateItem(customer);
         }
     }
 }

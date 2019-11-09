@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CbInsights.Core;
 using CbInsights.Domain;
 
 namespace CbInsights.OrdersApi.Repository
@@ -9,18 +10,17 @@ namespace CbInsights.OrdersApi.Repository
 
     //TODO: Update repository to return a status object and return a not found if the object
     //wasn't there
-    public class OrdersRepository : IOrdersRepository
+    public class OrdersRepository : RepositoryBase<Order>, IOrdersRepository
     {
-        private List<Order> _orders;
         private int _currentId = 2;
 
         public OrdersRepository()
         {
-            _orders = new List<Order> 
+            _items = new List<Order> 
             {
                 new Order
                 {
-                    OrderId = 0,
+                    Id = 0,
                     CustomerId = 0,
                     Items = new List<OrderItem>
                     {
@@ -38,7 +38,7 @@ namespace CbInsights.OrdersApi.Repository
                 },
                 new Order
                 {
-                    OrderId = 1,
+                    Id = 1,
                     CustomerId = 0,
                     Items = new List<OrderItem>
                     {
@@ -56,7 +56,7 @@ namespace CbInsights.OrdersApi.Repository
                 },
                 new Order
                 {
-                    OrderId = 2,
+                    Id = 2,
                     CustomerId = 1,
                     Items = new List<OrderItem>
                     {
@@ -76,43 +76,40 @@ namespace CbInsights.OrdersApi.Repository
             };
         }
 
-        public void DeleteOrder(int orderId)
+        public RepoResult<Order> DeleteOrder(int orderId)
         {
-            var order = _orders.FirstOrDefault(o => o.OrderId == orderId);
-            
-            if(order != null)
+            return base.DeleteItem(orderId);
+        }
+
+        public RepoResult<Order> GetOrderById(int orderId)
+        {
+            return base.GetItemById(orderId);
+        }
+
+        public RepoResult<IEnumerable<Order>> GetOrdersByCustomerId(int customerId)
+        {
+            var items = _items.Where(o => o.CustomerId == customerId);
+            if (items == null)
             {
-                _orders.Remove(order);
+                return new RepoResult<IEnumerable<Order>>(items)
+                {
+                    Type = RepoResultType.NotFound
+                };
             }
-        }
-
-        public Order GetOrderById(int orderId)
-        {
-            return _orders.SingleOrDefault(o => o.OrderId.Value == orderId);
-        }
-
-        public IEnumerable<Order> GetOrdersByCustomerId(int customerId)
-        {
-            return _orders.Where(o => o.CustomerId == customerId);
-        }
-
-        public int InsertOrder(Order order)
-        {
-            order.OrderId = _currentId;
-            _orders.Add(order);
-            _currentId++;
-            return order.OrderId.Value;
-        }
-
-        public void UpdateOrder(Order order)
-        {
-            var repoOrder = _orders.SingleOrDefault(o => o.OrderId == order.OrderId);
-
-            if(repoOrder != null)
+            return new RepoResult<IEnumerable<Order>>(items)
             {
-                _orders.Remove(repoOrder);
-            }
-            _orders.Add(order);
+                Type = RepoResultType.Success
+            };            
+        }
+
+        public RepoResult<Order> InsertOrder(Order order)
+        {
+            return base.InsertItem(order);
+        }
+
+        public RepoResult<Order> UpdateOrder(Order order)
+        {
+            return base.UpdateItem(order);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CbInsights.Core;
 using CbInsights.Domain;
 using CbInsights.OrdersApi.Models;
 using CbInsights.OrdersApi.Repository;
@@ -23,44 +24,81 @@ namespace CbInsights.OrdersApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var order = _ordersRepository.GetOrderById(id);
+            var result = _ordersRepository.GetOrderById(id);
 
-            if (order == null)
+            switch (result.Type)
             {
-                return NotFound();
-            }
-            return Ok(order);
+                case RepoResultType.NotFound:
+                    return NotFound();
+                case RepoResultType.Success:
+                    return Ok(result.Entity);
+                default:
+                    return BadRequest();
+            };
         }
 
         [HttpGet("~/api/customers/{customerId}/orders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetCustomerOrders(int customerId)
         {
-            var orders = _ordersRepository.GetOrdersByCustomerId(customerId).ToList();
+            var result = _ordersRepository.GetOrdersByCustomerId(customerId);
 
-            if (orders == null || orders.Count == 0)
+            switch (result.Type)
             {
-                return NotFound();
-            }
-            return Ok(orders);
+                case RepoResultType.NotFound:
+                    return NotFound();
+                case RepoResultType.Success:
+                    return Ok(result.Entity);
+                default:
+                    return BadRequest();
+            };
         }
 
         [HttpPost]
         public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
         {
-            var id = _ordersRepository.InsertOrder(order);
-            return Ok(new IdResult { Id = id });
+            var result = _ordersRepository.InsertOrder(order);
+            
+            switch (result.Type)
+            {
+                case RepoResultType.NotFound:
+                    return NotFound();
+                case RepoResultType.Success:
+                    return Ok(new IdResult { Id = result.Entity.Id.Value });
+                default:
+                    return BadRequest();
+            };
         }
 
         [HttpPut("{id}")]
-        public async Task UpdateOrder([FromRoute]int id, [FromBody] Order order)
+        public async Task<ActionResult> UpdateOrder([FromRoute]int id, [FromBody] Order order)
         {
-            _ordersRepository.UpdateOrder(order);
+            var result = _ordersRepository.UpdateOrder(order);
+
+            switch (result.Type)
+            {
+                case RepoResultType.NotFound:
+                    return NotFound();
+                case RepoResultType.Success:
+                    return Ok();
+                default:
+                    return BadRequest();
+            };
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteOrder(int id)
+        public async Task<ActionResult> DeleteOrder(int id)
         {
-            _ordersRepository.DeleteOrder(id);
+            var result = _ordersRepository.DeleteOrder(id);
+
+            switch (result.Type)
+            {
+                case RepoResultType.NotFound:
+                    return NotFound();
+                case RepoResultType.Success:
+                    return Ok();
+                default:
+                    return BadRequest();
+            };
         }
     }
 }

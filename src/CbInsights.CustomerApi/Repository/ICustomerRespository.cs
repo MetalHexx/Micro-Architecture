@@ -1,4 +1,5 @@
-﻿using CbInsights.Domain;
+﻿using CbInsights.Core;
+using CbInsights.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace CbInsights.CustomerApi.Repository
 {
     public interface ICustomerRespository
     {
-        IEnumerable<Customer> GetCustomers();
-        Customer GetCustomer(int id);
-        int InsertCustomer(Customer customer);
-        void UpdateCustomer(Customer customer);
-        void DeleteCustomer(int id);
+        RepoResult<IEnumerable<Customer>> GetCustomers();
+        RepoResult<Customer> GetCustomer(int id);
+        RepoResult<Customer> InsertCustomer(Customer customer);
+        RepoResult<Customer> UpdateCustomer(Customer customer);
+        RepoResult<Customer> DeleteCustomer(int id);
     }
 }

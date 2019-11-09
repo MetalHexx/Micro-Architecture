@@ -1,0 +1,95 @@
+﻿using CbInsights.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace CbInsights.Core
+{
+    public abstract class RepositoryBase<T> where T: IEntity
+    {
+        protected List<T> _items;
+        private int _currentId = 2;
+        
+        protected virtual RepoResult<T> DeleteItem(int id)
+        {
+            var item = _items.FirstOrDefault(o => o.Id == id);
+            if (item == null)
+            {
+                return new RepoResult<T>(item)
+                {
+                    Type = RepoResultType.NotFound
+                };
+            }
+            _items.Remove(item);
+
+            return new RepoResult<T>(item)
+            {
+                Type = RepoResultType.Success
+            };
+        }
+
+        protected virtual RepoResult<T> GetItemById(int id)
+        {
+            var item = _items.SingleOrDefault(o => o.Id.Value == id);
+
+            if (item == null)
+            {
+                return new RepoResult<T>(item)
+                {
+                    Type = RepoResultType.NotFound
+                };
+            }
+            return new RepoResult<T>(item)
+            {
+                Type = RepoResultType.Success
+            };
+        }
+
+        protected virtual RepoResult<IEnumerable<T>> GetItemsByIds(List<int> ids)
+        {
+            var items = _items.Where(i => ids.Any(id => i.Id == id));
+
+            if (items == null)
+            {
+                return new RepoResult<IEnumerable<T>>(items)
+                {
+                    Type = RepoResultType.NotFound
+                };
+            }
+            return new RepoResult<IEnumerable<T>>(items)
+            {
+                Type = RepoResultType.Success
+            };
+        }
+
+        protected virtual RepoResult<T> InsertItem(T item)
+        {
+            item.Id = _currentId;
+            _items.Add(item);
+            _currentId++;
+            return new RepoResult<T>(item)
+            {
+                Type = RepoResultType.Success
+            };
+        }
+
+        protected virtual RepoResult<T> UpdateItem(T item)
+        {
+            var repoItem = _items.SingleOrDefault(o => o.Id == item.Id);
+
+            if (repoItem == null)
+            {
+                return new RepoResult<T>(item)
+                {
+                    Type = RepoResultType.NotFound
+                };
+            }
+            _items.Remove(repoItem);
+            _items.Add(item);
+            return new RepoResult<T>(item)
+            {
+                Type = RepoResultType.Success
+            };            
+        }
+    }
+}

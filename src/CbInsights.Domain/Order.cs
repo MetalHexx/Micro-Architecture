@@ -4,9 +4,9 @@ using System.Text;
 
 namespace CbInsights.Domain
 {
-    public class Order
+    public class Order : IEntity
     {
-        public int? OrderId { get; set; }
+        public int? Id { get; set; }
         public int CustomerId { get; set; }
         public List<OrderItem> Items { get; set; }
     }

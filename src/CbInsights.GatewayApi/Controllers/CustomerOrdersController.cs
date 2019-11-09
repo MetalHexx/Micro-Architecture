@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.Clients;
+using CbInsights.Domain;
 using CbInsights.GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,37 +30,47 @@ namespace CbInsights.GatewayApi.Controllers
         [HttpGet("customers/{customerId}")]
         public async Task<ActionResult<CustomerOrdersModel>> GetCustomerOrders(int customerId)
         {
-            var customerTask = Task.Run(() => _customersClient.GetCustomerByIdAsync(customerId));
-            var orderTask = Task.Run(() => _ordersClient.GetCustomerOrdersAsync(customerId));
+            var customerTask = Task.Run(
+                () => _customersClient.GetCustomerByIdAsync(customerId));
 
-            Task.WaitAll(customerTask, orderTask);
+            var orderProductTask = Task.Run(async () =>
+            {
+                var ordersResult = await _ordersClient.GetCustomerOrdersAsync(customerId);
+                ApiResult<List<Product>> productsResult = null;
+
+                if (ordersResult.IsSuccess)
+                {
+                    var productIds = ordersResult.ContentObject
+                        .SelectMany(o => o.Items.Select(oi => oi.ProductId))
+                        .ToList();
+
+                    productsResult = await _productsClient.GetProductsAsync(productIds);
+                }
+                return new { OrdersResult = ordersResult, ProductsResult = productsResult };
+            });
+
+            Task.WaitAll(customerTask, orderProductTask);
 
             var customerResult = customerTask.Result;
-            var orderResult = orderTask.Result;
+            var orderProductResult = orderProductTask.Result;
 
             if (customerResult.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound($"Customer Id {customerId} was not found");
             }
-            if (orderResult.StatusCode == StatusCodes.Status404NotFound)
+            if (orderProductResult.OrdersResult.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound($"No orders were found for customerId {customerId}");
             }
-            var productIds = orderResult.ContentObject
-                .SelectMany(o => o.Items.Select(oi => oi.ProductId))
-                .ToList();
-
-            var products = await _productsClient.GetProductsAsync(productIds);
-
-            if (products.StatusCode == StatusCodes.Status404NotFound)
+            if (orderProductResult.ProductsResult.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound($"Products were not found for Customer Id {customerId}'s orders");
             }
             var customerOrders = new CustomerOrdersModel
             (
                 customerResult.ContentObject,
-                orderResult.ContentObject,
-                products.ContentObject
+                orderProductResult.OrdersResult.ContentObject,
+                orderProductResult.ProductsResult.ContentObject
             );
             return Ok(customerOrders);
         }

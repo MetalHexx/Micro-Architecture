@@ -30,9 +30,11 @@ namespace CbInsights.GatewayApi.Controllers
         [HttpGet("customers/{customerId}")]
         public async Task<ActionResult<CustomerOrdersModel>> GetCustomerOrders(int customerId)
         {
+            //Get the customer 
             var customerTask = Task.Run(
                 () => _customersClient.GetCustomerByIdAsync(customerId));
 
+            //Get the Customer Orders, wait, and get the order products
             var orderProductTask = Task.Run(async () =>
             {
                 var ordersResult = await _ordersClient.GetCustomerOrdersAsync(customerId);
@@ -49,7 +51,7 @@ namespace CbInsights.GatewayApi.Controllers
                 return new { OrdersResult = ordersResult, ProductsResult = productsResult };
             });
 
-            Task.WaitAll(customerTask, orderProductTask);
+            await Task.WhenAll(customerTask, orderProductTask);
 
             var customerResult = customerTask.Result;
             var orderProductResult = orderProductTask.Result;

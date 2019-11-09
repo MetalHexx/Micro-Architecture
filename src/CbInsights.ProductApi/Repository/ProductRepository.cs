@@ -42,9 +42,9 @@ namespace CbInsights.ProductsApi.Repository
                     Id = 4,
                     Name = "Darth Vader Action Figure",
                     Price = 10.99M
-                },
-
+                }
             };
+            _currentId = _items.Count;
         }
         public RepoResult<Product> DeleteProduct(int id)
         {
@@ -56,7 +56,7 @@ namespace CbInsights.ProductsApi.Repository
             return base.GetItemById(id);
         }
 
-        public RepoResult<IEnumerable<Product>> GetProductsByIds(List<int> ids)
+        public RepoResult<List<Product>> GetProductsByIds(List<int> ids)
         {
             return base.GetItemsByIds(ids);
         }

@@ -28,6 +28,7 @@ namespace CbInsights.CustomerApi.Repository
                     LastName = "Skywalker"
                 }
             };
+            _currentId = _items.Count;
         }
 
         public RepoResult<Customer> DeleteCustomer(int id)

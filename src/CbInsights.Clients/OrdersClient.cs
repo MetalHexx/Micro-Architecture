@@ -1,4 +1,5 @@
-﻿using CbInsights.Domain;
+﻿using CbInsights.Core;
+using CbInsights.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,25 +25,25 @@ namespace CbInsights.Clients
 
         public async Task<ApiResult<List<Order>>> GetCustomerOrdersAsync(int customerId)
         {
-            string path = $"api//customers//{customerId}// orders";
+            string path = $"customers/{customerId}/orders";
             return await GetAsync<List<Order>>(path);
         }
 
-        public async Task<ApiResult<int>> CreateOrderAsync(Order order)
+        public async Task<ApiResult<IdResult>> CreateOrderAsync(Order order)
         {
-            string path = $"api//customers//{order.CustomerId}// orders";
-            return await PostAsync<int>(path, order);
+            string path = $"orders";
+            return await PostAsync<IdResult>(path, order);
         }
 
         public async Task<ApiResult<string>> UpdateOrderAsync(Order order)
         {
-            string path = $"api//customers//{order.CustomerId}// orders";
+            string path = $"orders/{order.Id.Value}";
             return await PutAsync<string>(path, order);
         }
 
         public async Task<ApiResult<string>> DeleteOrderAsync(int id)
         {
-            return await DeleteAsync<string>($"{id}");
+            return await DeleteAsync<string>($"orders/{id}");
         }
     }
 }

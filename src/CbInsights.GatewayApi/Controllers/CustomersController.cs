@@ -25,7 +25,7 @@ namespace CbInsights.GatewayApi.Controllers
         {
             var result = await _customerClient.GetCustomerByIdAsync(id);
 
-            if (result.StatusCode == 404)
+            if (result.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound();
             }
@@ -37,7 +37,7 @@ namespace CbInsights.GatewayApi.Controllers
         {
             var result = await _customerClient.GetCustomersAsync();
 
-            if (result.StatusCode == 404)
+            if (result.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound();
             }
@@ -55,6 +55,10 @@ namespace CbInsights.GatewayApi.Controllers
         public async Task<ActionResult<Customer>> UpdateCustomer(int id, [FromBody]Customer customer)
         {
             var result = await _customerClient.UpdateCustomerAsync(customer);
+            if (result.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return NotFound();
+            }
             return Ok(result.Content);
         }
 
@@ -62,7 +66,12 @@ namespace CbInsights.GatewayApi.Controllers
         public async Task<ActionResult<Customer>> DeleteCustomer(int id)
         {
             var result = await _customerClient.DeleteCustomerAsync(id);
-            return Ok(result.Content);
+
+            if (result.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }

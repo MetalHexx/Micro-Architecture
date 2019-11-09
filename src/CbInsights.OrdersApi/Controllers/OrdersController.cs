@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.Core;
 using CbInsights.Domain;
-using CbInsights.OrdersApi.Models;
 using CbInsights.OrdersApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

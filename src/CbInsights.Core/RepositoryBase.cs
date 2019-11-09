@@ -8,7 +8,7 @@ namespace CbInsights.Core
     public abstract class RepositoryBase<T> where T: IEntity
     {
         protected List<T> _items;
-        private int _currentId = 2;
+        protected int _currentId;
         
         protected virtual RepoResult<T> DeleteItem(int id)
         {
@@ -45,25 +45,25 @@ namespace CbInsights.Core
             };
         }
 
-        protected virtual RepoResult<IEnumerable<T>> GetItemsByIds(List<int> ids)
+        protected virtual RepoResult<List<T>> GetItemsByIds(List<int> ids)
         {
-            var items = _items.Where(i => ids.Any(id => i.Id == id));
+            var items = _items.Where(i => ids.Any(id => i.Id == id)).ToList();
 
-            if (items == null)
+            if (items.Count == 0)
             {
-                return new RepoResult<IEnumerable<T>>(items)
+                return new RepoResult<List<T>>(items)
                 {
                     Type = RepoResultType.NotFound
                 };
             }
-            return new RepoResult<IEnumerable<T>>(items)
+            return new RepoResult<List<T>>(items)
             {
                 Type = RepoResultType.Success
             };
         }
 
         protected virtual RepoResult<T> InsertItem(T item)
-        {
+        {            
             item.Id = _currentId;
             _items.Add(item);
             _currentId++;

@@ -42,28 +42,38 @@ namespace CbInsights.Clients
 
         protected async Task<ApiResult<ResponseType>> HandleRequestAsync<ResponseType>(string path, HttpMethod method, string content = null)
         {
-            using (_client)
-            using (var response = await SendRequestAsync(path, method, content))
+            try
             {
-                var resContent = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode == false)
+                using (_client)
+                using (var response = await SendRequestAsync(path, method, content))
                 {
+                    var resContent = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode == false)
+                    {
+                        return new ApiResult<ResponseType>
+                        {
+                            StatusCode = (int)response.StatusCode,
+                            Content = resContent,
+                            IsSuccess = false
+                        };
+                    }
                     return new ApiResult<ResponseType>
                     {
                         StatusCode = (int)response.StatusCode,
                         Content = resContent,
+                        ContentObject = JsonConvert.DeserializeObject<ResponseType>(resContent),
                         IsSuccess = false
                     };
                 }
-                return new ApiResult<ResponseType>
-                {
-                    StatusCode = (int)response.StatusCode,
-                    Content = resContent,
-                    ContentObject = JsonConvert.DeserializeObject<ResponseType>(resContent),
-                    IsSuccess = false
-                };
+
             }
+            catch(Exception e)
+            {
+                var x = 0;
+                throw;
+            }
+            
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(string path, HttpMethod method, string content = null)

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.Clients;
+using CbInsights.Core;
 using CbInsights.Domain;
-using CbInsights.GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,13 +23,13 @@ namespace CbInsights.GatewayApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var order = await _ordersClient.GetOrderByIdAsync(id);
+            var result = await _ordersClient.GetOrderByIdAsync(id);
 
-            if (order == null)
+            if (result.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound();
             }
-            return Ok(order);
+            return Ok(result.Content);
         }
 
         [HttpGet("~/api/customers/{customerId}/orders")]
@@ -48,7 +48,7 @@ namespace CbInsights.GatewayApi.Controllers
         public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
         {
             var result = await _ordersClient.CreateOrderAsync(order);
-            return Ok(new IdResult { Id = result.ContentObject });
+            return Ok(new IdResult { Id = result.ContentObject.Id });
         }
 
         [HttpPut("{id}")]
@@ -67,6 +67,11 @@ namespace CbInsights.GatewayApi.Controllers
         public async Task<ActionResult> DeleteOrder(int id)
         {
             var result = await _ordersClient.DeleteOrderAsync(id);
+
+            if (result.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return NotFound();
+            }
             return Ok();
         }
     }

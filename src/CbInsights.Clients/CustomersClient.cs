@@ -1,4 +1,5 @@
-﻿using CbInsights.Domain;
+﻿using CbInsights.Core;
+using CbInsights.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,14 +22,14 @@ namespace CbInsights.Clients
             return await GetAsync<List<Customer>>("");
         }
 
-        public async Task<ApiResult<int>> CreateCustomerAsync(Customer customer)
+        public async Task<ApiResult<IdResult>> CreateCustomerAsync(Customer customer)
         {            
-            return await PostAsync<int>("", customer);
+            return await PostAsync<IdResult>("", customer);
         }
 
-        public async Task<ApiResult<int>> UpdateCustomerAsync(Customer customer)
+        public async Task<ApiResult<string>> UpdateCustomerAsync(Customer customer)
         {
-            return await PutAsync<int>($"{customer.Id}", customer);
+            return await PutAsync<string>($"{customer.Id}", customer);
         }
 
         public async Task<ApiResult<string>> DeleteCustomerAsync(int id)

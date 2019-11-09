@@ -12,8 +12,6 @@ namespace CbInsights.OrdersApi.Repository
     //wasn't there
     public class OrdersRepository : RepositoryBase<Order>, IOrdersRepository
     {
-        private int _currentId = 2;
-
         public OrdersRepository()
         {
             _items = new List<Order> 
@@ -74,6 +72,7 @@ namespace CbInsights.OrdersApi.Repository
                 },
 
             };
+            _currentId = _items.Count;
         }
 
         public RepoResult<Order> DeleteOrder(int orderId)

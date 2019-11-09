@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.Core;
 using CbInsights.Domain;
-using CbInsights.ProductsApi.Models;
 using CbInsights.ProductsApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +23,7 @@ namespace CbInsights.ProductsApi.Controllers
             _productRepo = productRepo;
         }
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByIds([FromQuery(Name = "ids")] List<int> ids)
+        public async Task<ActionResult<List<Product>>> GetProductsByIds([FromQuery(Name = "ids")] List<int> ids)
         {
             var result = _productRepo.GetProductsByIds(ids);
             switch (result.Type)
@@ -57,7 +56,7 @@ namespace CbInsights.ProductsApi.Controllers
         [HttpPost()]
         public async Task<ActionResult<IdResult>> CreateProduct([FromBody, Required]Product product)
         {           
-            var result = _productRepo.UpdateProduct(product);
+            var result = _productRepo.InsertProduct(product);
 
             switch (result.Type)
             {

@@ -51,11 +51,13 @@ namespace CbInsights.GatewayApi.Controllers
                 return new { OrdersResult = ordersResult, ProductsResult = productsResult };
             });
 
+            //wait for all api calls to complete
             await Task.WhenAll(customerTask, orderProductTask);
 
             var customerResult = customerTask.Result;
             var orderProductResult = orderProductTask.Result;
 
+            //Validate that all calls were successful, if not return errors
             if (customerResult.StatusCode == StatusCodes.Status404NotFound)
             {
                 return NotFound($"Customer Id {customerId} was not found");
@@ -68,6 +70,8 @@ namespace CbInsights.GatewayApi.Controllers
             {
                 return NotFound($"Products were not found for Customer Id {customerId}'s orders");
             }
+
+            //Construct customer order viewmodel and return
             var customerOrders = new CustomerOrdersModel
             (
                 customerResult.ContentObject,

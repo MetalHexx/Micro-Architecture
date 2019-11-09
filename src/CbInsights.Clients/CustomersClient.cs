@@ -1,5 +1,6 @@
 ﻿using CbInsights.Core;
 using CbInsights.Domain;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace CbInsights.Clients
 {
     public class CustomersClient: ClientBase
     {
-        public CustomersClient(HttpClient client) : base(client, "http://localhost:5001/api/customers/") { }
+        public CustomersClient(HttpClient client, IOptions<ApiSettings> options) : base(client, options.Value.CustomersApiBaseUrl) { }
 
         public async Task<ApiResult<Customer>> GetCustomerByIdAsync(int id)
         {

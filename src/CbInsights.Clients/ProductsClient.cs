@@ -1,5 +1,6 @@
 ﻿using CbInsights.Core;
 using CbInsights.Domain;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,7 +11,7 @@ namespace CbInsights.Clients
 {
     public class ProductsClient: ClientBase
     {
-        public ProductsClient(HttpClient client) : base(client, "http://localhost:5003/api/products/") { }
+        public ProductsClient(HttpClient client, IOptions<ApiSettings> options) : base(client, options.Value.ProductsApiBaseUrl) { }
 
         public async Task<ApiResult<List<Product>>> GetProductsAsync(List<int> ids)
         {

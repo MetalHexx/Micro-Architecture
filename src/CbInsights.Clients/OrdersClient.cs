@@ -1,5 +1,6 @@
 ﻿using CbInsights.Core;
 using CbInsights.Domain;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace CbInsights.Clients
 {
     public class OrdersClient: ClientBase
     {
-        public OrdersClient(HttpClient client): base(client, "http://localhost:5002/api/") { }
+        public OrdersClient(HttpClient client, IOptions<ApiSettings> options): base(client, options.Value.OrdersApiBaseUrl) { }
 
         public async Task<ApiResult<Order>> GetOrderByIdAsync(int orderId)
         {

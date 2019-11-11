@@ -1,4 +1,4 @@
-﻿namespace CbInsights.Core
+﻿namespace CbInsights.ProductsApi.Models
 {
     public class IdResult
     {

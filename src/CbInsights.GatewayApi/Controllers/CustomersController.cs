@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.Clients;
-using CbInsights.Domain;
+using CbInsights.GatewayApi.Clients;
+using CbInsights.GatewayApi.Clients.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

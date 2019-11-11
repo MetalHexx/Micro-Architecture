@@ -1,14 +1,10 @@
-﻿using CbInsights.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CbInsights.GatewayApi.Clients.Models;
 
 namespace CbInsights.GatewayApi.Models
 {
     public class ProductModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
 

@@ -1,9 +1,5 @@
-﻿using CbInsights.Core;
-using CbInsights.Domain;
-using System;
+﻿using CbInsights.ProductsApi.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CbInsights.ProductsApi.Repository
 {

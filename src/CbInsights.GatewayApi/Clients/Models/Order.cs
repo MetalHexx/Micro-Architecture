@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CbInsights.Domain
+namespace CbInsights.GatewayApi.Clients.Models
 {
-    public class Order : IEntity
+    public class Order
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public int CustomerId { get; set; }
         public List<OrderItem> Items { get; set; }
     }

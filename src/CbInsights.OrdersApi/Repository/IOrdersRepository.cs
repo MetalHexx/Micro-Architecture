@@ -1,5 +1,4 @@
-﻿using CbInsights.Core;
-using CbInsights.Domain;
+﻿using CbInsights.OrdersApi.Models;
 using System.Collections.Generic;
 
 namespace CbInsights.OrdersApi.Repository

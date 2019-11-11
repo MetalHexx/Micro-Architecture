@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.5.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
@@ -21,11 +23,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CbInsights.Core\CbInsights.Core.csproj" />
-    <ProjectReference Include="..\CbInsights.Domain\CbInsights.Domain.csproj" />
   </ItemGroup>
 
 </Project>

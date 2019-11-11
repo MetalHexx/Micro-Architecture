@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.Core;
-using CbInsights.Domain;
+using CbInsights.ProductsApi.Models;
 using CbInsights.ProductsApi.Repository;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CbInsights.ProductsApi.Controllers
@@ -23,84 +21,65 @@ namespace CbInsights.ProductsApi.Controllers
             _productRepo = productRepo;
         }
         [HttpGet()]
-        public async Task<ActionResult<List<Product>>> GetProductsByIds([FromQuery(Name = "ids")] List<int> ids)
+        public ActionResult<List<Product>> GetProducts([FromQuery(Name = "ids")] List<int> ids)
         {
             var result = _productRepo.GetProductsByIds(ids);
-            switch (result.Type)
+
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(result.Entity);
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(result.Entity);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductById(int id)
+        public ActionResult<Product> GetProduct(int id)
         {
             var result = _productRepo.GetProductById(id);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(result.Entity);
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(result.Entity);
         }
 
         [HttpPost()]
-        public async Task<ActionResult<IdResult>> CreateProduct([FromBody, Required]Product product)
+        public ActionResult<IdResult> PostProduct([FromBody, Required]Product product)
         {           
             var result = _productRepo.InsertProduct(product);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(new IdResult { Id = result.Entity.Id.Value });
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(new IdResult { Id = result.Entity.Id });
         }
 
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateProduct(int id, [FromBody, Required]Product product)
+        public ActionResult PutProduct(int id, [FromBody, Required]Product product)
         {
             var result = _productRepo.UpdateProduct(product);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok();
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteProduct(int id)
+        public ActionResult DeleteProduct(int id)
         {
             var result = _productRepo.DeleteProduct(id);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok();
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }

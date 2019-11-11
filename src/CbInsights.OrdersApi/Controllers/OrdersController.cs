@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.Core;
-using CbInsights.Domain;
+using CbInsights.OrdersApi.Models;
 using CbInsights.OrdersApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,83 +20,63 @@ namespace CbInsights.OrdersApi.Controllers
             _ordersRepository = ordersRepository;
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public ActionResult<Order> GetOrder(int id)
         {
             var result = _ordersRepository.GetOrderById(id);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(result.Entity);
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(result.Entity);
         }
 
         [HttpGet("~/api/customers/{customerId}/orders")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetCustomerOrders(int customerId)
+        public ActionResult<IEnumerable<Order>> GetCustomerOrders(int customerId)
         {
             var result = _ordersRepository.GetOrdersByCustomerId(customerId);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(result.Entity);
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(result.Entity);
         }
 
         [HttpPost]
-        public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
+        public ActionResult<IdResult> PostOrder([FromBody] Order order)
         {
             var result = _ordersRepository.InsertOrder(order);
-            
-            switch (result.Type)
+
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(new IdResult { Id = result.Entity.Id.Value });
-                default:
-                    return BadRequest();
-            };
+                return NotFound(new IdResult { Id = result.Entity.Id });
+            }
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateOrder([FromRoute]int id, [FromBody] Order order)
+        public ActionResult PutOrder([FromRoute]int id, [FromBody] Order order)
         {
             var result = _ordersRepository.UpdateOrder(order);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok();
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteOrder(int id)
+        public ActionResult DeleteOrder(int id)
         {
             var result = _ordersRepository.DeleteOrder(id);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok();
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }

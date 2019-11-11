@@ -1,4 +1,4 @@
-﻿using CbInsights.Domain;
+﻿using CbInsights.GatewayApi.Clients.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

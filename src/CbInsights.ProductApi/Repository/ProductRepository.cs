@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CbInsights.Core;
-using CbInsights.Domain;
+﻿using System.Collections.Generic;
+using CbInsights.ProductsApi.Models;
 
 namespace CbInsights.ProductsApi.Repository
 {
@@ -12,13 +8,7 @@ namespace CbInsights.ProductsApi.Repository
         public ProductRepository()
         {
             _items = new List<Product>
-            {
-                new Product()
-                {
-                    Id = 0,
-                    Name = "Pixel 3",
-                    Price = 699.99M
-                },
+            {                
                 new Product()
                 {
                     Id = 1,
@@ -42,6 +32,12 @@ namespace CbInsights.ProductsApi.Repository
                     Id = 4,
                     Name = "Darth Vader Action Figure",
                     Price = 10.99M
+                },
+                new Product()
+                {
+                    Id = 5,
+                    Name = "Pixel 3",
+                    Price = 699.99M
                 }
             };
             _currentId = _items.Count;

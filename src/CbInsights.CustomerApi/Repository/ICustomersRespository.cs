@@ -1,13 +1,9 @@
-﻿using CbInsights.Core;
-using CbInsights.Domain;
-using System;
+﻿using CbInsights.CustomersApi.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CbInsights.CustomerApi.Repository
+namespace CbInsights.CustomersApi.Repository
 {
-    public interface ICustomerRespository
+    public interface ICustomersRespository
     {
         RepoResult<IEnumerable<Customer>> GetCustomers();
         RepoResult<Customer> GetCustomer(int id);

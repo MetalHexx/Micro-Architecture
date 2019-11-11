@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.CustomerApi.Repository;
+using CbInsights.CustomerApi.Validations;
+using CbInsights.CustomersApi.Models;
+using CbInsights.CustomersApi.Repository;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,8 +35,9 @@ namespace CbInsights.CustomerApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Customers API", Version = "v1" });
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSingleton<ICustomerRespository, CustomerRepository>();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSingleton<ICustomersRespository, CustomersRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,9 +1,8 @@
-﻿using System;
+﻿using CbInsights.OrdersApi.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.Core;
-using CbInsights.Domain;
 
 namespace CbInsights.OrdersApi.Repository
 {
@@ -15,25 +14,7 @@ namespace CbInsights.OrdersApi.Repository
         public OrdersRepository()
         {
             _items = new List<Order> 
-            {
-                new Order
-                {
-                    Id = 0,
-                    CustomerId = 0,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem
-                        {
-                            ProductId = 0,
-                            Quantity = 1
-                        },
-                        new OrderItem
-                        {
-                            ProductId = 1,
-                            Quantity = 2
-                        }
-                    }
-                },
+            {               
                 new Order
                 {
                     Id = 1,
@@ -70,6 +51,25 @@ namespace CbInsights.OrdersApi.Repository
                         }
                     }
                 },
+                 new Order
+                {
+                    Id = 3,
+                    CustomerId = 0,
+                    Items = new List<OrderItem>
+                    {
+                        new OrderItem
+                        {
+                            ProductId = 0,
+                            Quantity = 1
+                        },
+                        new OrderItem
+                        {
+                            ProductId = 1,
+                            Quantity = 2
+                        }
+                    }
+                }
+
 
             };
             _currentId = _items.Count;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CbInsights.Core
+namespace CbInsights.ProductsApi.Repository
 {
     public class RepoResult<T>
     {
@@ -18,6 +18,7 @@ namespace CbInsights.Core
 
     public enum RepoResultType
     {
+        Invalid,
         Success,
         Failed,
         NotFound

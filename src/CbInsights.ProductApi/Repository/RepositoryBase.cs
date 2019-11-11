@@ -1,15 +1,14 @@
-﻿using CbInsights.Domain;
-using System;
+﻿using CbInsights.ProductsApi.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CbInsights.Core
+namespace CbInsights.ProductsApi.Repository
 {
-    public abstract class RepositoryBase<T> where T: IEntity
+    public abstract class RepositoryBase<T> where T : IEntity
     {
         protected List<T> _items;
         protected int _currentId;
-        
+
         protected virtual RepoResult<T> DeleteItem(int id)
         {
             var item = _items.FirstOrDefault(o => o.Id == id);
@@ -30,7 +29,7 @@ namespace CbInsights.Core
 
         protected virtual RepoResult<T> GetItemById(int id)
         {
-            var item = _items.SingleOrDefault(o => o.Id.Value == id);
+            var item = _items.SingleOrDefault(o => o.Id == id);
 
             if (item == null)
             {
@@ -63,7 +62,7 @@ namespace CbInsights.Core
         }
 
         protected virtual RepoResult<T> InsertItem(T item)
-        {            
+        {
             item.Id = _currentId;
             _items.Add(item);
             _currentId++;
@@ -89,7 +88,7 @@ namespace CbInsights.Core
             return new RepoResult<T>(item)
             {
                 Type = RepoResultType.Success
-            };            
+            };
         }
     }
 }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CbInsights.Core;
-using CbInsights.CustomerApi.Models;
-using CbInsights.CustomerApi.Repository;
-using CbInsights.Domain;
-using Microsoft.AspNetCore.Http;
+﻿using CbInsights.CustomerApi.Validations;
+using CbInsights.CustomersApi.Models;
+using CbInsights.CustomersApi.Repository;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CbInsights.CustomerApi.Controllers
 {
@@ -15,89 +12,94 @@ namespace CbInsights.CustomerApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerRespository _customerRepo;
+        private readonly ICustomersRespository _customersRepo;
 
-        public CustomersController(ICustomerRespository customerRepo)
+        public CustomersController(ICustomersRespository customerRepo)
         {
-            _customerRepo = customerRepo;
+            _customersRepo = customerRepo;
         }
         [HttpGet()]
-        public async Task<ActionResult<Customer>> GetCustomers()
+        public ActionResult<Customer> GetCustomers()
         {
-            var result = _customerRepo.GetCustomers();
+            var result = _customersRepo.GetCustomers();
 
-            switch (result.Type)
+            if(result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(result.Entity);
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(result.Entity);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerById(int id)
+        public ActionResult<Customer> GetCustomer(int id)
         {
-            var result = _customerRepo.GetCustomer(id);
+            var result = _customersRepo.GetCustomer(id);
 
-            switch (result.Type)
+            if (result.Type == RepoResultType.NotFound)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(result.Entity);
-                default:
-                    return BadRequest();
-            };
+                return NotFound();
+            }
+            return Ok(result.Entity);
         }
 
         [HttpPost]
-        public async Task<ActionResult<IdResult>> CreateCustomer([FromBody] Customer customer)
+        public ActionResult<IdResult> PostCustomer([FromBody] Customer customer)
         {
-            var result = _customerRepo.InsertCustomer(customer);
+            var postValidator = new PostValidator();
+            var results = postValidator.Validate(customer);
+            results.AddToModelState(ModelState, null);
 
-            switch (result.Type)
+            if (!ModelState.IsValid)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok(new IdResult { Id = result.Entity.Id.Value });
-                default:
-                    return BadRequest();
-            };
+                return BadRequest(ModelState);
+            }
+            var result = _customersRepo.InsertCustomer(customer);
+
+            if (result.Type == RepoResultType.NotFound)
+            {
+                return NotFound();
+            }
+            return Ok(new IdResult { Id = result.Entity.Id });
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCustomer([FromRoute]int id, [FromBody] Customer customer)
+        public ActionResult PutCustomer([FromRoute]int id, [FromBody] Customer customer)
         {
-            var result = _customerRepo.UpdateCustomer(customer);
+            var putValidator = new PutValidator();
+            var results = putValidator.Validate(customer);
+            results.AddToModelState(ModelState, null);
 
-            switch (result.Type)
+            if (!ModelState.IsValid)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok();
-                default:
-                    return BadRequest();
-            };
+                return BadRequest(ModelState);
+            }
+            var result = _customersRepo.UpdateCustomer(customer);
+
+            if (result.Type == RepoResultType.NotFound)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCustomer(int id)
+        public ActionResult DeleteCustomer(int id)
         {
-            var result = _customerRepo.DeleteCustomer(id);
-            switch (result.Type)
+            var deleteValidator = new DeleteValidator();
+            var results = deleteValidator.Validate(id);
+            results.AddToModelState(ModelState, null);
+
+            if (!ModelState.IsValid)
             {
-                case RepoResultType.NotFound:
-                    return NotFound();
-                case RepoResultType.Success:
-                    return Ok();
-                default:
-                    return BadRequest();
-            };            
+                return BadRequest(ModelState);
+            }
+            var result = _customersRepo.DeleteCustomer(id);
+
+            if (result.Type == RepoResultType.NotFound)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }

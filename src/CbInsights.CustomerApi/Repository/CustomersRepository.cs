@@ -1,29 +1,25 @@
-﻿using CbInsights.Core;
-using CbInsights.Domain;
-using System;
+﻿using CbInsights.CustomersApi.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CbInsights.CustomerApi.Repository
+namespace CbInsights.CustomersApi.Repository
 {
     //TODO: Update repository to return a status object and return a not found if the object
     //wasn't there
-    public class CustomerRepository: RepositoryBase<Customer>, ICustomerRespository
+    public class CustomersRepository: RepositoryBase<Customer>, ICustomersRespository
     {
-        public CustomerRepository()
+        public CustomersRepository()
         {
             _items = new List<Customer>()
             {
                 new Customer
                 {
-                    Id = 0,
+                    Id = 1,
                     FirstName = "William",
                     LastName = "Pereira"
                 },                
                 new Customer
                 {
-                    Id = 1,
+                    Id = 2,
                     FirstName = "Luke",
                     LastName = "Skywalker"
                 }

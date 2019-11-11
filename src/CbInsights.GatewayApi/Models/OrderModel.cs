@@ -1,14 +1,12 @@
-﻿using CbInsights.Domain;
-using System;
+﻿using CbInsights.GatewayApi.Clients.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CbInsights.GatewayApi.Models
 {
     public class OrderModel
     {
-        public int? OrderId { get; set; }
+        public int OrderId { get; set; }
         public List<OrderItemModel> Items { get; set; }
 
         public OrderModel(Order order, List<Product> products)

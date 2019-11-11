@@ -13,9 +13,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CbInsights.Clients\CbInsights.Clients.csproj" />
-    <ProjectReference Include="..\CbInsights.Domain\CbInsights.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

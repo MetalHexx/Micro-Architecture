@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.Clients;
-using CbInsights.Core;
-using CbInsights.Domain;
+using CbInsights.GatewayApi.Clients;
+using CbInsights.GatewayApi.Clients.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

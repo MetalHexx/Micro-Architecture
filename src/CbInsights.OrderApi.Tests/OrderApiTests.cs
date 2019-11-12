@@ -1,59 +1,82 @@
-using CbInsights.CustomerApi.Controllers;
-using CbInsights.CustomersApi.Models;
-using CbInsights.CustomersApi.Repository;
+using CbInsights.OrdersApi.Controllers;
+using CbInsights.OrdersApi.Models;
+using CbInsights.OrdersApi.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
 
-namespace CbInsights.CustomerApi.Tests
+namespace CbInsights.OrderApi.Tests
 {
-    public class CustomerApiTests
+    public class OrderApiTests
     {
-        private IEnumerable<Customer> _customerListTestData;
-        private Customer _customerTestData;
-        private string _customerListTestDataJson;
-        private string _customerTestDataJson;        
+        private IEnumerable<Order> _orderListTestData;
+        private Order _orderTestData;
+        private string _orderListTestDataJson;
+        private string _orderTestDataJson;
 
-        public CustomerApiTests()
+        public OrderApiTests()
         {
-            _customerListTestData = new List<Customer>()
+            _orderListTestData = new List<Order>
             {
-                new Customer
-                {
-                    Id = 0,
-                    FirstName = "William",
-                    LastName = "Pereira"
-                },
-                new Customer
+                new Order
                 {
                     Id = 1,
-                    FirstName = "Luke",
-                    LastName = "Skywalker"
+                    CustomerId = 0,
+                    Items = new List<OrderItem>
+                    {
+                        new OrderItem
+                        {
+                            ProductId = 3,
+                            Quantity = 1
+                        },
+                        new OrderItem
+                        {
+                            ProductId = 4,
+                            Quantity = 2
+                        }
+                    }
+                },
+                new Order
+                {
+                    Id = 2,
+                    CustomerId = 1,
+                    Items = new List<OrderItem>
+                    {
+                        new OrderItem
+                        {
+                            ProductId = 0,
+                            Quantity = 2
+                        },
+                        new OrderItem
+                        {
+                            ProductId = 1,
+                            Quantity = 5
+                        }
+                    }
                 }
             };
-            _customerListTestDataJson = JsonConvert.SerializeObject(_customerListTestData);
-            _customerTestData = _customerListTestData.First();
-            _customerTestDataJson = JsonConvert.SerializeObject(_customerTestData);
+            _orderListTestDataJson = JsonConvert.SerializeObject(_orderListTestData);
+            _orderTestData = _orderListTestData.First();
+            _orderTestDataJson = JsonConvert.SerializeObject(_orderTestData);
         }
 
         [Fact]
-        public void WhenGetCustomersCalled_ReturnsOkCustomerList()
+        public void WhenGetOrderCalled_AndOrderExists_ReturnsOkOrder()
         {
             //Arrange     
-            var expectedContent = _customerListTestDataJson;
-            var repoResult = new RepoResult<IEnumerable<Customer>>(_customerListTestData) { Type = RepoResultType.Success };
-            
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomers()).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var expectedContent = _orderTestDataJson;
+            var repoResult = new RepoResult<Order>(_orderTestData) { Type = RepoResultType.Success };
+
+            var orderRepoMock = new Mock<IOrdersRepository>();
+            orderRepoMock.Setup(repo => repo.GetOrderById(It.IsAny<int>())).Returns(repoResult);
+            var orderController = new OrdersController(orderRepoMock.Object);
 
             //Act
-            var actualResult = customersController.GetCustomers().Result as ObjectResult;
+            var actualResult = orderController.GetOrder(1).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -61,32 +84,32 @@ namespace CbInsights.CustomerApi.Tests
         }
 
         [Fact]
-        public void WhenGetCustomerCalled_AndCustomerExists_ReturnsOkCustomer()
+        public void WhenGetCustomerOrdersCalled_AndOrdersExist_ReturnOkOrders()
         {
-            //Arrange     
-            var expectedContent = _customerTestDataJson;
-            var repoResult = new RepoResult<Customer>(_customerTestData) { Type = RepoResultType.Success };
-
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomer(0)).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            //Arrange
+            var expectedResult = _orderListTestDataJson;
+            var repoResult = new RepoResult<IEnumerable<Order>>(_orderListTestData) { Type = RepoResultType.Success };
+            var orderRepoMock = new Mock<IOrdersRepository>();
+            orderRepoMock.Setup(repo => repo.GetOrdersByCustomerId(It.IsAny<int>())).Returns(repoResult);
+            var orderController = new OrdersController(orderRepoMock.Object);
 
             //Act
-            var actualResult = customersController.GetCustomer(0).Result as ObjectResult;
+            var actualResult = orderController.GetCustomerOrders(_orderTestData.CustomerId).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedContent, JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(expectedResult, JsonConvert.SerializeObject(actualResult.Value));
         }
 
+                
         [Fact]
-        public void WhenGetCustomerCalled_WithNonExistantCustomer_ReturnsNotFound()
+        public void WhenGetOrderCalled_WithNonExistantOrder_ReturnsNotFound()
         {
             //Arrange     
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomer(It.)).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Order>(null) { Type = RepoResultType.NotFound };
+            var orderRepoMock = new Mock<IOrdersRepository>();
+            orderRepoMock.Setup(repo => repo.GetOrderById(0)).Returns(repoResult);
+            var customersController = new CustomersController(orderRepoMock.Object);
 
             //Act
             var actualResult = customersController.GetCustomer(0).Result;
@@ -112,7 +135,7 @@ namespace CbInsights.CustomerApi.Tests
                 FirstName = newCustomer.FirstName,
                 LastName = newCustomer.LastName
             };
-            var expectedIdResult = JsonConvert.SerializeObject(new IdResult { Id = repoCustomer.Id });           
+            var expectedIdResult = JsonConvert.SerializeObject(new IdResult { Id = repoCustomer.Id });
             var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
             var customerRepoMock = new Mock<ICustomersRespository>();
             customerRepoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
@@ -138,9 +161,9 @@ namespace CbInsights.CustomerApi.Tests
                 Id = id,
                 FirstName = firstName,
                 LastName = lastName
-            };           
-            
-            var customerRepoMock = new Mock<ICustomersRespository>();            
+            };
+
+            var customerRepoMock = new Mock<ICustomersRespository>();
             var customersController = new CustomersController(customerRepoMock.Object);
 
             //Act
@@ -275,4 +298,6 @@ namespace CbInsights.CustomerApi.Tests
         }
 
     }
+
+}
 }

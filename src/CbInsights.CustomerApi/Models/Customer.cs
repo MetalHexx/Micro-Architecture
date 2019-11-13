@@ -1,4 +1,4 @@
-﻿using CbInsights.CustomerApi.Validations;
+﻿using CbInsights.CustomerApi.Validators;
 using System;
 
 namespace CbInsights.CustomersApi.Models

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CbInsights.CustomerApi.Validations
+namespace CbInsights.CustomerApi.Validators
 {
     public class PutValidator : AbstractValidator<Customer>
     {

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CbInsights.CustomerApi\CbInsights.CustomerApi.csproj" />
+    <ProjectReference Include="..\CbInsights.OrdersApi\CbInsights.OrdersApi.csproj" />
   </ItemGroup>
 
 </Project>

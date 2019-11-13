@@ -1,4 +1,4 @@
-﻿using CbInsights.CustomerApi.Validations;
+﻿using CbInsights.CustomerApi.Validators;
 using CbInsights.CustomersApi.Models;
 using CbInsights.CustomersApi.Repository;
 using FluentValidation;
@@ -85,14 +85,6 @@ namespace CbInsights.CustomerApi.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteCustomer(int id)
         {
-            var deleteValidator = new DeleteValidator();
-            var results = deleteValidator.Validate(id);
-            results.AddToModelState(ModelState, null);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var result = _customersRepo.DeleteCustomer(id);
 
             if (result.Type == RepoResultType.NotFound)

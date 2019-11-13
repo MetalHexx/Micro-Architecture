@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CbInsights.OrdersApi.Models;
 using CbInsights.OrdersApi.Repository;
-using Microsoft.AspNetCore.Http;
+using CbInsights.OrdersApi.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CbInsights.OrdersApi.Controllers
@@ -46,21 +44,38 @@ namespace CbInsights.OrdersApi.Controllers
         [HttpPost]
         public ActionResult<IdResult> PostOrder([FromBody] Order order)
         {
-            var result = _ordersRepository.InsertOrder(order);
+            var validator = new PostValidator();
+            var result = validator.Validate(order);
+            result.AddToModelState(ModelState, null);
 
-            if (result.Type == RepoResultType.NotFound)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new IdResult { Id = result.Entity.Id });
+                return BadRequest(ModelState);
+            }            
+
+            var repoResult = _ordersRepository.InsertOrder(order);
+
+            if (repoResult.Type == RepoResultType.NotFound)
+            {
+                return NotFound();
             }
-            return Ok();
+            return Ok(new IdResult { Id = repoResult.Entity.Id });
         }
 
         [HttpPut("{id}")]
         public ActionResult PutOrder([FromRoute]int id, [FromBody] Order order)
         {
-            var result = _ordersRepository.UpdateOrder(order);
+            var validator = new PutValidator();
+            var result = validator.Validate(order);
+            result.AddToModelState(ModelState, null);
 
-            if (result.Type == RepoResultType.NotFound)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var repoResult = _ordersRepository.UpdateOrder(order);
+
+            if (repoResult.Type == RepoResultType.NotFound)
             {
                 return NotFound();
             }

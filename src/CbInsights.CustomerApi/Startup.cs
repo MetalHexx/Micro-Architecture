@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.CustomerApi.Validations;
+using CbInsights.CustomerApi.Validators;
 using CbInsights.CustomersApi.Models;
 using CbInsights.CustomersApi.Repository;
 using FluentValidation;

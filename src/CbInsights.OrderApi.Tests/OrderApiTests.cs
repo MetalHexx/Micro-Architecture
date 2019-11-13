@@ -13,63 +13,12 @@ namespace CbInsights.OrderApi.Tests
 {
     public class OrderApiTests
     {
-        private IEnumerable<Order> _orderListTestData;
-        private Order _orderTestData;
-        private string _orderListTestDataJson;
-        private string _orderTestDataJson;
-
-        public OrderApiTests()
-        {
-            _orderListTestData = new List<Order>
-            {
-                new Order
-                {
-                    Id = 1,
-                    CustomerId = 0,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem
-                        {
-                            ProductId = 3,
-                            Quantity = 1
-                        },
-                        new OrderItem
-                        {
-                            ProductId = 4,
-                            Quantity = 2
-                        }
-                    }
-                },
-                new Order
-                {
-                    Id = 2,
-                    CustomerId = 1,
-                    Items = new List<OrderItem>
-                    {
-                        new OrderItem
-                        {
-                            ProductId = 0,
-                            Quantity = 2
-                        },
-                        new OrderItem
-                        {
-                            ProductId = 1,
-                            Quantity = 5
-                        }
-                    }
-                }
-            };
-            _orderListTestDataJson = JsonConvert.SerializeObject(_orderListTestData);
-            _orderTestData = _orderListTestData.First();
-            _orderTestDataJson = JsonConvert.SerializeObject(_orderTestData);
-        }
-
-        [Fact]
-        public void WhenGetOrderCalled_AndOrderExists_ReturnsOkOrder()
+        [Theory]
+        [ClassData(typeof(OrderExistingTestData))]
+        public void WhenGetOrderCalled_AndOrderExists_ReturnsOkOrder(Order expectedOrder)
         {
             //Arrange     
-            var expectedContent = _orderTestDataJson;
-            var repoResult = new RepoResult<Order>(_orderTestData) { Type = RepoResultType.Success };
+            var repoResult = new RepoResult<Order>(expectedOrder) { Type = RepoResultType.Success };
 
             var orderRepoMock = new Mock<IOrdersRepository>();
             orderRepoMock.Setup(repo => repo.GetOrderById(It.IsAny<int>())).Returns(repoResult);
@@ -80,27 +29,8 @@ namespace CbInsights.OrderApi.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedContent, JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(JsonConvert.SerializeObject(expectedOrder), JsonConvert.SerializeObject(actualResult.Value));
         }
-
-        [Fact]
-        public void WhenGetCustomerOrdersCalled_AndOrdersExist_ReturnOkOrders()
-        {
-            //Arrange
-            var expectedResult = _orderListTestDataJson;
-            var repoResult = new RepoResult<IEnumerable<Order>>(_orderListTestData) { Type = RepoResultType.Success };
-            var orderRepoMock = new Mock<IOrdersRepository>();
-            orderRepoMock.Setup(repo => repo.GetOrdersByCustomerId(It.IsAny<int>())).Returns(repoResult);
-            var orderController = new OrdersController(orderRepoMock.Object);
-
-            //Act
-            var actualResult = orderController.GetCustomerOrders(_orderTestData.CustomerId).Result as ObjectResult;
-
-            //Assert
-            Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedResult, JsonConvert.SerializeObject(actualResult.Value));
-        }
-
                 
         [Fact]
         public void WhenGetOrderCalled_WithNonExistantOrder_ReturnsNotFound()
@@ -108,196 +38,195 @@ namespace CbInsights.OrderApi.Tests
             //Arrange     
             var repoResult = new RepoResult<Order>(null) { Type = RepoResultType.NotFound };
             var orderRepoMock = new Mock<IOrdersRepository>();
-            orderRepoMock.Setup(repo => repo.GetOrderById(0)).Returns(repoResult);
-            var customersController = new CustomersController(orderRepoMock.Object);
+            orderRepoMock.Setup(repo => repo.GetOrderById(It.IsAny<int>())).Returns(repoResult);
+            var ordersController = new OrdersController(orderRepoMock.Object);
 
             //Act
-            var actualResult = customersController.GetCustomer(0).Result;
+            var actualResult = ordersController.GetOrder(0).Result;
 
             //Assert
             Assert.IsType<NotFoundResult>(actualResult);
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 0)]
-        public void WhenPostCustomerCalled_WithValidCustomer_ReturnsOkIdResult(string firstName, string lastName, int id)
+        [ClassData(typeof(OrderListValidTestData))]
+        public void WhenGetCustomerOrdersCalled_AndOrdersExist_ReturnOkOrders(List<Order> expectedOrders)
         {
             //Arrange
-            var newCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-            var repoCustomer = new Customer()
-            {
-                Id = 1,
-                FirstName = newCustomer.FirstName,
-                LastName = newCustomer.LastName
-            };
-            var expectedIdResult = JsonConvert.SerializeObject(new IdResult { Id = repoCustomer.Id });
-            var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<IEnumerable<Order>>(expectedOrders) { Type = RepoResultType.Success };
+            var orderRepoMock = new Mock<IOrdersRepository>();
+            orderRepoMock.Setup(repo => repo.GetOrdersByCustomerId(It.IsAny<int>())).Returns(repoResult);
+            var orderController = new OrdersController(orderRepoMock.Object);
 
             //Act
-            var actualResult = customersController.PostCustomer(newCustomer).Result as ObjectResult;
+            var actualResult = orderController.GetCustomerOrders(expectedOrders.First()
+                .CustomerId).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedIdResult, JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(JsonConvert.SerializeObject(expectedOrders), JsonConvert.SerializeObject(actualResult.Value));
+        }
+
+        [Fact]
+        public void WhenGetCustomerOrdersCalled_AndOrdersDoNotExist_ReturnNotFound()
+        {
+            //Arrange
+            var repoResult = new RepoResult<IEnumerable<Order>>(null){ Type = RepoResultType.NotFound };
+            var repoMock = new Mock<IOrdersRepository>();
+            repoMock.Setup(repo => repo.GetOrdersByCustomerId(It.IsAny<int>())).Returns(repoResult);
+            var controller = new OrdersController(repoMock.Object);
+
+            //Act
+            var result = controller.GetCustomerOrders(6).Result as ActionResult;
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public void WhenPostOrderCalled_WithValidOrder_ReturnsOkIdResult()
+        {
+            var newOrder = new Order
+            {
+                Id = 0,
+                CustomerId = 1,
+                Items = new List<OrderItem>
+                {
+                    new OrderItem
+                    {
+                        ProductId = 1,
+                        Quantity = 1
+                    }
+                }
+            };
+            var createdOrder = new Order
+            {
+                Id = 1,
+                CustomerId = 1,
+                Items = new List<OrderItem>
+                {
+                    new OrderItem
+                    {
+                        ProductId = 1,
+                        Quantity = 1
+                    }
+                }
+            };
+            //Arrange
+            var expectedIdResult = new IdResult { Id = createdOrder.Id };
+            var repoResult = new RepoResult<Order>(createdOrder) { Type = RepoResultType.Success };
+            var repoMock = new Mock<IOrdersRepository>();
+            repoMock.Setup(repo => repo.InsertOrder(It.IsAny<Order>())).Returns(repoResult);
+            var controller = new OrdersController (repoMock.Object);
+
+            //Act
+            var actualResult = controller.PostOrder(newOrder).Result as ObjectResult;
+
+            //Assert
+            Assert.IsType<OkObjectResult>(actualResult);
+            Assert.Equal(JsonConvert.SerializeObject(expectedIdResult), 
+                JsonConvert.SerializeObject(actualResult.Value));
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 1, 1)]
-        [InlineData("", "", 0, 2)]
-        [InlineData("", "", 1, 3)]
-        public void WhenPostCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(string firstName, string lastName, int id, int expectedNumErrors)
+        [ClassData(typeof(OrderInvalidTestData))]
+        public void WhenPostOrderCalled_WithInvalidOrder_ReturnsBadRequest(Order invalidOrder)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoMock = new Mock<IOrdersRepository>();
+            var controller = new OrdersController(repoMock.Object);
 
             //Act
-            var result = customersController.PostCustomer(updatedCustomer).Result as ObjectResult;
+            var result = controller.PostOrder(invalidOrder).Result as ObjectResult;
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(customersController.ModelState.ErrorCount, expectedNumErrors);
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 1)]
-        public void WhenPutCustomerCalled_WithValidCustomer_ReturnsOk(string firstName, string lastName, int id)
+        [ClassData(typeof(OrderValidTestData))]
+
+        public void WhenPutOrderCalled_WithValidOrder_ReturnsOkIdResult(Order expectedOrder)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-            var repoResult = new RepoResult<Customer>(updatedCustomer) { Type = RepoResultType.Success };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var expectedIdResult = new IdResult { Id = expectedOrder.Id };
+            var repoResult = new RepoResult<Order>(expectedOrder) { Type = RepoResultType.Success };
+            var repoMock = new Mock<IOrdersRepository>();
+            repoMock.Setup(repo => repo.UpdateOrder(It.IsAny<Order>())).Returns(repoResult);
+            var controller = new OrdersController(repoMock.Object);
 
             //Act
-            var actualResult = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer);
+            var actualResult = controller.PutOrder(expectedOrder.Id, expectedOrder) as ActionResult;
 
             //Assert
             Assert.IsType<OkResult>(actualResult);
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 0, 1)]
-        [InlineData("", "", 1, 2)]
-        [InlineData("", "", 0, 3)]
-        public void WhenPutCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(string firstName, string lastName, int id, int expectedNumErrors)
+        [ClassData(typeof(OrderInvalidTestData))]
+        public void WhenPutOrderCalled_WithInvalidOrder_ReturnsBadRequest(Order invalidOrder)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoMock = new Mock<IOrdersRepository>();
+            var controller = new OrdersController(repoMock.Object);
 
             //Act
-            var result = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer) as ObjectResult;
+            var result = controller.PutOrder(invalidOrder.Id, invalidOrder);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(customersController.ModelState.ErrorCount, expectedNumErrors);
         }
 
-
         [Theory]
-        [InlineData("FirstName", "LastName", 6)]
-        public void WhenPutCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(string firstName, string lastName, int id)
+        [ClassData(typeof(OrderExistingTestData))]
+        public void WhenPutOrderCalled_WithNonExistentOrder_ReturnsNotFound(Order nonExistentOrder)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Order>(null) { Type = RepoResultType.NotFound };
+            var mockRepo = new Mock<IOrdersRepository>();
+            mockRepo.Setup(repo => repo.UpdateOrder(It.IsAny<Order>())).Returns(repoResult);
+            var controller = new OrdersController(mockRepo.Object);
 
             //Act
-            var result = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer) as ActionResult;
+            var result = controller.PutOrder(nonExistentOrder.Id, nonExistentOrder);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Theory]
-        [InlineData(1)]
-        public void WhenDeleteCustomerCalled_WithValidCustomer_ReturnsOk(int validCustomerId)
+        [ClassData(typeof(OrderExistingTestData))]
+        public void WhenDeleteOrder_WithExistingOrder_OkResultReturned(Order existingOrder)
         {
             //Arrange
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.Success };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Order>(null) { Type = RepoResultType.Success };
+            var mockRepo = new Mock<IOrdersRepository>();
+            mockRepo.Setup(repo => repo.DeleteOrder(It.IsAny<int>())).Returns(repoResult);
+            var controller = new OrdersController(mockRepo.Object);
 
             //Act
-            var actualResult = customersController.DeleteCustomer(validCustomerId);
+            var result = controller.DeleteOrder(existingOrder.Id);
 
             //Assert
-            Assert.IsType<OkResult>(actualResult);
+            Assert.IsType<OkResult>(result);
         }
 
         [Theory]
-        [InlineData(0, 1)]
-        public void WhenDeleteCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(int invalidCustomerId, int expectedNumErrors)
+        [ClassData(typeof(OrderNonExistentTestData))]
+        public void WhenDeleteOrderCalled_WithNonExistantOrder_NotFoundReturned(Order nonExistantOrder)
         {
             //Arrange
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Order>(null) { Type = RepoResultType.NotFound };
+            var mockRepo = new Mock<IOrdersRepository>();
+            mockRepo.Setup(repo => repo.DeleteOrder(It.IsAny<int>())).Returns(repoResult);
+            
+            var controller = new OrdersController(mockRepo.Object);
 
             //Act
-            var result = customersController.DeleteCustomer(invalidCustomerId) as ActionResult;
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(customersController.ModelState.ErrorCount, expectedNumErrors);
-
-        }
-
-        [Theory]
-        [InlineData(6)]
-        public void WhenDeleteCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(int nonExistantId)
-        {
-            //Arrange
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
-
-            //Act
-            var result = customersController.DeleteCustomer(nonExistantId) as ActionResult;
+            var result = controller.DeleteOrder(nonExistantOrder.Id);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
-
     }
-
-}
 }

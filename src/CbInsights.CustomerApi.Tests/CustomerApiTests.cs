@@ -13,40 +13,13 @@ using Xunit;
 namespace CbInsights.CustomerApi.Tests
 {
     public class CustomerApiTests
-    {
-        private IEnumerable<Customer> _customerListTestData;
-        private Customer _customerTestData;
-        private string _customerListTestDataJson;
-        private string _customerTestDataJson;        
-
-        public CustomerApiTests()
-        {
-            _customerListTestData = new List<Customer>()
-            {
-                new Customer
-                {
-                    Id = 0,
-                    FirstName = "William",
-                    LastName = "Pereira"
-                },
-                new Customer
-                {
-                    Id = 1,
-                    FirstName = "Luke",
-                    LastName = "Skywalker"
-                }
-            };
-            _customerListTestDataJson = JsonConvert.SerializeObject(_customerListTestData);
-            _customerTestData = _customerListTestData.First();
-            _customerTestDataJson = JsonConvert.SerializeObject(_customerTestData);
-        }
-
+    {    
         [Fact]
         public void WhenGetCustomersCalled_ReturnsOkCustomerList()
         {
             //Arrange     
-            var expectedContent = _customerListTestDataJson;
-            var repoResult = new RepoResult<IEnumerable<Customer>>(_customerListTestData) { Type = RepoResultType.Success };
+            var expectedContent = GetTestCustomerList();
+            var repoResult = new RepoResult<IEnumerable<Customer>>(expectedContent) { Type = RepoResultType.Success };
             
             var customerRepoMock = new Mock<ICustomersRespository>();
             customerRepoMock.Setup(repo => repo.GetCustomers()).Returns(repoResult);
@@ -57,18 +30,18 @@ namespace CbInsights.CustomerApi.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedContent, JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(JsonConvert.SerializeObject(expectedContent), JsonConvert.SerializeObject(actualResult.Value));
         }
 
         [Fact]
         public void WhenGetCustomerCalled_AndCustomerExists_ReturnsOkCustomer()
         {
             //Arrange     
-            var expectedContent = _customerTestDataJson;
-            var repoResult = new RepoResult<Customer>(_customerTestData) { Type = RepoResultType.Success };
+            var expectedCustomer = GetTestCustomer();
+            var repoResult = new RepoResult<Customer>(expectedCustomer) { Type = RepoResultType.Success };
 
             var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomer(0)).Returns(repoResult);
+            customerRepoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
             var customersController = new CustomersController(customerRepoMock.Object);
 
             //Act
@@ -76,16 +49,16 @@ namespace CbInsights.CustomerApi.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedContent, JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(JsonConvert.SerializeObject(expectedCustomer), JsonConvert.SerializeObject(actualResult.Value));
         }
 
         [Fact]
-        public void WhenGetCustomerCalled_WithNonExistantCustomer_ReturnsNotFound()
+        public void WhenGetCustomerCalled_WithNonExistentCustomer_ReturnsNotFound()
         {
             //Arrange     
             var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
             var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomer(It.)).Returns(repoResult);
+            customerRepoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
             var customersController = new CustomersController(customerRepoMock.Object);
 
             //Act
@@ -144,7 +117,7 @@ namespace CbInsights.CustomerApi.Tests
             var customersController = new CustomersController(customerRepoMock.Object);
 
             //Act
-            var result = customersController.PostCustomer(updatedCustomer).Result as ObjectResult;
+            var result = customersController.PostCustomer(updatedCustomer).Result;
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
@@ -192,7 +165,7 @@ namespace CbInsights.CustomerApi.Tests
             var customersController = new CustomersController(customerRepoMock.Object);
 
             //Act
-            var result = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer) as ObjectResult;
+            var result = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
@@ -241,23 +214,6 @@ namespace CbInsights.CustomerApi.Tests
         }
 
         [Theory]
-        [InlineData(0, 1)]
-        public void WhenDeleteCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(int invalidCustomerId, int expectedNumErrors)
-        {
-            //Arrange
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            var customersController = new CustomersController(customerRepoMock.Object);
-
-            //Act
-            var result = customersController.DeleteCustomer(invalidCustomerId) as ActionResult;
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(customersController.ModelState.ErrorCount, expectedNumErrors);
-
-        }
-
-        [Theory]
         [InlineData(6)]
         public void WhenDeleteCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(int nonExistantId)
         {
@@ -268,10 +224,39 @@ namespace CbInsights.CustomerApi.Tests
             var customersController = new CustomersController(customerRepoMock.Object);
 
             //Act
-            var result = customersController.DeleteCustomer(nonExistantId) as ActionResult;
+            var result = customersController.DeleteCustomer(nonExistantId);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
+        }
+
+        private Customer GetTestCustomer()
+        {
+            return new Customer
+            {
+                Id = 0,
+                FirstName = "William",
+                LastName = "Pereira"
+            };
+        }
+
+        private List<Customer> GetTestCustomerList()
+        {
+            return new List<Customer>()
+            {
+                new Customer
+                {
+                    Id = 1,
+                    FirstName = "William",
+                    LastName = "Pereira"
+                },
+                new Customer
+                {
+                    Id = 2,
+                    FirstName = "Luke",
+                    LastName = "Skywalker"
+                }
+            };
         }
 
     }

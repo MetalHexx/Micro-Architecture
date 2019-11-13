@@ -2,6 +2,7 @@
 using CbInsights.OrdersApi.Models;
 using CbInsights.OrdersApi.Repository;
 using CbInsights.OrdersApi.Validators;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,18 @@ namespace CbInsights.OrdersApi.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
+        private readonly IPutValidator _putValidator;
+        private readonly IPostValidator _postValidator;
         private readonly IOrdersRepository _ordersRepository;
 
-        public OrdersController(IOrdersRepository ordersRepository)
+        public OrdersController(
+            IOrdersRepository ordersRepository,
+            IPutValidator putValidator,
+            IPostValidator postValidator )
         {
             _ordersRepository = ordersRepository;
+            _putValidator = putValidator;
+            _postValidator = postValidator;
         }
         [HttpGet("{id}")]
         public ActionResult<Order> GetOrder(int id)
@@ -44,8 +52,7 @@ namespace CbInsights.OrdersApi.Controllers
         [HttpPost]
         public ActionResult<IdResult> PostOrder([FromBody] Order order)
         {
-            var validator = new PostValidator();
-            var result = validator.Validate(order);
+            var result = _postValidator.Validate(order);
             result.AddToModelState(ModelState, null);
 
             if (!ModelState.IsValid)
@@ -65,8 +72,7 @@ namespace CbInsights.OrdersApi.Controllers
         [HttpPut("{id}")]
         public ActionResult PutOrder([FromRoute]int id, [FromBody] Order order)
         {
-            var validator = new PutValidator();
-            var result = validator.Validate(order);
+            var result = _putValidator.Validate(order);
             result.AddToModelState(ModelState, null);
 
             if (!ModelState.IsValid)

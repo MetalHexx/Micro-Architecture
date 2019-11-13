@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CbInsights.OrdersApi.Validators
 {
-    public class PutValidator : AbstractValidator<Order>
+    public class PutValidator : AbstractValidator<Order>, IPutValidator
     {
         public PutValidator()
         {

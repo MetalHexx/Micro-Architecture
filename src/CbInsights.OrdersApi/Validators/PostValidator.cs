@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CbInsights.OrdersApi.Validators
 {
-    public class PostValidator : AbstractValidator<Order>
+    public class PostValidator : AbstractValidator<Order>, IPostValidator
     {
         public PostValidator()
         {

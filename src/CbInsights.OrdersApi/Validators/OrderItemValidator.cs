@@ -11,7 +11,7 @@ namespace CbInsights.OrdersApi.Validators
     {
         public OrderItemValidator()
         {
-            RuleFor(o => o).NotNull().WithMessage("Order item cannot be null");
+            RuleFor(o => o).NotEmpty().WithMessage("Order item cannot be null");
             When(o => o != null, () => 
             {
                 RuleFor(o => o.ProductId).GreaterThan(0).WithMessage("ProductId must be greater than 0");

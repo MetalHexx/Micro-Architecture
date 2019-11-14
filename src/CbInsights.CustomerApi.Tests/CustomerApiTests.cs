@@ -154,7 +154,7 @@ namespace CbInsights.CustomerApi.Tests
                 _failedPostValidatorMock.Object);
 
             //Act
-            var result = controller.PostCustomer(invalidCustomer);
+            var result = controller.PostCustomer(invalidCustomer).Result as ObjectResult;
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);            

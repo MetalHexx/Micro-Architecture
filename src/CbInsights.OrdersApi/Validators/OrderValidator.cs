@@ -11,11 +11,11 @@ namespace CbInsights.OrdersApi.Validators
     {
         public OrderValidator()
         {
-            RuleFor(o => o).NotNull().WithMessage("Order cannot be null");
+            RuleFor(o => o).NotEmpty().WithMessage("Order cannot be null");
             When(o => o != null, () => 
             {
                 RuleFor(o => o.CustomerId).GreaterThan(0).WithMessage("CustomerId must be greater than 0");
-                RuleFor(o => o.Items).NotNull().WithMessage("Items must not be null");
+                RuleFor(o => o.Items).NotEmpty().WithMessage("Items must not be null");
 
                 When(o => o.Items != null, () => 
                 {

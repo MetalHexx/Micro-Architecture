@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.ProductsApi.Models;
 using CbInsights.ProductsApi.Repository;
+using CbInsights.ProductsApi.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using FluentValidation.AspNetCore;
 
 namespace CbInsights.ProductsApi.Controllers
 {
@@ -15,10 +17,14 @@ namespace CbInsights.ProductsApi.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _productRepo;
+        private readonly IPutValidator _putValidator;
+        private readonly IPostValidator _postValidator;
 
-        public ProductsController(IProductRepository productRepo)
+        public ProductsController(IProductRepository productRepo, IPutValidator putValidator, IPostValidator postValidator)
         {
             _productRepo = productRepo;
+            _putValidator = putValidator;
+            _postValidator = postValidator;
         }
         [HttpGet()]
         public ActionResult<List<Product>> GetProducts([FromQuery(Name = "ids")] List<int> ids)
@@ -46,7 +52,15 @@ namespace CbInsights.ProductsApi.Controllers
 
         [HttpPost()]
         public ActionResult<IdResult> PostProduct([FromBody, Required]Product product)
-        {           
+        {
+            var results = _postValidator.Validate(product);
+            results.AddToModelState(ModelState, null);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = _productRepo.InsertProduct(product);
 
             if (result.Type == RepoResultType.NotFound)
@@ -61,6 +75,14 @@ namespace CbInsights.ProductsApi.Controllers
         [HttpPut("{id}")]
         public ActionResult PutProduct(int id, [FromBody, Required]Product product)
         {
+            var results = _putValidator.Validate(product);
+            results.AddToModelState(ModelState, null);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = _productRepo.UpdateProduct(product);
 
             if (result.Type == RepoResultType.NotFound)

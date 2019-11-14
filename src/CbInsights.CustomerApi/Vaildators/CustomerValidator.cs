@@ -12,7 +12,9 @@ namespace CbInsights.CustomerApi.Validators
         public CustomerValidator()
         {
             RuleFor(x => x).NotNull().WithMessage("Customer cannot be null");
+            RuleFor(x => x.FirstName).NotNull().WithMessage("Customer first name cannot be null");
             RuleFor(x => x.FirstName).MinimumLength(1).WithMessage("First name must be greater than 1");
+            RuleFor(x => x.LastName).NotNull().WithMessage("Customer last name cannot be null");            
             RuleFor(x => x.LastName).MinimumLength(1).WithMessage("Last name must be greater than 1");
         }
     }

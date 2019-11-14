@@ -1,4 +1,5 @@
-﻿using CbInsights.CustomerApi.Validators;
+﻿using CbInsights.CustomerApi.Vaildators;
+using CbInsights.CustomerApi.Validators;
 using CbInsights.CustomersApi.Models;
 using CbInsights.CustomersApi.Repository;
 using FluentValidation;
@@ -13,10 +14,17 @@ namespace CbInsights.CustomerApi.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomersRespository _customersRepo;
+        private readonly IPutValidator _putValidator;
+        private readonly IPostValidator _postValidator;
 
-        public CustomersController(ICustomersRespository customerRepo)
+        public CustomersController(
+            ICustomersRespository customerRepo, 
+            IPutValidator putValidator,
+            IPostValidator postValidator)
         {
             _customersRepo = customerRepo;
+            _putValidator = putValidator;
+            _postValidator = postValidator;
         }
         [HttpGet()]
         public ActionResult<Customer> GetCustomers()
@@ -45,8 +53,7 @@ namespace CbInsights.CustomerApi.Controllers
         [HttpPost]
         public ActionResult<IdResult> PostCustomer([FromBody] Customer customer)
         {
-            var postValidator = new PostValidator();
-            var results = postValidator.Validate(customer);
+            var results = _postValidator.Validate(customer);
             results.AddToModelState(ModelState, null);
 
             if (!ModelState.IsValid)
@@ -65,8 +72,7 @@ namespace CbInsights.CustomerApi.Controllers
         [HttpPut("{id}")]
         public ActionResult PutCustomer([FromRoute]int id, [FromBody] Customer customer)
         {
-            var putValidator = new PutValidator();
-            var results = putValidator.Validate(customer);
+            var results = _putValidator.Validate(customer);
             results.AddToModelState(ModelState, null);
 
             if (!ModelState.IsValid)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CbInsights.CustomerApi.Vaildators;
 using CbInsights.CustomerApi.Validators;
 using CbInsights.CustomersApi.Models;
 using CbInsights.CustomersApi.Repository;
@@ -38,6 +39,8 @@ namespace CbInsights.CustomerApi
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<ICustomersRespository, CustomersRepository>();
+            services.AddSingleton<IPutValidator, PutValidator>();
+            services.AddSingleton<IPostValidator, PostValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

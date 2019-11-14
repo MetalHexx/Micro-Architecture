@@ -1,4 +1,5 @@
-﻿using CbInsights.CustomersApi.Models;
+﻿using CbInsights.CustomerApi.Vaildators;
+using CbInsights.CustomersApi.Models;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CbInsights.CustomerApi.Validators
 {
-    public class PostValidator : AbstractValidator<Customer>
+    public class PostValidator : AbstractValidator<Customer>, IPostValidator
     {
         public PostValidator()
         {

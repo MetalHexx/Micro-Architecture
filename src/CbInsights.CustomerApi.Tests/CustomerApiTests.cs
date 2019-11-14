@@ -1,6 +1,8 @@
 using CbInsights.CustomerApi.Controllers;
+using CbInsights.CustomerApi.Vaildators;
 using CbInsights.CustomersApi.Models;
 using CbInsights.CustomersApi.Repository;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
@@ -9,43 +11,79 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace CbInsights.CustomerApi.Tests
 {
     public class CustomerApiTests
-    {    
-        [Fact]
-        public void WhenGetCustomersCalled_ReturnsOkCustomerList()
+    {
+        private Mock<ICustomersRespository> _blankRepositoryMock;
+        private Mock<IPutValidator> _successPutValidatorMock;
+        private Mock<IPostValidator> _successPostValidatorMock;
+        private Mock<IPutValidator> _failedPutValidatorMock;
+        private Mock<IPostValidator> _failedPostValidatorMock;
+
+        public CustomerApiTests()
+        {
+            var successValidatonResult =
+                new ValidationResult(
+                    new List<ValidationFailure>());
+
+            var failedValidationResult =
+                new ValidationResult(
+                    new List<ValidationFailure> {
+                        new ValidationFailure("test", "test") });
+
+            _successPutValidatorMock = new Mock<IPutValidator>();
+            _successPutValidatorMock.Setup(v => v.Validate(It.IsAny<Customer>())).Returns(successValidatonResult);
+            _successPostValidatorMock = new Mock<IPostValidator>();
+            _successPostValidatorMock.Setup(v => v.Validate(It.IsAny<Customer>())).Returns(successValidatonResult);
+            _failedPutValidatorMock = new Mock<IPutValidator>();
+            _failedPutValidatorMock.Setup(v => v.Validate(It.IsAny<Customer>())).Returns(failedValidationResult);
+            _failedPostValidatorMock = new Mock<IPostValidator>();
+            _failedPostValidatorMock.Setup(v => v.Validate(It.IsAny<Customer>())).Returns(failedValidationResult);
+
+            _blankRepositoryMock = new Mock<ICustomersRespository>();
+        }
+
+        [Theory]
+        [ClassData(typeof(CustomerListValidTestData))]
+        public void WhenGetCustomersCalled_ReturnsOkCustomerList(List<Customer> expectedCustomers)
         {
             //Arrange     
-            var expectedContent = GetTestCustomerList();
-            var repoResult = new RepoResult<IEnumerable<Customer>>(expectedContent) { Type = RepoResultType.Success };
+            var repoResult = new RepoResult<IEnumerable<Customer>>(expectedCustomers) { Type = RepoResultType.Success };
             
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomers()).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.GetCustomers()).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object, 
+                _successPutValidatorMock.Object, 
+                _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = customersController.GetCustomers().Result as ObjectResult;
+            var actualResult = controller.GetCustomers().Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(JsonConvert.SerializeObject(expectedContent), JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(JsonConvert.SerializeObject(expectedCustomers), JsonConvert.SerializeObject(actualResult.Value));
         }
 
-        [Fact]
-        public void WhenGetCustomerCalled_AndCustomerExists_ReturnsOkCustomer()
+        [Theory]
+        [ClassData(typeof(CustomerExistingTestData))]
+        public void WhenGetCustomerCalled_AndCustomerExists_ReturnsOkCustomer(Customer expectedCustomer)
         {
             //Arrange     
-            var expectedCustomer = GetTestCustomer();
             var repoResult = new RepoResult<Customer>(expectedCustomer) { Type = RepoResultType.Success };
 
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = customersController.GetCustomer(0).Result as ObjectResult;
+            var actualResult = controller.GetCustomer(0).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -57,42 +95,48 @@ namespace CbInsights.CustomerApi.Tests
         {
             //Arrange     
             var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = customersController.GetCustomer(0).Result;
+            var actualResult = controller.GetCustomer(0).Result;
 
             //Assert
             Assert.IsType<NotFoundResult>(actualResult);
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 0)]
-        public void WhenPostCustomerCalled_WithValidCustomer_ReturnsOkIdResult(string firstName, string lastName, int id)
+        [ClassData(typeof(CustomerNonExistentTestData))]
+        public void WhenPostCustomerCalled_WithValidCustomer_ReturnsOkIdResult(Customer nonExistingCustomer)
         {
             //Arrange
             var newCustomer = new Customer()
             {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
+                Id = nonExistingCustomer.Id,
+                FirstName = nonExistingCustomer.FirstName,
+                LastName = nonExistingCustomer.LastName
             };
             var repoCustomer = new Customer()
             {
                 Id = 1,
-                FirstName = newCustomer.FirstName,
-                LastName = newCustomer.LastName
+                FirstName = nonExistingCustomer.FirstName,
+                LastName = nonExistingCustomer.LastName
             };
             var expectedIdResult = JsonConvert.SerializeObject(new IdResult { Id = repoCustomer.Id });           
             var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = customersController.PostCustomer(newCustomer).Result as ObjectResult;
+            var actualResult = controller.PostCustomer(newCustomer).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -100,164 +144,116 @@ namespace CbInsights.CustomerApi.Tests
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 1, 1)]
-        [InlineData("", "", 0, 2)]
-        [InlineData("", "", 1, 3)]
-        public void WhenPostCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(string firstName, string lastName, int id, int expectedNumErrors)
+        [ClassData(typeof(CustomerInvalidTestData))]
+        public void WhenPostCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(Customer invalidCustomer)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };           
-            
-            var customerRepoMock = new Mock<ICustomersRespository>();            
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var controller = new CustomersController(
+                _blankRepositoryMock.Object,
+                _failedPutValidatorMock.Object,
+                _failedPostValidatorMock.Object);
 
             //Act
-            var result = customersController.PostCustomer(updatedCustomer).Result;
+            var result = controller.PostCustomer(invalidCustomer);
 
             //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(customersController.ModelState.ErrorCount, expectedNumErrors);
+            Assert.IsType<BadRequestObjectResult>(result);            
         }
 
         [Theory]
-        [InlineData("FirstName", "LastName", 1)]
-        public void WhenPutCustomerCalled_WithValidCustomer_ReturnsOk(string firstName, string lastName, int id)
+        [ClassData(typeof(CustomerExistingTestData))]
+        public void WhenPutCustomerCalled_WithValidCustomer_ReturnsOk(Customer existingCustomer)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-            var repoResult = new RepoResult<Customer>(updatedCustomer) { Type = RepoResultType.Success };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Customer>(existingCustomer) { Type = RepoResultType.Success };
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer);
+            var actualResult = controller.PutCustomer(existingCustomer.Id, existingCustomer);
 
             //Assert
             Assert.IsType<OkResult>(actualResult);
         }
 
-        [Theory]
-        [InlineData("FirstName", "LastName", 0, 1)]
-        [InlineData("", "", 1, 2)]
-        [InlineData("", "", 0, 3)]
-        public void WhenPutCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(string firstName, string lastName, int id, int expectedNumErrors)
+        [Fact]
+        public void WhenPutCustomerCalled_WithInvalidCustomer_ReturnsBadRequest()
         {
-            //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var controller = new CustomersController(
+                _blankRepositoryMock.Object,
+                _failedPutValidatorMock.Object,
+                _failedPostValidatorMock.Object);
 
             //Act
-            var result = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer);
+            var result = controller.PutCustomer(0, new Customer());
 
             //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(customersController.ModelState.ErrorCount, expectedNumErrors);
+            Assert.IsType<BadRequestObjectResult>(result);            
         }
 
 
         [Theory]
-        [InlineData("FirstName", "LastName", 6)]
-        public void WhenPutCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(string firstName, string lastName, int id)
+        [ClassData(typeof(CustomerNonExistentTestData))]
+        public void WhenPutCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(Customer nonExistantCustomer)
         {
             //Arrange
-            var updatedCustomer = new Customer()
-            {
-                Id = id,
-                FirstName = firstName,
-                LastName = lastName
-            };
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Customer>(nonExistantCustomer) { Type = RepoResultType.NotFound };
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var result = customersController.PutCustomer(updatedCustomer.Id, updatedCustomer) as ActionResult;
+            var result = controller.PutCustomer(nonExistantCustomer.Id, nonExistantCustomer) as ActionResult;
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Theory]
-        [InlineData(1)]
-        public void WhenDeleteCustomerCalled_WithValidCustomer_ReturnsOk(int validCustomerId)
+        [ClassData(typeof(CustomerExistingTestData))]
+        public void WhenDeleteCustomerCalled_WithValidCustomer_ReturnsOk(Customer existingCustomer)
         {
             //Arrange
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.Success };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Customer>(existingCustomer) { Type = RepoResultType.Success };
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = customersController.DeleteCustomer(validCustomerId);
+            var actualResult = controller.DeleteCustomer(existingCustomer.Id);
 
             //Assert
             Assert.IsType<OkResult>(actualResult);
         }
 
         [Theory]
-        [InlineData(6)]
-        public void WhenDeleteCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(int nonExistantId)
+        [ClassData(typeof(CustomerExistingTestData))]
+        public void WhenDeleteCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(Customer nonExistentCustomer)
         {
             //Arrange
-            var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var customerRepoMock = new Mock<ICustomersRespository>();
-            customerRepoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
-            var customersController = new CustomersController(customerRepoMock.Object);
+            var repoResult = new RepoResult<Customer>(nonExistentCustomer) { Type = RepoResultType.NotFound };
+            var repoMock = new Mock<ICustomersRespository>();
+            repoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
+            var controller = new CustomersController(
+                repoMock.Object,
+                _successPutValidatorMock.Object,
+                _successPostValidatorMock.Object);
 
             //Act
-            var result = customersController.DeleteCustomer(nonExistantId);
+            var result = controller.DeleteCustomer(nonExistentCustomer.Id);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
-
-        private Customer GetTestCustomer()
-        {
-            return new Customer
-            {
-                Id = 0,
-                FirstName = "William",
-                LastName = "Pereira"
-            };
-        }
-
-        private List<Customer> GetTestCustomerList()
-        {
-            return new List<Customer>()
-            {
-                new Customer
-                {
-                    Id = 1,
-                    FirstName = "William",
-                    LastName = "Pereira"
-                },
-                new Customer
-                {
-                    Id = 2,
-                    FirstName = "Luke",
-                    LastName = "Skywalker"
-                }
-            };
-        }
-
     }
 }

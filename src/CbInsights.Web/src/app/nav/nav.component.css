@@ -1,0 +1,50 @@
+.sidenav-container {
+    height: 100%;
+    background-color: #EAEAEA;
+  }
+  
+  .sidenav-content {
+    padding:15px;
+  }
+    
+  .sidenav {
+    width: 200px;
+    box-shadow: 3px 0 6px rgba(0,0,0,.24);
+    background-color: #263343;
+  }
+    
+  .mat-list-item {
+    color: rgb(255, 255, 255);
+  }
+  
+  .mat-nav-list {
+    flex: 1;
+    min-height: 85vh;
+  }
+  
+  .mat-toolbar {
+    background-color: #0895d3;
+  }
+  
+  .footer {
+    vertical-align: baseline;
+    margin-left: 24px;
+  }
+  
+  .tmp-logo {
+    height: 24px
+  }
+  app-name {
+    margin:auto; 
+    display:table;
+  }
+  
+  .client-select-container{
+    text-align: center;
+    width: 100%;
+  }
+  
+  #account-menu{ 
+    margin-top: 10px;
+    float: right;
+  }

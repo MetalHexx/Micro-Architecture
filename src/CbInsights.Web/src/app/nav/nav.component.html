@@ -1,0 +1,50 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="isHandset ? 'dialog' : 'navigation'"
+      [mode]="isHandset ? 'over' : 'side'" [opened]="!isHandset">
+      <mat-toolbar class="mat-toolbar" color="primary">
+        Menu
+      </mat-toolbar>  
+      <mat-nav-list>
+        <a id="route-home" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'home']">HOME</a>
+        <a id="route-clients" mat-list-item routerLinkActive="selected" [routerLink]="['/clients']">CLIENTS</a>
+        <a id="route-feeds" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'importer']">JOB IMPORTER</a>
+        <a id="route-job-search" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'jobs']">JOB SEARCH</a>
+        <a id="route-jobs-facets" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'facets']">JOB FACETS</a>
+        <a id="route-jobs-synonyms" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'synonyms']">JOB SYNONYMS</a>
+        <a id="route-location-search" mat-list-item routerLinkActive="selected"
+          [routerLink]="[ '/clients', selectedClientId, 'locations']">LOCATION SEARCH</a>
+        <a id="route-jobs-categories" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'categories']">CATEGORIES</a>
+        <a id="route-jobs-queryconfig" mat-list-item routerLinkActive="selected"
+          [routerLink]="['/clients', selectedClientId, 'queryconfig']">QUERY CONFIG</a>
+      </mat-nav-list>
+      <footer class="footer">
+        <img class="tmp-logo" src="https://styleguide.talentbrew.com/latest/img/logo.png">
+      </footer>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="mat-toolbar">
+        <button id="toggle-nav-button" type="button" aria-label="Toggle sidenav" mat-icon-button
+          (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <div class="wideAndCenter">
+          <span id="app-name">{{appName}}</span>
+        </div>
+        <div id="account-menu">
+          <mat-icon aria-label="Account menu">account_circle</mat-icon>
+        </div>
+  
+      </mat-toolbar>
+      <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+      <div class="sidenav-content" [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

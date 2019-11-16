@@ -11,7 +11,7 @@ namespace CbInsights.GatewayApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController : BaseGatewayController
     {
         private readonly OrdersClient _ordersClient;
 
@@ -23,55 +23,35 @@ namespace CbInsights.GatewayApi.Controllers
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
             var result = await _ordersClient.GetOrderByIdAsync(id);
-
-            if (result.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return NotFound();
-            }
-            return Ok(result.Content);
+            return GetResult(result);
         }
 
         [HttpGet("~/api/customers/{customerId}/orders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetCustomerOrders(int customerId)
         {
             var result = await _ordersClient.GetCustomerOrdersAsync(customerId);
-
-            if (result.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return NotFound();
-            }
-            return Ok(result.Content);
+            return GetResult(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
         {
             var result = await _ordersClient.CreateOrderAsync(order);
-            return Ok(new IdResult { Id = result.ContentObject.Id });
+            return GetResult(result);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateOrder([FromRoute]int id, [FromBody] Order order)
         {
             var result = await _ordersClient.UpdateOrderAsync(order);
-
-            if (result.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return NotFound();
-            }
-            return Ok();
+            return GetResult(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteOrder(int id)
         {
             var result = await _ordersClient.DeleteOrderAsync(id);
-
-            if (result.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return NotFound();
-            }
-            return Ok();
+            return GetResult(result);
         }
     }
 }

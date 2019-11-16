@@ -24,13 +24,8 @@ namespace CbInsights.CustomersApi.Repository
                     LastName = "Skywalker"
                 }
             };
-            _currentId = _items.Count;
-        }
-
-        public RepoResult<Customer> DeleteCustomer(int id)
-        {
-            return base.DeleteItem(id);
-        }
+            _currentId = _items.Count + 1;
+        }        
 
         public RepoResult<IEnumerable<Customer>> GetCustomers()
         {
@@ -53,6 +48,11 @@ namespace CbInsights.CustomersApi.Repository
         public RepoResult<Customer> UpdateCustomer(Customer customer)
         {
             return base.UpdateItem(customer);
+        }
+
+        public RepoResult<Customer> DeleteCustomer(int id)
+        {
+            return base.DeleteItem(id);
         }
     }
 }

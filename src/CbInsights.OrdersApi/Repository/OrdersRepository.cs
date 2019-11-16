@@ -18,7 +18,7 @@ namespace CbInsights.OrdersApi.Repository
                 new Order
                 {
                     Id = 1,
-                    CustomerId = 0,
+                    CustomerId = 1,
                     Items = new List<OrderItem>
                     {
                         new OrderItem
@@ -72,7 +72,7 @@ namespace CbInsights.OrdersApi.Repository
 
 
             };
-            _currentId = _items.Count;
+            _currentId = _items.Count + 1;
         }
 
         public RepoResult<Order> DeleteOrder(int orderId)

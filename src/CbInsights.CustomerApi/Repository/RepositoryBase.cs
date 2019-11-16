@@ -9,24 +9,6 @@ namespace CbInsights.CustomersApi.Repository
         protected List<T> _items;
         protected int _currentId;
         
-        protected virtual RepoResult<T> DeleteItem(int id)
-        {
-            var item = _items.FirstOrDefault(o => o.Id == id);
-            if (item == null)
-            {
-                return new RepoResult<T>(item)
-                {
-                    Type = RepoResultType.NotFound
-                };
-            }
-            _items.Remove(item);
-
-            return new RepoResult<T>(item)
-            {
-                Type = RepoResultType.Success
-            };
-        }
-
         protected virtual RepoResult<T> GetItemById(int id)
         {
             var item = _items.SingleOrDefault(o => o.Id == id);
@@ -89,6 +71,24 @@ namespace CbInsights.CustomersApi.Repository
             {
                 Type = RepoResultType.Success
             };            
+        }
+
+        protected virtual RepoResult<T> DeleteItem(int id)
+        {
+            var item = _items.FirstOrDefault(o => o.Id == id);
+            if (item == null)
+            {
+                return new RepoResult<T>(item)
+                {
+                    Type = RepoResultType.NotFound
+                };
+            }
+            _items.Remove(item);
+
+            return new RepoResult<T>(item)
+            {
+                Type = RepoResultType.Success
+            };
         }
     }
 }

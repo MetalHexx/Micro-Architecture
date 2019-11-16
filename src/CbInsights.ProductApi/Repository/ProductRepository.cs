@@ -40,7 +40,7 @@ namespace CbInsights.ProductsApi.Repository
                     Price = 699.99M
                 }
             };
-            _currentId = _items.Count;
+            _currentId = _items.Count + 1;
         }
         public RepoResult<Product> DeleteProduct(int id)
         {

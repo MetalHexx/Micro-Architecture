@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.GatewayApi.Clients;
 using CbInsights.GatewayApi.Clients.Models;
+using CbInsights.GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,21 +29,21 @@ namespace CbInsights.GatewayApi.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<Customer>> GetCustomers()
+        public async Task<ActionResult<List<Customer>>> GetCustomers()
         {
             var result = await _customerClient.GetCustomersAsync();
             return GetResult(result);
         }
 
         [HttpPost()]
-        public async Task<ActionResult<Customer>> CreateCustomer([FromBody]Customer customer)
+        public async Task<ActionResult<IdResult>> CreateCustomer([FromBody]Customer customer)
         {
             var result = await _customerClient.CreateCustomerAsync(customer);
             return GetResult(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Customer>> UpdateCustomer(int id, [FromBody]Customer customer)
+        public async Task<ActionResult> UpdateCustomer(int id, [FromBody]Customer customer)
         {
             var result = await _customerClient.UpdateCustomerAsync(customer);
             return GetResult(result);

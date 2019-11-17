@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CbInsights.GatewayApi.Clients;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CbInsights.GatewayApi
 {
@@ -27,12 +29,22 @@ namespace CbInsights.GatewayApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));            
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod());
+            });
+            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gateway API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Gateway API"                    
+                });
             });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpClient<CustomersClient>();
             services.AddHttpClient<OrdersClient>();
@@ -42,6 +54,7 @@ namespace CbInsights.GatewayApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("CorsPolicy");
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

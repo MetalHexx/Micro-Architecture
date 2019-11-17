@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
 import { MaterialModule } from './material/material.module';
 import { CustomerOrdersModule } from './customer-orders/customer-orders.module';
+import { GatewayApiModule } from './gateway-api/gateway-api.module';
 import { HomeComponent } from './home/home.component'
 
 @NgModule({
@@ -20,7 +21,8 @@ import { HomeComponent } from './home/home.component'
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    CustomerOrdersModule
+    CustomerOrdersModule,
+    GatewayApiModule
   ],
   providers: [],
   bootstrap: [AppComponent]

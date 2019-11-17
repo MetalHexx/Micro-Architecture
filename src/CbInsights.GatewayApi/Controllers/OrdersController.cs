@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.GatewayApi.Clients;
 using CbInsights.GatewayApi.Clients.Models;
+using CbInsights.GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,7 @@ namespace CbInsights.GatewayApi.Controllers
         }
 
         [HttpGet("~/api/customers/{customerId}/orders")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetCustomerOrders(int customerId)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersByCustomerId(int customerId)
         {
             var result = await _ordersClient.GetCustomerOrdersAsync(customerId);
             return GetResult(result);

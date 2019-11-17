@@ -1,1 +1,11 @@
-<p>customer-orders-view works!</p>
+<div *ngIf="customers$ | async as customers">
+
+    <mat-select id="customer-select" [(value)]="selectedCustomer" (selectionChange)="onCustomerSelected()">
+        <mat-option id="customer-select-option-{{i}}" *ngFor="let item of customers; index as i;" [value]="item">
+            {{item.Firstname}}
+        </mat-option>
+    </mat-select>
+
+    <pre>{{customers | json}}</pre>
+
+</div>

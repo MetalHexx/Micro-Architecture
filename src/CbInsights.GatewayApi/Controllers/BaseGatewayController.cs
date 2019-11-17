@@ -11,7 +11,7 @@ namespace CbInsights.GatewayApi.Controllers
     [ApiController]
     public class BaseGatewayController : ControllerBase
     {
-        protected ActionResult GetResult<T>(ApiResult<T> result)
+        protected ActionResult GetResult<InputType>(ApiResult<InputType> result)
         {
             switch (result.StatusCode)
             {

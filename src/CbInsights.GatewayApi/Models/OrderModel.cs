@@ -9,7 +9,7 @@ namespace CbInsights.GatewayApi.Models
         public int OrderId { get; set; }
         public List<OrderItemModel> Items { get; set; }
 
-        public OrderModel(Order order, List<Product> products)
+        public OrderModel(Order order, List<Product> products = null)
         {
             OrderId = order.Id;
             Items = order.Items.Select(item => new OrderItemModel

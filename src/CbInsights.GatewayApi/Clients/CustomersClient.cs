@@ -1,4 +1,5 @@
 ﻿using CbInsights.GatewayApi.Clients.Models;
+using CbInsights.GatewayApi.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;

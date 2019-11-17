@@ -26,7 +26,7 @@ namespace CbInsights.GatewayApi.Controllers
             _ordersClient = ordersClient;
             _productsClient = products;
         }
-        [HttpGet("customers/{customerId}")]
+        [HttpGet("customers/{customerId}/orders")]
         public async Task<ActionResult<CustomerOrdersModel>> GetCustomerOrders(int customerId)
         {
             //Get the customer 

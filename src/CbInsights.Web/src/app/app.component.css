@@ -1,0 +1,23 @@
+html, body { height: 100%;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-form-field-full-width { width: 100%; }
+.mat-card-header-image {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 60px !important;
+    width: 50px !important;
+    opacity: .8;
+  }
+.wideAndCenter{
+  width:100%;
+  text-align: center;
+}
+
+mat-card-title {
+    margin-top: 4px;
+}
+
+mat-error {
+  text-align: right; 
+}

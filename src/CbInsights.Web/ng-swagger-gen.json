@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/ng-swagger-gen/ng-swagger-gen-schema.json",
+  "swagger": "http://localhost:500/swagger/v1/swagger.json",
+  "output": "src/app/api-services",
+  "prefix": "gateway-api",
+  "ignoreUnusedModels": false,
+  "minParamsForContainer": 10,
+  "sortParams": "desc",
+  "defaultTag": "Api",
+  "removeStaleFiles": true,
+  "modelIndex": true,
+  "serviceIndex": true,
+  "apiModule": true,
+  "enumModule": false,
+  "generateExamples": false,
+  "camelCase": false
+}

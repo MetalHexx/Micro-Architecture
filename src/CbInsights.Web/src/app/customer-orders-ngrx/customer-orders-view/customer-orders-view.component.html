@@ -1,15 +1,27 @@
 <h2>Customer Orders</h2>
+
+<div *ngIf="(customersLoading$ | async) === true">
+    Loading customers
+</div>
+
 <div *ngIf="customers$ | async as customers">
     <cbi-customer-select [customers]="customers" (customerSelected)="onCustomerSelected($event)">
     </cbi-customer-select>
 </div>
 
-<div *ngIf="customerOrders$ | async as customerOrders">
-    <div *ngIf="selectedOrder$ | async as selectedOrder">
-        <cbi-order-list [orders]="customerOrders.orders" (orderSelected)="onOrderSelected($event)"
-            *ngIf="isEmpty(selectedOrder)">
-        </cbi-order-list>
-        <cbi-order-details *ngIf="!isEmpty(selectedOrder)" [order]="selectedOrder" (orderClosed)="onBackToOrderList()">
-        </cbi-order-details>
+<div *ngIf="(ordersLoading$ | async) === true">
+    Loading Orders
+</div>
+
+<div *ngIf="(ordersLoading$ | async) === false">
+    <div *ngIf="customerOrders$ | async as customerOrders">
+        <div *ngIf="selectedOrder$ | async as selectedOrder">
+            <cbi-order-list [orders]="customerOrders.orders" (orderSelected)="onOrderSelected($event)"
+                *ngIf="isEmpty(selectedOrder)">
+            </cbi-order-list>
+            <cbi-order-details *ngIf="!isEmpty(selectedOrder)" [order]="selectedOrder"
+                (orderClosed)="onBackToOrderList()">
+            </cbi-order-details>
+        </div>
     </div>
 </div>

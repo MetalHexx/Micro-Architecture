@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CustomersService, CustomerOrdersService } from 'src/app/gateway-api/services';
-import { Customer } from 'src/app/gateway-api/models';
+import { Customer, Order, CustomerOrdersModel, OrderModel } from 'src/app/gateway-api/models';
 
 
 @Component({
@@ -11,7 +11,9 @@ import { Customer } from 'src/app/gateway-api/models';
 })
 export class CustomerOrdersViewComponent implements OnInit {
   customers$: Observable<Customer[]>;
-  selectedCustomer: Customer;
+  customerOrders$: Observable<CustomerOrdersModel>;
+  selectedOrder: Order = null;
+  selectedCustomer: Customer = null;
 
   constructor(
     private customersService: CustomersService,
@@ -19,13 +21,21 @@ export class CustomerOrdersViewComponent implements OnInit {
 
   ngOnInit() {
     this.customersService.rootUrl = "http://localhost:5000";
+    this.customerOrdersService.rootUrl = "http://localhost:5000";
     this.customers$ = this.customersService.GetCustomers();
-
-
   }
 
-  onCustomerSelected() {
-
+  onCustomerSelected(customer: Customer) {
+    this.selectedCustomer = customer;
+    this.selectedOrder = null;
+    this.customerOrders$ = this.customerOrdersService.GetCustomerOrders({ customerId: customer.id });
   }
 
+  onOrderSelected(order: OrderModel) {
+    this.selectedOrder = order;
+  }
+
+  onBackToOrderList() {
+    this.selectedOrder = null;
+  }
 }

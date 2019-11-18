@@ -19,6 +19,7 @@ namespace CbInsights.OrdersApi.Repository
                 {
                     Id = 1,
                     CustomerId = 1,
+                    OrderDate = new DateTime(2019, 1, 1),
                     Items = new List<OrderItem>
                     {
                         new OrderItem
@@ -28,7 +29,7 @@ namespace CbInsights.OrdersApi.Repository
                         },
                         new OrderItem
                         {
-                            ProductId = 4,
+                            ProductId = 2,
                             Quantity = 2
                         }
                     }
@@ -37,11 +38,12 @@ namespace CbInsights.OrdersApi.Repository
                 {
                     Id = 2,
                     CustomerId = 1,
+                    OrderDate = new DateTime(2019, 2, 10),
                     Items = new List<OrderItem>
                     {
                         new OrderItem
                         {
-                            ProductId = 0,
+                            ProductId = 3,
                             Quantity = 2
                         },
                         new OrderItem
@@ -54,12 +56,13 @@ namespace CbInsights.OrdersApi.Repository
                  new Order
                 {
                     Id = 3,
-                    CustomerId = 0,
+                    CustomerId = 2,
+                    OrderDate = new DateTime(2019, 3, 3),
                     Items = new List<OrderItem>
                     {
                         new OrderItem
                         {
-                            ProductId = 0,
+                            ProductId = 2,
                             Quantity = 1
                         },
                         new OrderItem

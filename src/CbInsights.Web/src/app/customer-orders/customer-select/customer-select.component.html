@@ -1,0 +1,8 @@
+<mat-form-field class="mat-form-field-full-width">
+    <mat-label>Select Customer</mat-label>
+    <mat-select id="customer-select" (selectionChange)="onCustomerSelected($event)">
+        <mat-option id="customer-select-option-{{i}}" *ngFor="let item of customers; index as i;" [value]="item">
+            {{item.lastName}}, {{item.firstName}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

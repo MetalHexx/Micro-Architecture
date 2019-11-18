@@ -29,6 +29,62 @@ namespace CbInsights.GatewayApi.Controllers
         [HttpGet("customers/{customerId}/orders")]
         public async Task<ActionResult<CustomerOrdersModel>> GetCustomerOrders(int customerId)
         {
+            var result = await GetCustomerOrdersAsync(customerId);
+            var notFoundResult = GetCustomerOrdersNotFoundResult(result, customerId);
+
+            if (notFoundResult != null)
+            {
+                return notFoundResult;
+            }
+
+            var customerOrders = new CustomerOrdersModel
+            (
+                result.CustomerResult.ContentObject,
+                result.OrderResult.ContentObject,
+                result.ProductResult.ContentObject
+            );
+            return Ok(customerOrders);
+        }
+
+        //[HttpGet("customers/{customerId}/orders/flattened")]
+        //public async Task<ActionResult<CustomerOrdersModel>> GetCustomerOrdersFlattened(int customerId)
+        //{
+        //    var result = await GetCustomerOrdersAsync(customerId);
+        //    var notFoundResult = GetCustomerOrdersNotFoundResult(result, customerId);
+
+        //    if(notFoundResult != null)
+        //    {
+        //        return notFoundResult;
+        //    }
+
+        //    var customerOrders = new CustomerOrdersModel
+        //    (
+        //        result.CustomerResult.ContentObject,
+        //        result.OrderResult.ContentObject,
+        //        result.ProductResult.ContentObject
+        //    );
+        //    return Ok(customerOrders);
+        //}
+
+        private ActionResult GetCustomerOrdersNotFoundResult(CustomerOrdersResult result, int customerId)
+        {
+            if (result.CustomerResult.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return NotFound($"Customer Id {customerId} was not found");
+            }
+            if (result.OrderResult.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return NotFound($"No orders were found for customerId {customerId}");
+            }
+            if (result.ProductResult.StatusCode == StatusCodes.Status404NotFound)
+            {
+                return NotFound($"Products were not found for Customer Id {customerId}'s orders");
+            }
+            return null;
+        }
+
+        private async Task<CustomerOrdersResult> GetCustomerOrdersAsync(int customerId)
+        {
             //Get the customer 
             var customerTask = Task.Run(
                 () => _customersClient.GetCustomerByIdAsync(customerId));
@@ -56,28 +112,12 @@ namespace CbInsights.GatewayApi.Controllers
             var customerResult = customerTask.Result;
             var orderProductResult = orderProductTask.Result;
 
-            //Validate that all calls were successful, if not return errors
-            if (customerResult.StatusCode == StatusCodes.Status404NotFound)
+            return new CustomerOrdersResult
             {
-                return NotFound($"Customer Id {customerId} was not found");
-            }
-            if (orderProductResult.OrdersResult.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return NotFound($"No orders were found for customerId {customerId}");
-            }
-            if (orderProductResult.ProductsResult.StatusCode == StatusCodes.Status404NotFound)
-            {
-                return NotFound($"Products were not found for Customer Id {customerId}'s orders");
-            }
-
-            //Construct customer order viewmodel and return
-            var customerOrders = new CustomerOrdersModel
-            (
-                customerResult.ContentObject,
-                orderProductResult.OrdersResult.ContentObject,
-                orderProductResult.ProductsResult.ContentObject
-            );
-            return Ok(customerOrders);
+                CustomerResult = customerResult,
+                OrderResult = orderProductResult.OrdersResult,
+                ProductResult = orderProductResult.ProductsResult
+            };
         }
     }
 }

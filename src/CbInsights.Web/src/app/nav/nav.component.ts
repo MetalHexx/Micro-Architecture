@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { RouterOutlet } from '@angular/router';
+import { slideInAnimation } from './nav-animations';
+
 interface SidenavItem {
   id: string;
   label: string;
@@ -10,7 +12,10 @@ interface SidenavItem {
 @Component({
   selector: 'cbi-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
+  animations: [
+    slideInAnimation
+  ]
 })
 export class NavComponent {
   isHandset: boolean = false;
@@ -18,7 +23,7 @@ export class NavComponent {
   linkUrlPrefix: string;
   selectedClientId: number = 0;
 
-  menuItems: SidenavItem[] = [
+  menuItems: SidenavItem[] = [ 
     {
       id: "route-home",
       label: 'Home',

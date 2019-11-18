@@ -1,11 +1,33 @@
+<h2>Customer Orders</h2>
 <div *ngIf="customers$ | async as customers">
+    <cbi-customer-select [customers]="customers" (customerSelected)="onCustomerSelected($event)">
+    </cbi-customer-select>
+</div>
 
-    <mat-select id="customer-select" [(value)]="selectedCustomer" (selectionChange)="onCustomerSelected()">
-        <mat-option id="customer-select-option-{{i}}" *ngFor="let item of customers; index as i;" [value]="item">
-            {{item.Firstname}}
-        </mat-option>
-    </mat-select>
-
-    <pre>{{customers | json}}</pre>
+<div *ngIf="customerOrders$ | async as customerOrders">
+    <cbi-order-list [orders]="customerOrders.orders" (orderSelected)="onOrderSelected($event)"
+        *ngIf="selectedOrder === null"></cbi-order-list>
+    <cbi-order-details *ngIf="selectedOrder !== null" [order]="selectedOrder" (orderClosed)="onBackToOrderList()">
+    </cbi-order-details>
 
 </div>
+
+
+
+
+<!-- <div *ngIf="customers$ | async as customers" fxLayout="row">
+    <div fxFlex="500px">
+        <cbi-customer-select [customers]="customers" (customerSelected)="onCustomerSelected($event)">
+        </cbi-customer-select>
+        <div *ngIf="customerOrders$ | async as customerOrders">
+            <cbi-order-list [orders]="customerOrders.orders" (orderSelected)="onOrderSelected($event)"
+                *ngIf="selectedOrder === null"></cbi-order-list>
+            <cbi-order-details *ngIf="selectedOrder !== null"></cbi-order-details>
+
+        </div>
+    </div>
+    <div fxFlex>
+        <h4>Order Details</h4>
+        <pre>{{customers | json}}</pre>
+    </div>
+</div> -->

@@ -1,0 +1,11 @@
+<mat-card>
+    <mat-card-content>
+        <h3>Order</h3>
+        <div>Id: {{order.orderId}}</div>
+        <div>Order Date: {{order.orderDate}}</div>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-button color="primary" (click)="onOrderSelected()">Select Order</button>
+    </mat-card-actions>
+</mat-card>

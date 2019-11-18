@@ -3,12 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
 import { MaterialModule } from './material/material.module';
 import { CustomerOrdersModule } from './customer-orders/customer-orders.module';
 import { GatewayApiModule } from './gateway-api/gateway-api.module';
 import { HomeComponent } from './home/home.component'
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -20,9 +22,12 @@ import { HomeComponent } from './home/home.component'
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    NoopAnimationsModule,
     MaterialModule,
     CustomerOrdersModule,
-    GatewayApiModule
+    GatewayApiModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
   ],
   providers: [],
   bootstrap: [AppComponent]

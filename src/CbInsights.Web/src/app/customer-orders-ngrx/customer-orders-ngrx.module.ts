@@ -16,7 +16,13 @@ import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
-  declarations: [CustomerOrdersViewComponent, CustomerSelectComponent, OrderListComponent, OrderDetailsComponent, OrderListItemComponent, OrderItemComponent],
+  declarations: [
+    CustomerOrdersViewComponent,
+    CustomerSelectComponent,
+    OrderListComponent,
+    OrderDetailsComponent,
+    OrderListItemComponent,
+    OrderItemComponent],
   providers: [CustomerOrdersEffects],
   imports: [
     CommonModule,

@@ -7,6 +7,7 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { NavComponent } from './nav/nav.component';
 import { MaterialModule } from './material/material.module';
 import { CustomerOrdersModule } from './customer-orders/customer-orders.module';
+import { CustomerOrdersNgrxModule } from './customer-orders-ngrx/customer-orders-ngrx.module';
 import { GatewayApiModule } from './gateway-api/gateway-api.module';
 import { HomeComponent } from './home/home.component'
 import { StoreModule } from '@ngrx/store';
@@ -25,6 +26,7 @@ import { EffectsModule } from '@ngrx/effects';
     NoopAnimationsModule,
     MaterialModule,
     CustomerOrdersModule,
+    CustomerOrdersNgrxModule,
     GatewayApiModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),

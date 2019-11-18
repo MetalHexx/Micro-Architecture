@@ -31,6 +31,7 @@ export class CustomerOrdersEffects {
                     })
                 )));
 
+    @Effect()
     getOrders = this.actions$.pipe(
         ofType(customerOrdersActions.Actions.GetCustomerOrders),
         mergeMap((action: customerOrdersActions.GetCustomerOrders) =>

@@ -18,7 +18,7 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
   selectedCustomer$: Observable<Customer>;
   customersLoading$: Observable<boolean>;
   customersError$: Observable<boolean>;
-  orders$: Observable<CustomerOrdersModel>;
+  customerOrders$: Observable<CustomerOrdersModel>;
   selectedOrder$: Observable<OrderModel>;
   ordersLoading$: Observable<boolean>;
   ordersError$: Observable<boolean>;
@@ -48,7 +48,7 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
       filter(s => s !== null),
       takeWhile(() => this.componentActive));
 
-    this.orders$ = this.store.pipe(
+    this.customerOrders$ = this.store.pipe(
       select(selectOrders),
       filter(s => s !== null),
       takeWhile(() => this.componentActive));

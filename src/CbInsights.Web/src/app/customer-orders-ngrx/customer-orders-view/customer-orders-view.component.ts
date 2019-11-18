@@ -32,7 +32,7 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
 
     this.customers$ = this.store.pipe(
       select(selectCustomers),
-      filter(s => s !== null),
+      filter(s => !this.isEmpty(s)),
       takeWhile(() => this.componentActive));
 
     this.customersLoading$ = this.store.pipe(
@@ -45,12 +45,12 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
 
     this.selectedCustomer$ = this.store.pipe(
       select(selectSelectedCustomer),
-      filter(s => s !== null),
+      filter(s => !this.isEmpty(s)),
       takeWhile(() => this.componentActive));
 
     this.customerOrders$ = this.store.pipe(
       select(selectOrders),
-      filter(s => s !== null),
+      filter(s => !this.isEmpty(s)),
       takeWhile(() => this.componentActive));
 
     this.ordersLoading$ = this.store.pipe(
@@ -64,6 +64,10 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
     this.selectedOrder$ = this.store.pipe(
       select(selectSelectedOrder),
       takeWhile(() => this.componentActive));
+  }
+
+  isEmpty(obj): boolean {
+    return (obj && (Object.keys(obj).length === 0));
   }
 
   ngOnDestroy() {

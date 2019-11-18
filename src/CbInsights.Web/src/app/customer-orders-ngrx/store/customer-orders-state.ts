@@ -15,12 +15,12 @@ export interface CustomerOrdersState {
 
 //State Definition Initializer
 export const initialState: CustomerOrdersState = {
-    customers: null,
-    selectedCustomer: null,
+    customers: [],
+    selectedCustomer: {},
     customersLoading: false,
     customersError: false,
-    orders: null,
-    selectedOrder: null,
+    orders: {},
+    selectedOrder: {},
     ordersLoading: false,
     ordersError: false
 };

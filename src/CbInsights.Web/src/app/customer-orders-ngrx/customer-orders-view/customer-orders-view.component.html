@@ -7,9 +7,9 @@
 <div *ngIf="customerOrders$ | async as customerOrders">
     <div *ngIf="selectedOrder$ | async as selectedOrder">
         <cbi-order-list [orders]="customerOrders.orders" (orderSelected)="onOrderSelected($event)"
-            *ngIf="selectedOrder === null">
+            *ngIf="isEmpty(selectedOrder)">
         </cbi-order-list>
-        <cbi-order-details *ngIf="selectedOrder !== null" [order]="selectedOrder" (orderClosed)="onBackToOrderList()">
+        <cbi-order-details *ngIf="!isEmpty(selectedOrder)" [order]="selectedOrder" (orderClosed)="onBackToOrderList()">
         </cbi-order-details>
     </div>
 </div>

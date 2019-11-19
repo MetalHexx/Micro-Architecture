@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.GatewayApi.Clients;
 using CbInsights.GatewayApi.Clients.Models;
-using CbInsights.GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,36 +21,84 @@ namespace CbInsights.GatewayApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var result = await _ordersClient.GetOrderByIdAsync(id);
-            return GetResult(result);
+            try
+            {
+                var result = await _ordersClient.GetOrderAsync(id);
+                return Ok(result);
+
+            }
+            catch (ApiException e)
+            {
+                return GenerateErrorResult(e);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpGet("~/api/customers/{customerId}/orders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrdersByCustomerId(int customerId)
         {
-            var result = await _ordersClient.GetCustomerOrdersAsync(customerId);
-            return GetResult(result);
+            try
+            {
+                var result = await _ordersClient.GetCustomerOrdersAsync(customerId);
+                return Ok(result);
+
+            }
+            catch (ApiException e)
+            {
+                return GenerateErrorResult(e);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
         {
-            var result = await _ordersClient.CreateOrderAsync(order);
-            return GetResult(result);
+            try
+            {
+                var result = await _ordersClient.PostOrderAsync(order);
+                return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateOrder([FromRoute]int id, [FromBody] Order order)
         {
-            var result = await _ordersClient.UpdateOrderAsync(order);
-            return GetResult(result);
+            try
+            {
+                await _ordersClient.PutOrderAsync(id, order);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteOrder(int id)
         {
-            var result = await _ordersClient.DeleteOrderAsync(id);
-            return GetResult(result);
+            try
+            {
+                await _ordersClient.DeleteOrderAsync(id);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
     }
 }

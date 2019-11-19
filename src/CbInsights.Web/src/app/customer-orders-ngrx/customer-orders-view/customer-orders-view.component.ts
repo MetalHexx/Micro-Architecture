@@ -4,8 +4,9 @@ import { Customer, CustomerOrdersModel, OrderModel } from 'src/app/gateway-api/m
 import { Store, select } from '@ngrx/store';
 import { CustomerOrdersState } from '../store/customer-orders-state';
 import { GetCustomers, SelectCustomer, ClearOrder, GetCustomerOrders, SelectOrder } from '../store/customer-orders-actions';
-import { selectCustomers, selectOrders, selectCustomersLoading, selectOrdersLoading, selectOrdersError, selectSelectedCustomer, selectSelectedOrder } from '../store/customer-orders-selectors';
+import { selectCustomers, selectOrders, selectCustomersLoading, selectOrdersLoading, selectOrdersError, selectSelectedCustomer, selectSelectedOrder, selectCustomersError } from '../store/customer-orders-selectors';
 import { filter, takeWhile } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
   componentActive: boolean = true;
 
   constructor(
-    private store: Store<CustomerOrdersState>) { }
+    private store: Store<CustomerOrdersState>, private snackbar: MatSnackBar) { }
 
   ngOnInit() {
     this.store.dispatch(new GetCustomers());
@@ -40,7 +41,7 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
       takeWhile(() => this.componentActive));
 
     this.customersError$ = this.store.pipe(
-      select(selectCustomersLoading),
+      select(selectCustomersError),
       takeWhile(() => this.componentActive));
 
     this.selectedCustomer$ = this.store.pipe(
@@ -64,6 +65,22 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
     this.selectedOrder$ = this.store.pipe(
       select(selectSelectedOrder),
       takeWhile(() => this.componentActive));
+
+    this.customersError$
+      .pipe(
+        filter(isError => {
+          return isError !== false;
+        }))
+      .subscribe(error => {
+        this.snackbar.open("Error fetching customers", null, { duration: 3000 });
+      });
+
+
+    this.ordersError$
+      .pipe(
+        filter(isError => isError !== false))
+      .subscribe(error =>
+        this.snackbar.open("Error fetching orders", null, { duration: 3000 }));
   }
 
   isEmpty(obj): boolean {

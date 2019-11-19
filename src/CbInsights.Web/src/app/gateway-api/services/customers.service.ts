@@ -74,8 +74,10 @@ class CustomersService extends __BaseService {
    * - `id`:
    *
    * - `customer`:
+   *
+   * @return Success
    */
-  UpdateCustomerResponse(params: CustomersService.UpdateCustomerParams): __Observable<__StrictHttpResponse<null>> {
+  UpdateCustomerResponse(params: CustomersService.UpdateCustomerParams): __Observable<__StrictHttpResponse<IdResult>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -94,7 +96,7 @@ class CustomersService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<IdResult>;
       })
     );
   }
@@ -104,10 +106,12 @@ class CustomersService extends __BaseService {
    * - `id`:
    *
    * - `customer`:
+   *
+   * @return Success
    */
-  UpdateCustomer(params: CustomersService.UpdateCustomerParams): __Observable<null> {
+  UpdateCustomer(params: CustomersService.UpdateCustomerParams): __Observable<IdResult> {
     return this.UpdateCustomerResponse(params).pipe(
-      __map(_r => _r.body as null)
+      __map(_r => _r.body as IdResult)
     );
   }
 
@@ -115,10 +119,8 @@ class CustomersService extends __BaseService {
    * @param params The `CustomersService.DeleteCustomerParams` containing the following parameters:
    *
    * - `id`:
-   *
-   * @return Success
    */
-  DeleteCustomerResponse(params: CustomersService.DeleteCustomerParams): __Observable<__StrictHttpResponse<Customer>> {
+  DeleteCustomerResponse(params: CustomersService.DeleteCustomerParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -136,7 +138,7 @@ class CustomersService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<Customer>;
+        return _r as __StrictHttpResponse<null>;
       })
     );
   }
@@ -144,12 +146,10 @@ class CustomersService extends __BaseService {
    * @param params The `CustomersService.DeleteCustomerParams` containing the following parameters:
    *
    * - `id`:
-   *
-   * @return Success
    */
-  DeleteCustomer(params: CustomersService.DeleteCustomerParams): __Observable<Customer> {
+  DeleteCustomer(params: CustomersService.DeleteCustomerParams): __Observable<null> {
     return this.DeleteCustomerResponse(params).pipe(
-      __map(_r => _r.body as Customer)
+      __map(_r => _r.body as null)
     );
   }
 

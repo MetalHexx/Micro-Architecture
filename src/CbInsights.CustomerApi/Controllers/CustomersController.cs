@@ -5,6 +5,7 @@ using CbInsights.CustomersApi.Repository;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CbInsights.CustomerApi.Controllers
@@ -27,7 +28,7 @@ namespace CbInsights.CustomerApi.Controllers
             _postValidator = postValidator;
         }
         [HttpGet()]
-        public ActionResult<Customer> GetCustomers()
+        public ActionResult<List<Customer>> GetCustomers()
         {
             var result = _customersRepo.GetCustomers();
 

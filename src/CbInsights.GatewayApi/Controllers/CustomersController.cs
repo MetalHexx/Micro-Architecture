@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CbInsights.GatewayApi.Clients;
 using CbInsights.GatewayApi.Clients.Models;
-using CbInsights.GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace CbInsights.GatewayApi.Controllers
 {
@@ -16,44 +15,80 @@ namespace CbInsights.GatewayApi.Controllers
     {
         private readonly CustomersClient _customerClient;
 
-        public CustomersController(CustomersClient customerClient)
+        public CustomersController(CustomersClient customerClient, IOptions<ApiSettings> options)
         {
             _customerClient = customerClient;
+            _customerClient.BaseUrl = options.Value.CustomersApiBaseUrl;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var result = await _customerClient.GetCustomerByIdAsync(id);
-            return GetResult(result);
+            try
+            {
+                var result = await _customerClient.GetCustomerAsync(id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<Customer>>> GetCustomers()
+        public async Task<ActionResult<ICollection<Customer>>> GetCustomers()
         {
-            var result = await _customerClient.GetCustomersAsync();
-            return GetResult(result);
+            try
+            {
+                var result = await _customerClient.GetCustomersAsync();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
 
         [HttpPost()]
         public async Task<ActionResult<IdResult>> CreateCustomer([FromBody]Customer customer)
         {
-            var result = await _customerClient.CreateCustomerAsync(customer);
-            return GetResult(result);
+            try
+            {
+                var result = await _customerClient.PostCustomerAsync(customer);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCustomer(int id, [FromBody]Customer customer)
+        public async Task<ActionResult<IdResult>> UpdateCustomer(int id, [FromBody]Customer customer)
         {
-            var result = await _customerClient.UpdateCustomerAsync(customer);
-            return GetResult(result);
+            try
+            {
+                var result = await _customerClient.PostCustomerAsync(customer);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Customer>> DeleteCustomer(int id)
+        public async Task<ActionResult> DeleteCustomer(int id)
         {
-            var result = await _customerClient.DeleteCustomerAsync(id);
-            return GetResult(result);
+            try
+            {
+                await _customerClient.DeleteCustomerAsync(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
         }
     }
 }

@@ -6,14 +6,16 @@ export function customerOrdersReducer(state: CustomerOrdersState = initialState,
         case Actions.GetCustomers:
             return {
                 ...state,
-                customersLoading: true
+                customersLoading: true,
+                customersError: false
             };
 
         case Actions.GetCustomersSuccess:
             return {
                 ...state,
                 customers: action.payload,
-                customersLoading: false
+                customersLoading: false,
+                customersError: false
             };
 
         case Actions.GetCustomersFailure:
@@ -27,14 +29,16 @@ export function customerOrdersReducer(state: CustomerOrdersState = initialState,
         case Actions.GetCustomerOrders:
             return {
                 ...state,
-                ordersLoading: true
+                ordersLoading: true,
+                ordersError: false
             };
 
         case Actions.GetCustomerOrdersSuccess:
             return {
                 ...state,
                 orders: action.payload,
-                ordersLoading: false
+                ordersLoading: false,
+                ordersError: false
             };
 
         case Actions.GetCustomerOrdersFailure:

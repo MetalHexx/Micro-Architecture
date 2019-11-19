@@ -11,19 +11,25 @@ namespace CbInsights.GatewayApi.Controllers
     [ApiController]
     public class BaseGatewayController : ControllerBase
     {
-        protected ActionResult GetResult<InputType>(ApiResult<InputType> result)
+        protected ActionResult GenerateErrorResult(Exception exception)
         {
-            switch (result.StatusCode)
+            if(exception is ApiException)
             {
-                default:
-                    return Ok(result.Content);
+                var apiException = exception as ApiException;
 
-                case (StatusCodes.Status404NotFound):
-                    return NotFound();
+                switch (apiException.StatusCode)
+                {
+                    default:
+                        return new StatusCodeResult(StatusCodes.Status500InternalServerError);
 
-                case (StatusCodes.Status400BadRequest):
-                    return BadRequest(result.Content);
+                    case (StatusCodes.Status404NotFound):
+                        return NotFound();
+
+                    case (StatusCodes.Status400BadRequest):
+                        return BadRequest(apiException.Response);
+                }
             }
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }
 }

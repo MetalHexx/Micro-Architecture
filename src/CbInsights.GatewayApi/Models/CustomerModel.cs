@@ -1,4 +1,5 @@
-﻿using CbInsights.GatewayApi.Clients.Models;
+﻿
+using CbInsights.GatewayApi.Clients.Models;
 
 namespace CbInsights.GatewayApi.Models
 {

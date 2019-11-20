@@ -14,7 +14,7 @@ namespace CbInsights.GatewayApi.Configuration
     public static class ApiClientConfig
     {
         /// <summary>
-        /// Configures the services.
+        /// Configures the api clients.
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="configuration">The configuration.</param>

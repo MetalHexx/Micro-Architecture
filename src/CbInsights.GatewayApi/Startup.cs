@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using CbInsights.GatewayApi.Clients;
+using CbInsights.GatewayApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Polly;
+using Polly.Extensions.Http;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -46,28 +49,35 @@ namespace CbInsights.GatewayApi
                 });
             });
 
-            var apiSettings = Configuration
-                .GetSection("ApiSettings")
-                .Get<ApiSettings>();
+            //var apiSettings = Configuration
+            //    .GetSection("ApiSettings")
+            //    .Get<ApiSettings>();
+
+            
+
+            //ApiClientConfig.ConfigureServices(services, Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddHttpClient<CustomersClient>();
+
+            ApiClientConfig.ConfigureServices(services, Configuration);
+
+            //services.AddTransient<CustomersClient>();
+
             //services.AddHttpClient<OrdersClient>();
             //services.AddHttpClient<ProductsClient>();
 
-            services.AddHttpClient();
+            //services.AddHttpClient();
 
-            services.AddTransient(c => new CustomersClient(
-                apiSettings.CustomersApiBaseUrl,
-                c.GetRequiredService<IHttpClientFactory>().CreateClient()));
 
-            services.AddTransient(c => new OrdersClient(
-                apiSettings.OrdersApiBaseUrl,
-                c.GetRequiredService<IHttpClientFactory>().CreateClient()));
+            
 
-            services.AddTransient(c => new ProductsClient(
-                apiSettings.ProductsApiBaseUrl,
-                c.GetRequiredService<IHttpClientFactory>().CreateClient()));
+            //services.AddTransient(c => new OrdersClient(
+            //    apiSettings.OrdersApiBaseUrl,
+            //    c.GetRequiredService<IHttpClientFactory>().CreateClient()));
+
+            //services.AddTransient(c => new ProductsClient(
+            //    apiSettings.ProductsApiBaseUrl,
+            //    c.GetRequiredService<IHttpClientFactory>().CreateClient()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

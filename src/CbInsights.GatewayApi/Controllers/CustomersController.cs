@@ -15,10 +15,9 @@ namespace CbInsights.GatewayApi.Controllers
     {
         private readonly CustomersClient _customerClient;
 
-        public CustomersController(CustomersClient customerClient, IOptions<ApiSettings> options)
+        public CustomersController(CustomersClient customerClient)
         {
             _customerClient = customerClient;
-            _customerClient.BaseUrl = options.Value.CustomersApiBaseUrl;
         }
 
         [HttpGet("{id}")]

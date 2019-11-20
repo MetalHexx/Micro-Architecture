@@ -3,6 +3,9 @@
 <div *ngIf="(customersLoading$ | async) === true">
     Loading customers
 </div>
+<div *ngIf="(customersError$ | async) === true">
+    Error loading customers
+</div>
 
 <div *ngIf="customers$ | async as customers">
     <cbi-customer-select [customers]="customers" (customerSelected)="onCustomerSelected($event)">
@@ -10,7 +13,11 @@
 </div>
 
 <div *ngIf="(ordersLoading$ | async) === true">
-    Loading Orders
+    Loading orders
+</div>
+
+<div *ngIf="(ordersError$ | async) === true">
+    Error loading orders
 </div>
 
 <div *ngIf="(ordersLoading$ | async) === false">

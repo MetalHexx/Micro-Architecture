@@ -24,66 +24,20 @@ namespace CbInsights.GatewayApi.Configuration
                 .GetSection("ApiSettings")
                 .Get<ApiSettings>();
 
-            //services.AddHttpClient<CustomersClient>()
-            //    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            //    .AddPolicyHandler(GetRetryPolicy());
-
-            //services.AddTransient(c => new CustomersClient(
-            //    apiSettings.CustomersApiBaseUrl,
-            //    c.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-
-            services.AddTransient(c => new CustomersClient(
-                apiSettings.CustomersApiBaseUrl,
-                c.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-
-            //services.AddHttpClient<CustomersClient, CustomersClient>(c =>
-            //{
-            //    new CustomersClient(
-            //        apiSettings.CustomersApiBaseUrl, 
-            //        c);
-            //});
-            //.SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            //.AddPolicyHandler(GetRetryPolicy());
-
-            //services.AddTransient(c => new CustomersClient(
-            //    apiSettings.CustomersApiBaseUrl,
-            //    c.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-            services.AddHttpClient<OrdersClient>()
+            services.AddHttpClient<CustomersClient>(client => 
+                client.BaseAddress = new Uri(apiSettings.CustomersApiBaseUrl))
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryPolicy());
 
-            services.AddTransient(c => new OrdersClient(
-                apiSettings.OrdersApiBaseUrl,
-                c.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-            services.AddHttpClient<ProductsClient>()
+            services.AddHttpClient<OrdersClient>(client =>
+                client.BaseAddress = new Uri(apiSettings.OrdersApiBaseUrl))
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryPolicy());
 
-            services.AddTransient(c => new ProductsClient(
-                apiSettings.ProductsApiBaseUrl,
-                c.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-            //var apiSettings = configuration
-            //    .GetSection("ApiSettings")
-            //    .Get<ApiSettings>();
-
-            //services.AddHttpClient();
-
-            //services.AddHttpClient<CustomersClient>(c => new CustomersClient(apiSettings.CustomersApiBaseUrl, c))
-            //    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            //    .AddPolicyHandler(GetRetryPolicy());
-
-            //services.AddHttpClient<OrdersClient>(c => new OrdersClient(apiSettings.OrdersApiBaseUrl, c))
-            //    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            //    .AddPolicyHandler(GetRetryPolicy());
-
-            //services.AddHttpClient<ProductsClient>(c => new ProductsClient(apiSettings.ProductsApiBaseUrl, c))
-            //    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            //    .AddPolicyHandler(GetRetryPolicy());
+            services.AddHttpClient<ProductsClient>(client =>
+                client.BaseAddress = new Uri(apiSettings.ProductsApiBaseUrl))
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .AddPolicyHandler(GetRetryPolicy());
         }
 
         static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

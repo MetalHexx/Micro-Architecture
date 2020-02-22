@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CbInsights.GatewayApi.Clients.Models
+namespace GatewayApi.Clients.Models
 {
     public class Customer
     {

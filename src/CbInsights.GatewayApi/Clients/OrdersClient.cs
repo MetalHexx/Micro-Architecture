@@ -1,11 +1,11 @@
-﻿//using CbInsights.GatewayApi.Clients.Models;
-//using CbInsights.GatewayApi.Models;
+﻿//using GatewayApi.Clients.Models;
+//using GatewayApi.Models;
 //using Microsoft.Extensions.Options;
 //using System.Collections.Generic;
 //using System.Net.Http;
 //using System.Threading.Tasks;
 
-//namespace CbInsights.GatewayApi.Clients
+//namespace GatewayApi.Clients
 //{
 //    public class OrdersClient: ClientBase
 //    {
@@ -51,8 +51,8 @@
 // </auto-generated>
 //----------------------
 
-using CbInsights.GatewayApi.Clients;
-using CbInsights.GatewayApi.Clients.Models;
+using GatewayApi.Clients;
+using GatewayApi.Clients.Models;
 
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
 #pragma warning disable 114 // Disable "CS0114 '{derivedDto}.RaisePropertyChanged(String)' hides inherited member 'dtoBase.RaisePropertyChanged(String)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword."
@@ -60,7 +60,7 @@ using CbInsights.GatewayApi.Clients.Models;
 #pragma warning disable 1573 // Disable "CS1573 Parameter '...' has no matching param tag in the XML comment for ...
 #pragma warning disable 1591 // Disable "CS1591 Missing XML comment for publicly visible type or member ..."
 
-namespace CbInsights.GatewayApi.Clients
+namespace GatewayApi.Clients
 {
     using System = global::System;
 

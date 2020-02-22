@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CbInsights.GatewayApi.Clients;
+using GatewayApi.Clients;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CbInsights.GatewayApi.Controllers
+namespace GatewayApi.Controllers
 {
     [ApiController]
     public class BaseGatewayController : ControllerBase

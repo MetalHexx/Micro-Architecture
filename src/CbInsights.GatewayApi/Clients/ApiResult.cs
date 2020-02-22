@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CbInsights.GatewayApi.Clients
+namespace GatewayApi.Clients
 {
     public class ApiResult<T>
     {

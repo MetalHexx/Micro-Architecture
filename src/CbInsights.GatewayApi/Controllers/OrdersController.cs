@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CbInsights.GatewayApi.Clients;
-using CbInsights.GatewayApi.Clients.Models;
+using GatewayApi.Clients;
+using GatewayApi.Clients.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CbInsights.GatewayApi.Controllers
+namespace GatewayApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

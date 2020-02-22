@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CbInsights.GatewayApi.Clients.Models
+namespace GatewayApi.Clients.Models
 {
     public class Order
     {

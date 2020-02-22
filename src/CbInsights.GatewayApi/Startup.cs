@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using CbInsights.GatewayApi.Clients;
-using CbInsights.GatewayApi.Configuration;
+using GatewayApi.Clients;
+using GatewayApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,7 +19,7 @@ using Polly.Extensions.Http;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CbInsights.GatewayApi
+namespace GatewayApi
 {
     public class Startup
     {

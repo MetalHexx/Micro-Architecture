@@ -1,7 +1,7 @@
 ﻿
-using CbInsights.GatewayApi.Clients.Models;
+using GatewayApi.Clients.Models;
 
-namespace CbInsights.GatewayApi.Models
+namespace GatewayApi.Models
 {
     public class OrderItemModel
     {

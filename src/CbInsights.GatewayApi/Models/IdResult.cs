@@ -1,4 +1,4 @@
-﻿namespace CbInsights.GatewayApi.Models
+﻿namespace GatewayApi.Models
 {
     public class IdResult
     {

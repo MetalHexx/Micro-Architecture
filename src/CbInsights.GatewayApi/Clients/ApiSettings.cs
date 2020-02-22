@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CbInsights.GatewayApi.Clients
+namespace GatewayApi.Clients
 {
     public class ApiSettings
     {

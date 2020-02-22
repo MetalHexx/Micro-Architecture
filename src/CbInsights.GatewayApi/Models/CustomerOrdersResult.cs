@@ -1,8 +1,8 @@
-﻿using CbInsights.GatewayApi.Clients.Models;
+﻿using GatewayApi.Clients.Models;
 using System.Collections.Generic;
 
 
-namespace CbInsights.GatewayApi.Models
+namespace GatewayApi.Models
 {
     public class CustomerOrdersResult
     {

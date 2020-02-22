@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CbInsights.GatewayApi.Clients.Models
+namespace GatewayApi.Clients.Models
 {
     public class IdResult
     {

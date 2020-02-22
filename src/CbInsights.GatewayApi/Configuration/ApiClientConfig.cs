@@ -1,4 +1,4 @@
-﻿using CbInsights.GatewayApi.Clients;
+﻿using GatewayApi.Clients;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CbInsights.GatewayApi.Configuration
+namespace GatewayApi.Configuration
 {
     public static class ApiClientConfig
     {

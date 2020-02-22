@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'CbInsightsWeb'`, () => {
+  it(`should have as title 'AngularWeb'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('CbInsightsWeb');
+    expect(app.title).toEqual('AngularWeb');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('CbInsightsWeb app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('AngularWeb app is running!');
   });
 });

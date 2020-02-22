@@ -1,7 +1,7 @@
 # Micro-Architecture Sandbox
 Just my own personal stomping grounds for testing and experimenting with microservice architecture and related technologies.  The intent is to log my journey in the hopes to create a great reference source for other projects.  This is all new work, in progress, and far from anything production ready. :)
 
-#### Tech / Pattern Highlights ####
+### Tech / Pattern Highlights ###
 - .Net Core 2.2
 - Polly / Resilience Patterns
 - Gateway Pattern
@@ -13,7 +13,7 @@ Just my own personal stomping grounds for testing and experimenting with microse
 - NGRX
 - ng-swagger-gen typescript clients
 
-#### How to Run ####
+### How to Run ###
 __Server Side:__
 - Configure all Services to run as projects (not IISExpress)
 - Configure the projects to run with the correct port (see AppSettings.json file)

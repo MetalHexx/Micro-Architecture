@@ -1,5 +1,5 @@
 # Micro-Architecture Sandbox
-Just my own personal stomping grounds for testing and experimenting with microservice architecture and related technologies.  The intent is to log my journey in the hopes to create a great reference source for other projects.  This is obviously a work in progress.
+Just my own personal stomping grounds for testing and experimenting with microservice architecture and related technologies.  The intent is to log my journey in the hopes to create a great reference source for other projects.  This is all new work, in progress, and far from anything production ready. :)
 
 #### Tech / Pattern Highlights ####
 - .Net Core 2.2

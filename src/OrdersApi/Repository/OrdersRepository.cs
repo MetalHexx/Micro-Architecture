@@ -1,10 +1,10 @@
-﻿using CbInsights.OrdersApi.Models;
+﻿using OrdersApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CbInsights.OrdersApi.Repository
+namespace OrdersApi.Repository
 {
 
     //TODO: Update repository to return a status object and return a not found if the object

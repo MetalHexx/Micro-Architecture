@@ -1,7 +1,7 @@
-﻿using CbInsights.OrdersApi.Models;
+﻿using OrdersApi.Models;
 using System.Collections.Generic;
 
-namespace CbInsights.OrdersApi.Repository
+namespace OrdersApi.Repository
 {
     public interface IOrdersRepository
     {

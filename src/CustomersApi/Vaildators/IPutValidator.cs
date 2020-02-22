@@ -1,13 +1,13 @@
-﻿using OrdersApi.Models;
+﻿using CustomersApi.Models;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OrdersApi.Validators
+namespace CustomersApi.Vaildators
 {
-    public interface IPostValidator: IValidator<Order>
+    public interface IPutValidator : IValidator<Customer>
     {
     }
 }

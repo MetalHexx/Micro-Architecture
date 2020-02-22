@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OrdersApi.Repository
+﻿namespace CustomersApi.Repository
 {
     public class RepoResult<T>
     {
@@ -18,7 +14,6 @@ namespace OrdersApi.Repository
 
     public enum RepoResultType
     {
-        Invalid,
         Success,
         Failed,
         NotFound

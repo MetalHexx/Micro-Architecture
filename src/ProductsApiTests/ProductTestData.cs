@@ -1,10 +1,10 @@
-﻿using CbInsights.ProductsApi.Models;
+﻿using ProductsApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace CbInsights.ProductsApiTests
+namespace ProductsApiTests
 {
     public class ProductListValidTestData : TheoryData<List<Product>>
     {

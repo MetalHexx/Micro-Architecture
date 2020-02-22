@@ -1,7 +1,7 @@
-using CbInsights.ProductsApi.Controllers;
-using CbInsights.ProductsApi.Models;
-using CbInsights.ProductsApi.Repository;
-using CbInsights.ProductsApi.Validators;
+using ProductsApi.Controllers;
+using ProductsApi.Models;
+using ProductsApi.Repository;
+using ProductsApi.Validators;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace CbInsights.ProductsApiTests
+namespace ProductsApiTests
 {
     public class ProductsApiTests
     {

@@ -1,34 +1,14 @@
-﻿using OrdersApi.Models;
-using OrdersApi.Repository;
-using System;
+﻿using CustomersApi.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OrdersApi.Repository
+namespace CustomersApi.Repository
 {
-    public abstract class RepositoryBase<T> where T : IEntity
+    public abstract class RepositoryBase<T> where T: IEntity
     {
         protected List<T> _items;
         protected int _currentId;
-
-        protected virtual RepoResult<T> DeleteItem(int id)
-        {
-            var item = _items.FirstOrDefault(o => o.Id == id);
-            if (item == null)
-            {
-                return new RepoResult<T>(item)
-                {
-                    Type = RepoResultType.NotFound
-                };
-            }
-            _items.Remove(item);
-
-            return new RepoResult<T>(item)
-            {
-                Type = RepoResultType.Success
-            };
-        }
-
+        
         protected virtual RepoResult<T> GetItemById(int id)
         {
             var item = _items.SingleOrDefault(o => o.Id == id);
@@ -87,6 +67,24 @@ namespace OrdersApi.Repository
             }
             _items.Remove(repoItem);
             _items.Add(item);
+            return new RepoResult<T>(item)
+            {
+                Type = RepoResultType.Success
+            };            
+        }
+
+        protected virtual RepoResult<T> DeleteItem(int id)
+        {
+            var item = _items.FirstOrDefault(o => o.Id == id);
+            if (item == null)
+            {
+                return new RepoResult<T>(item)
+                {
+                    Type = RepoResultType.NotFound
+                };
+            }
+            _items.Remove(item);
+
             return new RepoResult<T>(item)
             {
                 Type = RepoResultType.Success

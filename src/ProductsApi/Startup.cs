@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OrdersApi.Models;
-using OrdersApi.Repository;
-using OrdersApi.Validators;
-using FluentValidation;
+using ProductsApi.Repository;
+using ProductsApi.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace OrdersApi
+namespace ProductsApi
 {
     public class Startup
     {
@@ -30,19 +27,18 @@ namespace OrdersApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IOrdersRepository, OrdersRepository>();
             services.AddSingleton<IPutValidator, PutValidator>();
             services.AddSingleton<IPostValidator, PostValidator>();
-            services.AddSingleton<IOrdersRepository, OrdersRepository>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "Orders API"
+                    Title = "Products API"
                 });
             });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,20 +47,13 @@ namespace OrdersApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders API v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Products API v1");
             });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

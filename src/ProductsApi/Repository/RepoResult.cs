@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OrdersApi.Repository
+namespace ProductsApi.Repository
 {
     public class RepoResult<T>
     {

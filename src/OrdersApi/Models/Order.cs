@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CbInsights.OrdersApi.Models
+namespace OrdersApi.Models
 {
     public class Order : IEntity
     {

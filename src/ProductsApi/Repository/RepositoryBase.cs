@@ -1,10 +1,8 @@
-﻿using OrdersApi.Models;
-using OrdersApi.Repository;
-using System;
+﻿using ProductsApi.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OrdersApi.Repository
+namespace ProductsApi.Repository
 {
     public abstract class RepositoryBase<T> where T : IEntity
     {

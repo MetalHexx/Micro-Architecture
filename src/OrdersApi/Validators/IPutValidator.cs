@@ -1,4 +1,4 @@
-﻿using CbInsights.OrdersApi.Models;
+﻿using OrdersApi.Models;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CbInsights.OrdersApi.Validators
+namespace OrdersApi.Validators
 {
     public interface IPutValidator : IValidator<Order>
     {

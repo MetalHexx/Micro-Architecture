@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OrdersApi.Models;
-using OrdersApi.Repository;
-using OrdersApi.Validators;
+using CustomersApi.Vaildators;
+using CustomersApi.Validators;
+using CustomersApi.Models;
+using CustomersApi.Repository;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,7 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace OrdersApi
+namespace CustomersApi
 {
     public class Startup
     {
@@ -30,19 +32,19 @@ namespace OrdersApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IOrdersRepository, OrdersRepository>();
-            services.AddSingleton<IPutValidator, PutValidator>();
-            services.AddSingleton<IPostValidator, PostValidator>();
-            services.AddSingleton<IOrdersRepository, OrdersRepository>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "Orders API"
+                    Title = "Customers API"
                 });
             });
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSingleton<ICustomersRespository, CustomersRepository>();
+            services.AddSingleton<IPutValidator, PutValidator>();
+            services.AddSingleton<IPostValidator, PostValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +53,7 @@ namespace OrdersApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders API v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Customers API v1");
             });
 
             if (env.IsDevelopment())

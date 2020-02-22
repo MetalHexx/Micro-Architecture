@@ -1,4 +1,4 @@
-﻿namespace CbInsights.ProductsApiTests
+﻿namespace ProductsApiTests
 {
     internal interface IOrdersRepository
     {

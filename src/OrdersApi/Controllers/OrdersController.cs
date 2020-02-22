@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using CbInsights.OrdersApi.Models;
-using CbInsights.OrdersApi.Repository;
-using CbInsights.OrdersApi.Validators;
+using OrdersApi.Models;
+using OrdersApi.Repository;
+using OrdersApi.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CbInsights.OrdersApi.Controllers
+namespace OrdersApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

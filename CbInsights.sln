@@ -3,25 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.CustomerApi", "src\CbInsights.CustomerApi\CbInsights.CustomerApi.csproj", "{498CAADF-FD43-46D6-BB27-EAAC9CD09D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.CustomerApi", "src\CustomerApi\CbInsights.CustomerApi.csproj", "{498CAADF-FD43-46D6-BB27-EAAC9CD09D97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi", "src\CbInsights.GatewayApi\GatewayApi.csproj", "{69253054-92AA-4112-AC75-F737D725DB7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi", "src\GatewayApi\GatewayApi.csproj", "{69253054-92AA-4112-AC75-F737D725DB7E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.OrdersApi", "src\CbInsights.OrdersApi\CbInsights.OrdersApi.csproj", "{2A37C0F2-7BF0-4D70-9E65-9766E6E4FD0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.OrdersApi", "src\OrdersApi\CbInsights.OrdersApi.csproj", "{2A37C0F2-7BF0-4D70-9E65-9766E6E4FD0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.ProductsApi", "src\CbInsights.ProductApi\CbInsights.ProductsApi.csproj", "{A568327C-95DA-4219-8369-470EF9054D60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.ProductsApi", "src\ProductApi\CbInsights.ProductsApi.csproj", "{A568327C-95DA-4219-8369-470EF9054D60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.CustomerApi.Tests", "src\CbInsights.CustomerApi.Tests\CbInsights.CustomerApi.Tests.csproj", "{5546C168-8E47-450F-ADF1-F51AF6E06E4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.CustomerApi.Tests", "src\CustomerApi.Tests\CbInsights.CustomerApi.Tests.csproj", "{5546C168-8E47-450F-ADF1-F51AF6E06E4B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerApi", "CustomerApi", "{7BD81B6D-A6B4-43E0-BBA5-B527FB41A664}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.OrderApi.Tests", "src\CbInsights.OrderApi.Tests\CbInsights.OrderApi.Tests.csproj", "{2D722811-B889-4DC1-9A4C-F99C21FA9339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.OrderApi.Tests", "src\OrderApi.Tests\CbInsights.OrderApi.Tests.csproj", "{2D722811-B889-4DC1-9A4C-F99C21FA9339}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrdersApi", "OrdersApi", "{1357406D-B8E5-4B02-9755-AACFD73FCE26}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductsApi", "ProductsApi", "{EA77E66D-73C7-47CA-9BEF-664DEB7E8D07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.ProductsApiTests", "src\CbInsights.ProductsApiTests\CbInsights.ProductsApiTests.csproj", "{9D2ED2DE-4B49-4CAF-B555-423231C632D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbInsights.ProductsApiTests", "src\ProductsApiTests\CbInsights.ProductsApiTests.csproj", "{9D2ED2DE-4B49-4CAF-B555-423231C632D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

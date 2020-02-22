@@ -8,7 +8,7 @@ const getCustomersLoading = (state: CustomerOrdersState): boolean => state.custo
 const getCustomersError = (state: CustomerOrdersState): boolean => state.customersError;
 
 const getOrders = (state: CustomerOrdersState): CustomerOrdersModel => state.orders;
-const getSelectedOrder = (state: CustomerOrdersState): Customer => state.selectedOrder;
+const getSelectedOrder = (state: CustomerOrdersState): OrderModel => state.selectedOrder;
 const getOrdersLoading = (state: CustomerOrdersState): boolean => state.ordersLoading;
 const getOrdersError = (state: CustomerOrdersState): boolean => state.ordersError;
 
@@ -16,7 +16,7 @@ export const selectCustomerOrdersState: MemoizedSelector<object, CustomerOrdersS
     createFeatureSelector<CustomerOrdersState>('customerOrders');
 
 export const selectCustomers: MemoizedSelector<object, Customer[]> =
-    createSelector(selectCustomerOrdersState, getCustomers);
+    createSelector(selectCustomerOrdersState, getCustomers); 
 
 export const selectSelectedCustomer: MemoizedSelector<object, Customer> =
     createSelector(selectCustomerOrdersState, getSelectedCustomer);

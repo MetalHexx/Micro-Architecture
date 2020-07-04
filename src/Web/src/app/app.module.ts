@@ -12,6 +12,7 @@ import { GatewayApiModule } from './gateway-api/gateway-api.module';
 import { HomeComponent } from './home/home.component'
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { FeatureSettingsModule } from './feature-settings/feature-settings.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { EffectsModule } from '@ngrx/effects';
     CustomerOrdersModule,
     CustomerOrdersNgrxModule,
     GatewayApiModule,
+    FeatureSettingsModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
   ],

@@ -5,6 +5,7 @@ import { GatewayApiConfiguration, GatewayApiConfigurationInterface } from './gat
 
 import { CustomerOrdersService } from './services/customer-orders.service';
 import { CustomersService } from './services/customers.service';
+import { FeaturesService } from './services/features.service';
 import { OrdersService } from './services/orders.service';
 import { ProductsService } from './services/products.service';
 
@@ -23,6 +24,7 @@ import { ProductsService } from './services/products.service';
     GatewayApiConfiguration,
     CustomerOrdersService,
     CustomersService,
+    FeaturesService,
     OrdersService,
     ProductsService
   ],

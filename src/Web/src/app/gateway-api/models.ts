@@ -5,6 +5,8 @@ export { OrderItemModel } from './models/order-item-model';
 export { ProductModel } from './models/product-model';
 export { Customer } from './models/customer';
 export { IdResult } from './models/id-result';
+export { AppFeatures } from './models/app-features';
+export { Feature } from './models/feature';
 export { Order } from './models/order';
 export { OrderItem } from './models/order-item';
 export { Product } from './models/product';

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using GatewayApi.Clients;
 using GatewayApi.Configuration;
+using GatewayApi.Features;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,6 +34,8 @@ namespace GatewayApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppFeatures>(Configuration.GetSection(AppFeatures.SectionName));
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
@@ -49,35 +52,10 @@ namespace GatewayApi
                 });
             });
 
-            //var apiSettings = Configuration
-            //    .GetSection("ApiSettings")
-            //    .Get<ApiSettings>();
-
-            
-
-            //ApiClientConfig.ConfigureServices(services, Configuration);
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             ApiClientConfig.ConfigureServices(services, Configuration);
 
-            //services.AddTransient<CustomersClient>();
-
-            //services.AddHttpClient<OrdersClient>();
-            //services.AddHttpClient<ProductsClient>();
-
-            //services.AddHttpClient();
-
-
-            
-
-            //services.AddTransient(c => new OrdersClient(
-            //    apiSettings.OrdersApiBaseUrl,
-            //    c.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-            //services.AddTransient(c => new ProductsClient(
-            //    apiSettings.ProductsApiBaseUrl,
-            //    c.GetRequiredService<IHttpClientFactory>().CreateClient()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

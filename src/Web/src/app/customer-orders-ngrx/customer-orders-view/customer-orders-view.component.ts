@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Customer, CustomerOrdersModel, OrderModel } from 'src/app/gateway-api/models';
+import { Customer, CustomerOrdersModel, OrderModel, Feature } from 'src/app/gateway-api/models';
 import { Store, select } from '@ngrx/store';
 import { CustomerOrdersState } from '../store/customer-orders-state';
 import { GetCustomers, SelectCustomer, ClearOrder, GetCustomerOrders, SelectOrder } from '../store/customer-orders-actions';
 import { selectCustomers, selectOrders, selectCustomersLoading, selectOrdersLoading, selectOrdersError, selectSelectedCustomer, selectSelectedOrder, selectCustomersError } from '../store/customer-orders-selectors';
-import { filter, takeWhile } from 'rxjs/operators';
+import { filter, takeWhile, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
+import { FeatureState } from 'src/app/feature-settings/store/feature.state';
+import { selectFeatures, selectViewCustomersFeature, selectFeaturesState } from 'src/app/feature-settings/store/feature-selectors';
 
 
 @Component({
@@ -15,6 +17,7 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./customer-orders-view.component.css']
 })
 export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
+  viewCustomerFeature$: Observable<Feature>;
   customers$: Observable<Customer[]>;
   selectedCustomer$: Observable<Customer>;
   customersLoading$: Observable<boolean>;
@@ -30,6 +33,18 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(new GetCustomers());
+
+
+    this.viewCustomerFeature$ = this.store.pipe(
+      select(selectViewCustomersFeature),
+      filter(s => s !== null),
+      takeWhile(() => this.componentActive));
+
+    // this.store
+    // .select<any>((state: any) => state) // the complete state this time!!!
+    // .subscribe((completeState: any) => {
+    //   console.log(completeState)
+    // });
 
     this.customers$ = this.store.pipe(
       select(selectCustomers),

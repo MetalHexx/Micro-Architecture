@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { NgModule, InjectionToken } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,8 +10,16 @@ import { CustomerOrdersNgrxModule } from './customer-orders-ngrx/customer-orders
 import { GatewayApiModule } from './gateway-api/gateway-api.module';
 import { HomeComponent } from './home/home.component'
 import { StoreModule } from '@ngrx/store';
+import * as fromAppState from './store';
+import { reducers, AppState, metaReducers } from './store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { FeatureSettingsModule } from './feature-settings/feature-settings.module';
+import { AppEffects } from './store/app.effects';
+import { FeatureManagementModule } from './feature-management/feature-management.module';
+// import { reducers, metaReducers } from './store/reducers';
+
+export const REDUCERS = new InjectionToken<AppState>('Root Reducer');
 
 @NgModule({
   declarations: [
@@ -27,13 +34,20 @@ import { FeatureSettingsModule } from './feature-settings/feature-settings.modul
     NoopAnimationsModule,
     MaterialModule,
     CustomerOrdersModule,
-    CustomerOrdersNgrxModule,
+    CustomerOrdersNgrxModule, 
     GatewayApiModule,
-    FeatureSettingsModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
+    FeatureManagementModule,
+    StoreModule.forRoot(REDUCERS, {
+      metaReducers, 
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+      }
+    }),
+    StoreDevtoolsModule.instrument(),
+    EffectsModule.forRoot([AppEffects]),
   ],
-  providers: [],
+  providers: [{provide: REDUCERS, useValue: reducers}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CustomerOrdersViewComponent } from './customer-orders-view/customer-orders-view.component';
 import { GatewayApiModule } from '../gateway-api/gateway-api.module';
@@ -8,11 +8,10 @@ import { OrderListComponent } from './order-list/order-list.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { OrderListItemComponent } from './order-list-item/order-list-item.component';
 import { OrderItemComponent } from './order-item/order-item.component';
-import { customerOrdersReducer } from './store/customers-orders-reducer';
-import { CustomerOrdersEffects } from './store/customer-orders-effects';
 import { StoreModule } from '@ngrx/store';
+import * as fromCustomerOrder from './store/customer-order.reducer';
 import { EffectsModule } from '@ngrx/effects';
-
+import { CustomerOrderEffects } from './store/customer-order.effects';
 
 
 @NgModule({
@@ -23,13 +22,13 @@ import { EffectsModule } from '@ngrx/effects';
     OrderDetailsComponent,
     OrderListItemComponent,
     OrderItemComponent],
-  providers: [CustomerOrdersEffects],
+  providers: [],
   imports: [
     CommonModule,
     GatewayApiModule,
     MaterialModule,
-    StoreModule.forFeature('customerOrders', customerOrdersReducer),
-    EffectsModule.forFeature([CustomerOrdersEffects])
+    StoreModule.forFeature(fromCustomerOrder.customerOrderFeatureKey, fromCustomerOrder.reducer),
+    EffectsModule.forFeature([CustomerOrderEffects])
   ]
 })
 export class CustomerOrdersNgrxModule { }

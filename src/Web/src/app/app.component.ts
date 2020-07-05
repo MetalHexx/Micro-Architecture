@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { FeatureState } from './feature-settings/store/feature.state';
-import { getFeatures } from './feature-settings/store/feature-actions';
+import { AppState } from './store';
+import { loadFeatures } from './feature-management/store/feature.actions';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +10,12 @@ import { getFeatures } from './feature-settings/store/feature-actions';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private featureStore: Store<FeatureState>) {
+  constructor(private store: Store<AppState>) {
     
 
   }
   ngOnInit(): void {
-    this.featureStore.dispatch(getFeatures());  
+    this.store.dispatch(loadFeatures());  
     
   }
   

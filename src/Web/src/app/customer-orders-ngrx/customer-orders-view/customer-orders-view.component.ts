@@ -2,13 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Customer, CustomerOrdersModel, OrderModel, Feature } from 'src/app/gateway-api/models';
 import { Store, select } from '@ngrx/store';
-import { CustomerOrdersState } from '../store/customer-orders-state';
-import { GetCustomers, SelectCustomer, ClearOrder, GetCustomerOrders, SelectOrder } from '../store/customer-orders-actions';
-import { selectCustomers, selectOrders, selectCustomersLoading, selectOrdersLoading, selectOrdersError, selectSelectedCustomer, selectSelectedOrder, selectCustomersError } from '../store/customer-orders-selectors';
 import { filter, takeWhile, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
-import { FeatureState } from 'src/app/feature-settings/store/feature.state';
-import { selectFeatures, selectViewCustomersFeature, selectFeaturesState } from 'src/app/feature-settings/store/feature-selectors';
+import { AppState } from 'src/app/store';
+import { loadCustomers, selectCustomer, clearOrder, selectOrder, loadCustomerOrders } from '../store/customer-order.actions';
+import { selectCustomers, selectCustomersLoading, selectCustomersError, selectSelectedCustomer, selectOrders, selectOrdersLoading, selectOrdersError, selectSelectedOrder } from '../store/customer-order.selectors';
+import { selectViewCustomersFeature, selectViewOrderDetailsFeature } from 'src/app/feature-management/store/feature.selectors';
 
 
 @Component({
@@ -17,34 +16,34 @@ import { selectFeatures, selectViewCustomersFeature, selectFeaturesState } from 
   styleUrls: ['./customer-orders-view.component.css']
 })
 export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
-  viewCustomerFeature$: Observable<Feature>;
+  canViewCustomerFeature$: Observable<Feature>;
+  canViewOrderDetails$: Observable<Feature>;
   customers$: Observable<Customer[]>;
   selectedCustomer$: Observable<Customer>;
   customersLoading$: Observable<boolean>;
   customersError$: Observable<boolean>;
   customerOrders$: Observable<CustomerOrdersModel>;
-  selectedOrder$: Observable<OrderModel>;
+  selectedOrder$: Observable<OrderModel>; 
   ordersLoading$: Observable<boolean>;
   ordersError$: Observable<boolean>;
   componentActive: boolean = true;
 
   constructor(
-    private store: Store<CustomerOrdersState>, private snackbar: MatSnackBar) { }
+    private store: Store<AppState>, private snackbar: MatSnackBar) { }
 
   ngOnInit() {
-    this.store.dispatch(new GetCustomers());
+    this.store.dispatch(loadCustomers());
 
 
-    this.viewCustomerFeature$ = this.store.pipe(
+    this.canViewCustomerFeature$ = this.store.pipe(
       select(selectViewCustomersFeature),
       filter(s => s !== null),
       takeWhile(() => this.componentActive));
 
-    // this.store
-    // .select<any>((state: any) => state) // the complete state this time!!!
-    // .subscribe((completeState: any) => {
-    //   console.log(completeState)
-    // });
+    this.canViewOrderDetails$ = this.store.pipe(
+      select(selectViewOrderDetailsFeature),
+      filter(s => s !== null),
+      takeWhile(() => this.componentActive));
 
     this.customers$ = this.store.pipe(
       select(selectCustomers),
@@ -107,16 +106,16 @@ export class CustomerOrdersViewComponent implements OnInit, OnDestroy {
   }
 
   onCustomerSelected(customer: Customer) {
-    this.store.dispatch(new SelectCustomer(customer));
-    this.store.dispatch(new ClearOrder());
-    this.store.dispatch(new GetCustomerOrders(customer.id));
+    this.store.dispatch(selectCustomer({data: customer}));
+    this.store.dispatch(clearOrder());
+    this.store.dispatch(loadCustomerOrders({data: customer.id}));
   }
 
   onOrderSelected(order: OrderModel) {
-    this.store.dispatch(new SelectOrder(order));
+    this.store.dispatch(selectOrder({data: order}));
   }
 
   onBackToOrderList() {
-    this.store.dispatch(new ClearOrder());
+    this.store.dispatch(clearOrder());
   }
 }

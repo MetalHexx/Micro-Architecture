@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
 import { MaterialModule } from './material/material.module';
 import { CustomerOrdersModule } from './customer-orders/customer-orders.module';
@@ -10,13 +10,13 @@ import { CustomerOrdersNgrxModule } from './customer-orders-ngrx/customer-orders
 import { GatewayApiModule } from './gateway-api/gateway-api.module';
 import { HomeComponent } from './home/home.component'
 import { StoreModule } from '@ngrx/store';
-import * as fromAppState from './store';
 import { reducers, AppState, metaReducers } from './store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './store/app.effects';
 import { FeatureManagementModule } from './feature-management/feature-management.module';
+import { SharedModule } from './shared/shared.module';
+import { OverlayModule } from '@angular/cdk/overlay';
 // import { reducers, metaReducers } from './store/reducers';
 
 export const REDUCERS = new InjectionToken<AppState>('Root Reducer');
@@ -31,12 +31,13 @@ export const REDUCERS = new InjectionToken<AppState>('Root Reducer');
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule,
     MaterialModule,
     CustomerOrdersModule,
     CustomerOrdersNgrxModule, 
     GatewayApiModule,
     FeatureManagementModule,
+    SharedModule,
+    OverlayModule,
     StoreModule.forRoot(REDUCERS, {
       metaReducers, 
       runtimeChecks: {
@@ -49,5 +50,6 @@ export const REDUCERS = new InjectionToken<AppState>('Root Reducer');
   ],
   providers: [{provide: REDUCERS, useValue: reducers}],
   bootstrap: [AppComponent]
+  
 })
 export class AppModule { }

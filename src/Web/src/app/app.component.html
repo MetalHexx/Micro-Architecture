@@ -1,1 +1,11 @@
-<cbi-nav></cbi-nav>
+<ng-container *ngIf = "features$ | async as features">
+    <cbi-nav [appFeatures]="features" ></cbi-nav>
+</ng-container>
+
+<ng-container *ngIf = "(featuresLoading$ | async) === true">
+    Starting Application...
+</ng-container>
+
+<ng-container *ngIf = "(featureLoadingFailed$ | async) === true">
+    Error starting application
+</ng-container>

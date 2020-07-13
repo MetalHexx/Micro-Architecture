@@ -5,6 +5,7 @@ import { EMPTY, of } from 'rxjs';
 
 import * as CustomerOrderActions from './customer-order.actions';
 import { CustomersService, CustomerOrdersService } from 'src/app/gateway-api/services';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -18,7 +19,10 @@ export class CustomerOrderEffects {
       concatMap(() =>
         this.customersService.GetCustomers().pipe(
           map(data => CustomerOrderActions.loadCustomersSuccess({data})),
-          catchError(error => of(CustomerOrderActions.loadCustomersFailure())))
+          catchError(error => {
+            this.snackbar.open("Error fetching customers", null, { duration: 3000 });
+            return of(CustomerOrderActions.loadCustomersFailure())
+          }))
       )
     );
   });
@@ -30,7 +34,10 @@ export class CustomerOrderEffects {
       mergeMap((action) =>
         this.customerOrdersService.GetCustomerOrders({ customerId: action.data }).pipe(
           map(data => CustomerOrderActions.loadCustomerOrdersSuccess({ data })),
-          catchError(error => of(CustomerOrderActions.loadCustomersOrdersFailure())))
+          catchError(error => {
+            this.snackbar.open("Error fetching orders", null, { duration: 3000 });
+            return of(CustomerOrderActions.loadCustomersOrdersFailure())
+          }))
       )
     );
   });
@@ -38,7 +45,8 @@ export class CustomerOrderEffects {
   constructor(
     private actions$: Actions,
     private customersService: CustomersService,
-    private customerOrdersService: CustomerOrdersService
+    private customerOrdersService: CustomerOrdersService,
+    private snackbar: MatSnackBar
 ) {
     this.customersService.rootUrl = "http://localhost:5000";
     this.customerOrdersService.rootUrl = "http://localhost:5000";

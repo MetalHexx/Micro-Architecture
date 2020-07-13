@@ -12,7 +12,7 @@ export interface FeatureState {
 }
 
 export const initialState: FeatureState = {
-  features: {},
+  features: null,
   loading: false,
   loadingFailed: false
 };

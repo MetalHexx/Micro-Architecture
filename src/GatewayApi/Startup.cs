@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using GatewayApi.Clients;
-using GatewayApi.Configuration;
-using GatewayApi.Features;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -22,7 +21,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace GatewayApi
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -33,8 +32,9 @@ namespace GatewayApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.Configure<AppFeatures>(Configuration.GetSection(AppFeatures.SectionName));
+        {            
+            ConfigureAppFeatures(services);
+            ConfigureClients(services);
 
             services.AddCors(options =>
             {
@@ -54,13 +54,17 @@ namespace GatewayApi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            ApiClientConfig.ConfigureServices(services, Configuration);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Use(async (context, next) =>
+            {
+                Thread.Sleep(new Random().Next(0, 2000));
+                await next.Invoke();                
+            });
+
             app.UseCors("CorsPolicy");
             app.UseSwagger();
             app.UseSwaggerUI(c =>

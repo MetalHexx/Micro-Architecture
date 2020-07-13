@@ -10,22 +10,22 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace GatewayApi.Configuration
+namespace GatewayApi
 {
-    public static class ApiClientConfig
+    public partial class Startup
     {
         /// <summary>
         /// Configures the api clients with resilience policies.
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="configuration">The configuration.</param>
-        public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public void ConfigureClients(IServiceCollection services)
         {
-            var apiSettings = configuration
+            var apiSettings = Configuration
                 .GetSection("ApiSettings")
                 .Get<ApiSettings>();
 
-            services.AddHttpClient<CustomersClient>(client => 
+            services.AddHttpClient<CustomersClient>(client =>
                 client.BaseAddress = new Uri(apiSettings.CustomersApiBaseUrl))
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryWithBackoffPolicy())
@@ -44,7 +44,7 @@ namespace GatewayApi.Configuration
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
         }
 
-        static IAsyncPolicy<HttpResponseMessage> GetRetryWithBackoffPolicy()
+        IAsyncPolicy<HttpResponseMessage> GetRetryWithBackoffPolicy()
         {
             Random jitterer = new Random();
             return HttpPolicyExtensions
@@ -55,16 +55,16 @@ namespace GatewayApi.Configuration
                     OnHttpRetry(retryAttempt);
                     return TimeSpan.FromSeconds(1)
                                    + TimeSpan.FromMilliseconds(jitterer.Next(0, 100));
-                });;
+                }); ;
         }
 
-        static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .CircuitBreakerAsync(5, TimeSpan.FromSeconds(10),
                 (result, breakDuration) =>
-                {                    
+                {
                     OnHttpBreak(result, breakDuration, 10);
                 },
                 () =>
@@ -73,7 +73,7 @@ namespace GatewayApi.Configuration
                 });
         }
 
-        static void OnHttpRetry(int retryAttempt)
+        void OnHttpRetry(int retryAttempt)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Retry attempt #{retryAttempt}");

@@ -30,6 +30,12 @@ namespace GatewayApi.Controllers
         {
             try
             {
+                var randomError = new Random().Next(0, 10);
+                if (randomError > 6)
+                {
+                    throw new Exception();
+                }
+
                 var result = await GetCustomerOrdersAsync(customerId);
                 var customerOrders = new CustomerOrdersModel
                 (

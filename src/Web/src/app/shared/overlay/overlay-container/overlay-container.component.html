@@ -1,0 +1,60 @@
+<ng-container [ngSwitch]="type">
+
+    <ng-container *ngSwitchCase="loaderType.ErrorDialog">
+        <ng-container  *ngTemplateOutlet="ErrorDialog"></ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="loaderType.ErrorDialogSmall">
+        <ng-container  *ngTemplateOutlet="ErrorDialogSmall"></ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="loaderType.LoadingDialog">
+        <ng-container  *ngTemplateOutlet="LoadingDialog"></ng-container>
+    </ng-container>
+    
+    <ng-container *ngSwitchCase="loaderType.Spinner">
+        <ng-container  *ngTemplateOutlet="Spinner"></ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="loaderType.SpinnerSmall">
+        <ng-container  *ngTemplateOutlet="SpinnerSmall"></ng-container>
+    </ng-container>
+</ng-container>
+
+<ng-template #Spinner>
+    <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #SpinnerSmall>
+    <mat-spinner diameter="25" strokeWidth="5"></mat-spinner>
+</ng-template>
+
+<ng-template #ErrorDialog>
+    <mat-card [style.backgroundColor]="'lightpink'">
+        <mat-card-header>
+            <mat-card-title *ngIf="message">
+                {{message ? message : "Error loading data"}}
+            </mat-card-title>
+        </mat-card-header>
+    </mat-card>
+</ng-template>
+
+<ng-template #ErrorDialogSmall>
+    <mat-card [style.backgroundColor]="'lightpink'">
+        {{message ? message : "Error loading data"}}
+    </mat-card>
+    <mat-card-content></mat-card-content>
+</ng-template>
+
+<ng-template #LoadingDialog>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title *ngIf="message">
+                {{message}}...
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-card-content>
+    </mat-card>
+</ng-template>

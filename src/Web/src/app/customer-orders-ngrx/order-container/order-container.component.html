@@ -1,0 +1,14 @@
+<div [loadingOverlay]="loading$" loadingMessage="Loading Orders" loadingType="loading-dialog" [errorOverlay]="error$" errorMessage="Error fetching orders" errorType="error-dialog">
+
+    <ng-container *ngIf="(isOrderSelected$ | async) === true">        
+            <cbi-order-details [order]="selectedOrder$ | async"
+                (orderClosed)="onBackToOrderList()" *ngIf="selectedOrder$ | async">
+            </cbi-order-details>
+    </ng-container>
+
+    <ng-container *ngIf="(isOrderSelected$ | async) === false">
+        <cbi-order-list  [orders]="(customerOrders$ | async).orders" (orderSelected)="onOrderSelected($event)" *ngIf="customerOrders$ | async as customerOrders">
+        </cbi-order-list>
+    </ng-container>
+
+<div>   

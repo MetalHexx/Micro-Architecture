@@ -1,65 +1,15 @@
 <h2>Customer Orders</h2>
 
-ViewCustomer Feature State Value:
-<pre>{{canViewCustomerFeature$ | async | json}}</pre>
-
-ViewCustomerOrders Feature State Value:
-<pre>{{canViewOrderDetails$ | async | json}}</pre>
-
-<ng-container *ngIf="((canViewCustomerFeature$ | async)?.enabled); else CustomersDisabled">
-
-    <div *ngIf="(customersLoading$ | async)">
-        Loading customers
-    </div>
-    <div *ngIf="(customersError$ | async)">
-        Error loading customers
-    </div>
-
-    <div *ngIf="customers$ | async as customers">
-        <cbi-customer-select [customers]="customers" (customerSelected)="onCustomerSelected($event)">
-        </cbi-customer-select>
-    </div>
-
-</ng-container>
-
-<ng-template #CustomersDisabled>
-    <div>
-        Customer feature has been disabled.
-    </div>    
+<ng-template #CustomerOrdersViewDisabled>
+    This page has been disabled!
 </ng-template>
 
-<ng-container *ngIf="(canViewOrderDetails$ | async)?.enabled; else OrdersDisabled">
+<ng-container *ngIf="customerOrdersViewEnabled$ | async; else CustomerOrdersViewDisabled">
 
-    <ng-container *ngIf="selectedCustomer$ | async; else SelectCustomer">   
+    <cbi-customer-select 
+        (customerSelected)="onCustomerSelected($event)">
+    </cbi-customer-select>    
 
-        <div *ngIf="(ordersLoading$ | async)">
-            Loading orders
-        </div>
-        
-        <div *ngIf="(ordersError$ | async)">
-            Error loading orders
-        </div>
-        
-        <div *ngIf="(ordersLoading$ | async) === false">
-            <div *ngIf="customerOrders$ | async as customerOrders">
-                <div *ngIf="selectedOrder$ | async as selectedOrder">
-                    <cbi-order-list [orders]="customerOrders.orders" (orderSelected)="onOrderSelected($event)"
-                        *ngIf="isEmpty(selectedOrder)">
-                    </cbi-order-list>
-                    <cbi-order-details *ngIf="!isEmpty(selectedOrder)" [order]="selectedOrder"
-                        (orderClosed)="onBackToOrderList()">
-                    </cbi-order-details>
-                </div>
-            </div>
-        </div>
-    </ng-container>
-    <ng-template #SelectCustomer>
-        Select a customer to view orders
-    </ng-template>
+    <cbi-order-container></cbi-order-container>
+    
 </ng-container>
-
-<ng-template #OrdersDisabled>
-    <div>
-        Order details feature has been disabled.
-    </div>
-</ng-template>

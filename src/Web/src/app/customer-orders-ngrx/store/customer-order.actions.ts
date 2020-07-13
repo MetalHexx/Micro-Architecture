@@ -30,7 +30,11 @@ export const selectOrder = createAction(
   '[CustomerOrders] Order Selected',
   props<{ data: Order }>());
 
-export const clearOrder = createAction(
-  '[CustomerOrders] Order Cleared');
+export const clearSelectedOrder = createAction(
+  '[CustomerOrders] Selected Order Cleared');
+
+
+export const clearAllOrders = createAction(
+  '[CustomerOrders] All Orders Cleared');
 
 

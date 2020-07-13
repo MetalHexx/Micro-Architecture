@@ -5,12 +5,11 @@
             Menu
         </mat-toolbar>
         <mat-nav-list>
-            <a id="route-home" mat-list-item routerLinkActive="selected" [routerLink]="['/home']">Home</a>
-            <a id="route-clients" mat-list-item routerLinkActive="selected" [routerLink]="['/customer-orders']">Customer
-                Orders</a>
-            <a id="route-clients" mat-list-item routerLinkActive="selected"
-                [routerLink]="['/customer-orders-ngrx']">Customer
-                Orders (NGRX)</a>
+            <ng-container *ngFor="let item of menuItems"> 
+                <a mat-list-item routerLinkActive="selected"  id="item.id" [routerLink]="item.routerLink" *ngIf="item.enabled">
+                    {{item.label}}
+                </a>
+            </ng-container>
         </mat-nav-list>
         <footer class="footer">
             

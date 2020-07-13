@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GatewayApi.Features;
+using GatewayApi.Features.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,16 +14,16 @@ namespace GatewayApi.Controllers
     [ApiController]
     public class FeaturesController : ControllerBase
     {
-        private readonly AppFeatures _features;
+        private readonly IAppFeaturesService _featuresService;
 
-        public FeaturesController(IOptions<AppFeatures> features)
+        public FeaturesController(IAppFeaturesService featuresService)
         {
-            _features = features.Value;
+            _featuresService = featuresService;
         }
         [HttpGet("features")]
         public async Task<ActionResult<AppFeatures>> GetFeatures()
         {
-            return Ok(_features);
+            return Ok(await _featuresService.Get());
         }
     }
 }

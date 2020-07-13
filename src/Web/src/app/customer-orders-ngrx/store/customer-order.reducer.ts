@@ -18,12 +18,12 @@ export interface CustomerOrderState {
 }
 
 export const initialState: CustomerOrderState = {
-  customers: [],
-  selectedCustomer: {},
+  customers: null,
+  selectedCustomer: null,
   customersLoading: false,
   customersError: false,
-  orders: {},
-  selectedOrder: {},
+  orders: null,
+  selectedOrder: null,
   ordersLoading: false,
   ordersError: false
 };
@@ -53,27 +53,43 @@ const customerOrderReducer = createReducer(
     ordersLoading: true, 
     orderssError: false
   })),
+
   on(CustomerOrderActions.loadCustomerOrdersSuccess, (state, action) => ({
     ...state,
     orders: action.data,
     ordersLoading: false,
     ordersError: false
   })),
+
   on(CustomerOrderActions.loadCustomersOrdersFailure, (state) => ({
     ...state,
     ordersLoading: false,
     ordersError: true
   })),
+
+  on(CustomerOrderActions.clearAllOrders, (state) => ({
+    ...state,
+    selectedOrder: initialState.selectedOrder,
+    orders: initialState.orders,
+    ordersError: false,
+    ordersLoading: false
+  })),
+
   on(CustomerOrderActions.selectCustomer, (state, action) => ({
     ...state,
     selectedOrder: initialState.selectedOrder,
     selectedCustomer: action.data,
   })),
+
   on(CustomerOrderActions.selectOrder, (state, action) => ({
     ...state,
     selectedOrder: action.data
   })),
 
+  on(CustomerOrderActions.clearSelectedOrder, (state, action) => ({
+    ...state,
+    selectedOrder: initialState.selectedOrder
+  }))
 );
 
 export function reducer(state: CustomerOrderState | undefined, action: Action) {

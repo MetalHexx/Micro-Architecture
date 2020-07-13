@@ -44,7 +44,14 @@ export class NavComponent implements OnInit {
         label: 'Customer Orders (NGRX)',
         routerLink: "/customer-orders-ngrx",
         enabled: this.appFeatures.customerOrdersView.enabled
-      }];
+      },
+      {
+        id: "feature-management",
+        label: 'Feature Management',
+        routerLink: "/feature-management",
+        enabled: true
+      }
+    ];
   }
 
   constructor(private breakpointObserver: BreakpointObserver) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AppState } from './store';
 import { loadFeatures } from './feature-management/store/feature.actions';
-import { selectAppFeaturesState, featuresLoadingFailed, allFeatures, featuresLoading } from './feature-management/store/feature.selectors';
+import { featuresLoadingFailed, allFeatures, featuresLoading } from './feature-management/store/feature.selectors';
 import { Observable } from 'rxjs';
 import { AppFeatures } from './gateway-api/models';
 import { filter } from 'rxjs/operators';

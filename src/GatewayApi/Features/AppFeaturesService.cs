@@ -25,8 +25,11 @@ namespace GatewayApi.Features
             var database = client.GetDatabase(settings.Value.DatabaseName);
             _appFeatures = database.GetCollection<AppFeatures>(settings.Value.CollectionName);            
         }
+        public async Task<AppFeatures> Get(string id) => 
+            (await _appFeatures.FindAsync(f => f.Id == id)).FirstOrDefault();
+        
 
-        public async Task<AppFeatures> Get()
+        public async Task<AppFeatures> GetAll()
         {
             try
             {                
@@ -36,7 +39,9 @@ namespace GatewayApi.Features
                 if (appFeatures == null)
                 {
                     //TODO: Log first record creation
-                    return await Create(_appFeaturesOptions);
+                    await Create(_appFeaturesOptions);
+                    appFeatures = (await _appFeatures.FindAsync(f => true)).FirstOrDefault();
+                    return _appFeaturesOptions;
                 }
                 return appFeatures;
             }
@@ -47,21 +52,26 @@ namespace GatewayApi.Features
             }
         }
 
-        public async Task Remove(AppFeatures features)
-        {
+        public async Task Remove(AppFeatures features) => 
             await _appFeatures.DeleteOneAsync(f => f.Id == features.Id);
-        }
 
-        public async Task<AppFeatures> Create(AppFeatures features)
-        {
+        public async Task Remove(string id) => await 
+            _appFeatures.DeleteOneAsync(f => f.Id == id);
+
+        public async Task Create(AppFeatures features) => 
             await _appFeatures.InsertOneAsync(features);
-            return features;
-        }
+
+        public Task Update(string id, AppFeatures features) =>
+            _appFeatures.ReplaceOneAsync(f => f.Id == id, features);
     }
 
     public interface IAppFeaturesService
     {
-        Task<AppFeatures> Get();
+        Task<AppFeatures> Get(string id);
+        Task<AppFeatures> GetAll();
         Task Remove(AppFeatures features);
+        Task Remove(string id);
+        Task Create(AppFeatures features);
+        Task Update(string id, AppFeatures features);
     }
 }

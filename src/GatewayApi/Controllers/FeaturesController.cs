@@ -23,7 +23,28 @@ namespace GatewayApi.Controllers
         [HttpGet("features")]
         public async Task<ActionResult<AppFeatures>> GetFeatures()
         {
-            return Ok(await _featuresService.Get());
+            return Ok(await _featuresService.GetAll());
+        }
+
+        [HttpPost("features")]
+        public async Task<ActionResult<AppFeatures>> CreateFeatures([FromBody] AppFeatures features)
+        {
+            await _featuresService.Create(features);
+            return Ok();
+        }
+
+        [HttpPut("features")]
+        public async Task<ActionResult<AppFeatures>> UpdateFeatures([FromBody] AppFeatures features)
+        {
+            await _featuresService.Update(features.Id, features);
+            return Ok();
+        }
+
+        [HttpDelete("features/{id}")]
+        public async Task<ActionResult<AppFeatures>> DeleteFeatures(string id)
+        {
+            await _featuresService.Remove(id);
+            return Ok();
         }
     }
 }

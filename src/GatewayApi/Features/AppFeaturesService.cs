@@ -30,9 +30,7 @@ namespace GatewayApi.Features
         {
             try
             {                
-                var appFeatures = (await _appFeatures.FindAsync(settings => true)).FirstOrDefault();
-                await Remove(appFeatures);
-                appFeatures = null;
+                var appFeatures = (await _appFeatures.FindAsync(f => true)).FirstOrDefault();
 
 
                 if (appFeatures == null)

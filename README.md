@@ -12,12 +12,14 @@ Just my own personal stomping grounds for testing and experimenting with microse
 - Angular 8
 - NGRX
 - ng-swagger-gen typescript clients
+- mongodb (for feature management)
 
 ### How to Run ###
 __Server Side:__
 - Configure all Services to run as projects (not IISExpress)
 - Configure the projects to run with the correct port (see AppSettings.json file)
 - Run all apis -- Front end talks to Gateway exclusively
+- Install mongo db
 
 __Angular:__
 - install npm globally

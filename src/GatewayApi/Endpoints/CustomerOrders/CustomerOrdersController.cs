@@ -15,9 +15,12 @@ namespace GatewayApi.Infrastructure
     public class CustomerOrdersController : BaseGatewayController
     {
         private readonly ICustomerOrdersService _service;
+        private readonly CustomersClient _customersClient;
 
-        public CustomerOrdersController(ICustomerOrdersService customerOrdersService){
+        public CustomerOrdersController(ICustomerOrdersService customerOrdersService, CustomersClient customersClient)
+        {
             _service = customerOrdersService;
+            _customersClient = customersClient;
         }
 
         [HttpGet("customers/{customerId}/orders")]
@@ -44,6 +47,25 @@ namespace GatewayApi.Infrastructure
             {
                 return GenerateErrorResult(e);
             }            
-        }        
+        }
+
+        [HttpGet("customers")]
+        public async Task<ActionResult<CustomerOrdersViewModel>> GetCustomerList(int customerId)
+        {
+            try
+            {
+                //var randomError = new Random().Next(0, 10);
+                //if(randomError > 6)
+                //{
+                //    throw new Exception();
+                //}
+                var result = await _customersClient.GetCustomersAsync();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return GenerateErrorResult(e);
+            }
+        }
     }
 }

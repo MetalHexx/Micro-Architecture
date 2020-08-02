@@ -1,6 +1,6 @@
 /* tslint:disable */
 export interface Customer {
-  id?: number;
   firstName?: string;
+  id?: number;
   lastName?: string;
 }

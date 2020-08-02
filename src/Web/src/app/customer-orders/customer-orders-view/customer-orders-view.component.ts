@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CustomersService, CustomerOrdersService } from 'src/app/gateway-api/services';
-import { Customer, Order, CustomerOrdersModel, OrderModel } from 'src/app/gateway-api/models';
+import { Customer, Order, CustomerOrdersViewModel, OrderModel } from 'src/app/gateway-api/models';
 
 
 @Component({
@@ -11,7 +11,7 @@ import { Customer, Order, CustomerOrdersModel, OrderModel } from 'src/app/gatewa
 })
 export class CustomerOrdersViewComponent implements OnInit {
   customers$: Observable<Customer[]>;
-  customerOrders$: Observable<CustomerOrdersModel>;
+  customerOrders$: Observable<CustomerOrdersViewModel>;
   selectedOrder: Order = null;
   selectedCustomer: Customer = null;
 

@@ -124,7 +124,7 @@ class ProductsService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/Products/${params.id}`,
+      this.rootUrl + `/api/Products/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,
@@ -167,7 +167,7 @@ class ProductsService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/api/Products/${params.id}`,
+      this.rootUrl + `/api/Products/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,
@@ -207,7 +207,7 @@ class ProductsService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/Products/${params.id}`,
+      this.rootUrl + `/api/Products/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,

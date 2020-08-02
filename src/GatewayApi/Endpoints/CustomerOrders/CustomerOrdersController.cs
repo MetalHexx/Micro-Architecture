@@ -21,7 +21,7 @@ namespace GatewayApi.Infrastructure
         }
 
         [HttpGet("customers/{customerId}/orders")]
-        public async Task<ActionResult<CustomerOrdersModel>> GetCustomerOrders(int customerId)
+        public async Task<ActionResult<CustomerOrdersViewModel>> GetCustomerOrders(int customerId)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace GatewayApi.Infrastructure
                 }
 
                 var result = await _service.GetCustomerOrdersAsync(customerId);
-                var customerOrders = new CustomerOrdersModel
+                var customerOrders = new CustomerOrdersViewModel
                 (
                     result.CustomerResult,
                     result.OrderResult,

@@ -155,7 +155,7 @@ class FeaturesService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/Features/features/${params.id}`,
+      this.rootUrl + `/api/Features/features/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,

@@ -1,4 +1,4 @@
-export { CustomerOrdersModel } from './models/customer-orders-model';
+export { CustomerOrdersViewModel } from './models/customer-orders-view-model';
 export { CustomerModel } from './models/customer-model';
 export { OrderModel } from './models/order-model';
 export { OrderItemModel } from './models/order-item-model';

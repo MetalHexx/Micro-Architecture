@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
-import { CustomerOrdersModel } from 'src/app/gateway-api/models/customer-orders-model';
+import { CustomerOrdersViewModel } from 'src/app/gateway-api/models/customer-orders-view-model';
 import { OrderModel } from 'src/app/gateway-api/models';
 import { selectOrders, selectOrdersLoading, selectOrdersError, selectSelectedOrder } from '../store/customer-order.selectors';
 import { filter, map } from 'rxjs/operators';
@@ -14,8 +14,8 @@ import { selectOrder, clearSelectedOrder } from '../store/customer-order.actions
   styleUrls: ['./order-container.component.css']
 })
 export class OrderContainerComponent implements OnInit {
-  customerOrders$: Observable<CustomerOrdersModel>;
-  selectedOrder$: Observable<OrderModel>; 
+  customerOrders$: Observable<CustomerOrdersViewModel>;
+  selectedOrder$: Observable<OrderModel>;
   isOrderSelected$:  Observable<boolean>;
   loading$: Observable<boolean>;
   error$: Observable<boolean>;

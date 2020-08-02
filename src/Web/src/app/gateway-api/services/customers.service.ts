@@ -40,7 +40,7 @@ class CustomersService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/Customers/${params.id}`,
+      this.rootUrl + `/api/Customers/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,
@@ -85,7 +85,7 @@ class CustomersService extends __BaseService {
     __body = params.customer;
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/api/Customers/${params.id}`,
+      this.rootUrl + `/api/Customers/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,
@@ -127,7 +127,7 @@ class CustomersService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/Customers/${params.id}`,
+      this.rootUrl + `/api/Customers/${encodeURIComponent(params.id)}`,
       __body,
       {
         headers: __headers,

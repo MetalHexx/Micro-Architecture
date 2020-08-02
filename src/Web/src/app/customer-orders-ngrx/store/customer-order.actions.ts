@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Customer, Order, CustomerOrdersModel } from 'src/app/gateway-api/models';
+import { Customer, Order, CustomerOrdersViewModel } from 'src/app/gateway-api/models';
 
 export const loadCustomers = createAction(
   '[CustomerOrders] Get Customers');
@@ -7,7 +7,7 @@ export const loadCustomers = createAction(
 export const loadCustomersSuccess = createAction(
   '[CustomerOrders] Load Customers Success',
   props<{ data: Customer[] }>());
-  
+
 export const loadCustomersFailure = createAction(
   '[CustomerOrders] Load Customers Failure');
 
@@ -17,8 +17,8 @@ export const loadCustomerOrders = createAction(
 
 export const loadCustomerOrdersSuccess = createAction(
   '[CustomerOrders] Load Customer Orders Success',
-  props<{ data: CustomerOrdersModel }>());
-  
+  props<{ data: CustomerOrdersViewModel }>());
+
 export const loadCustomersOrdersFailure = createAction(
   '[CustomerOrders] Load Customer Orders Failure');
 

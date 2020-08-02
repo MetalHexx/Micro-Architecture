@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface ProductModel {
+export interface ProductViewModel {
   id?: number;
   name?: string;
   price?: number;

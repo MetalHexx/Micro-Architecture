@@ -1,8 +1,8 @@
 export { CustomerOrdersViewModel } from './models/customer-orders-view-model';
-export { CustomerModel } from './models/customer-model';
-export { OrderModel } from './models/order-model';
-export { OrderItemModel } from './models/order-item-model';
-export { ProductModel } from './models/product-model';
+export { CustomerViewModel } from './models/customer-view-model';
+export { OrderViewModel } from './models/order-view-model';
+export { OrderItemViewModel } from './models/order-item-view-model';
+export { ProductViewModel } from './models/product-view-model';
 export { Customer } from './models/customer';
 export { IdResult } from './models/id-result';
 export { AppFeatures } from './models/app-features';

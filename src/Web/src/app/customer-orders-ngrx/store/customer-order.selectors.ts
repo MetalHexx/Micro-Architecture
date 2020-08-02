@@ -2,7 +2,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import * as fromCustomerOrder from './customer-order.reducer';
 import { CustomerOrderState } from './customer-order.reducer';
 import { Customer } from 'src/app/gateway-api/models/customer';
-import { CustomerOrdersViewModel, OrderModel } from 'src/app/gateway-api/models';
+import { CustomerOrdersViewModel, OrderViewModel } from 'src/app/gateway-api/models';
 
 const getCustomers = (state: CustomerOrderState): Customer[] => state.customers;
 const getSelectedCustomer = (state: CustomerOrderState): Customer => state.selectedCustomer;
@@ -10,7 +10,7 @@ const getCustomersLoading = (state: CustomerOrderState): boolean => state.custom
 const getCustomersError = (state: CustomerOrderState): boolean => state.customersError;
 
 const getOrders = (state: CustomerOrderState): CustomerOrdersViewModel => state.orders;
-const getSelectedOrder = (state: CustomerOrderState): OrderModel => state.selectedOrder;
+const getSelectedOrder = (state: CustomerOrderState): OrderViewModel => state.selectedOrder;
 const getOrdersLoading = (state: CustomerOrderState): boolean => state.ordersLoading;
 const getOrdersError = (state: CustomerOrderState): boolean => state.ordersError;
 
@@ -33,7 +33,7 @@ export const selectCustomersError: MemoizedSelector<object, boolean> =
 export const selectOrders: MemoizedSelector<object, CustomerOrdersViewModel> =
     createSelector(selectCustomerOrderState, getOrders);
 
-export const selectSelectedOrder: MemoizedSelector<object, OrderModel> =
+export const selectSelectedOrder: MemoizedSelector<object, OrderViewModel> =
     createSelector(selectCustomerOrderState, getSelectedOrder);
 
 export const selectOrdersLoading: MemoizedSelector<object, boolean> =

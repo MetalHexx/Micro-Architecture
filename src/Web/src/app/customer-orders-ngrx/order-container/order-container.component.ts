@@ -3,7 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { Observable } from 'rxjs';
 import { CustomerOrdersViewModel } from 'src/app/gateway-api/models/customer-orders-view-model';
-import { OrderModel } from 'src/app/gateway-api/models';
+import { OrderViewModel } from 'src/app/gateway-api/models';
 import { selectOrders, selectOrdersLoading, selectOrdersError, selectSelectedOrder } from '../store/customer-order.selectors';
 import { filter, map } from 'rxjs/operators';
 import { selectOrder, clearSelectedOrder } from '../store/customer-order.actions';
@@ -15,7 +15,7 @@ import { selectOrder, clearSelectedOrder } from '../store/customer-order.actions
 })
 export class OrderContainerComponent implements OnInit {
   customerOrders$: Observable<CustomerOrdersViewModel>;
-  selectedOrder$: Observable<OrderModel>;
+  selectedOrder$: Observable<OrderViewModel>;
   isOrderSelected$:  Observable<boolean>;
   loading$: Observable<boolean>;
   error$: Observable<boolean>;
@@ -41,7 +41,7 @@ export class OrderContainerComponent implements OnInit {
     )
   }
 
-  onOrderSelected(order: OrderModel) {
+  onOrderSelected(order: OrderViewModel) {
     this.store.dispatch(selectOrder({data: order}));
   }
 

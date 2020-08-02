@@ -1,7 +1,7 @@
 /* tslint:disable */
-import { CustomerModel } from './customer-model';
-import { OrderModel } from './order-model';
+import { CustomerViewModel } from './customer-view-model';
+import { OrderViewModel } from './order-view-model';
 export interface CustomerOrdersViewModel {
-  customer?: CustomerModel;
-  orders?: Array<OrderModel>;
+  customer?: CustomerViewModel;
+  orders?: Array<OrderViewModel>;
 }

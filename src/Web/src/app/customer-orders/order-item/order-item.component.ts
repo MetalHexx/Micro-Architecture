@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { OrderItemModel } from 'src/app/gateway-api/models';
+import { OrderItemViewModel } from 'src/app/gateway-api/models';
 
 @Component({
   selector: 'cbi-order-item',
@@ -7,7 +7,7 @@ import { OrderItemModel } from 'src/app/gateway-api/models';
   styleUrls: ['./order-item.component.css']
 })
 export class OrderItemComponent implements OnInit {
-  @Input() item: OrderItemModel;
+  @Input() item: OrderItemViewModel;
 
   constructor() { }
 

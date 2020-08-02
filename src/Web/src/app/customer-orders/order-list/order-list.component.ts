@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { OrderModel } from 'src/app/gateway-api/models';
+import { OrderViewModel } from 'src/app/gateway-api/models';
 
 @Component({
   selector: 'cbi-order-list',
@@ -7,15 +7,15 @@ import { OrderModel } from 'src/app/gateway-api/models';
   styleUrls: ['./order-list.component.css']
 })
 export class OrderListComponent implements OnInit {
-  @Input() orders: OrderModel[];
-  @Output() orderSelected: EventEmitter<OrderModel> = new EventEmitter<OrderModel>();
+  @Input() orders: OrderViewModel[];
+  @Output() orderSelected: EventEmitter<OrderViewModel> = new EventEmitter<OrderViewModel>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  onOrderSelected(order: OrderModel) {
+  onOrderSelected(order: OrderViewModel) {
     this.orderSelected.emit(order);
   }
 

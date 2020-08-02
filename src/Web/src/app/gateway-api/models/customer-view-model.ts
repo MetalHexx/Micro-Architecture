@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface CustomerModel {
+export interface CustomerViewModel {
   firstName?: string;
   id?: number;
   lastName?: string;

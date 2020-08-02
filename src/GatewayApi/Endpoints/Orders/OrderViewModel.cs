@@ -4,17 +4,17 @@ using System.Linq;
 
 namespace GatewayApi.Models
 {
-    public class OrderModel
+    public class OrderViewModel
     {
         public int OrderId { get; set; }
         public string OrderDate { get; set; }
-        public List<OrderItemModel> Items { get; set; }
+        public List<OrderItemViewModel> Items { get; set; }
 
-        public OrderModel(Order order, List<Product> products = null)
+        public OrderViewModel(Order order, List<Product> products = null)
         {
             OrderId = order.Id;
             OrderDate = order.OrderDate.ToString();
-            Items = order.Items.Select(item => new OrderItemModel
+            Items = order.Items.Select(item => new OrderItemViewModel
             (
                 products.First(p => p.Id == item.ProductId),
                 item

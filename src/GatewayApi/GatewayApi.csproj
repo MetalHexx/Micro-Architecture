@@ -24,4 +24,8 @@
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GatewayApi.Domain\GatewayApi.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

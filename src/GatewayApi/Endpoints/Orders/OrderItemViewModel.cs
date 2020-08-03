@@ -1,5 +1,5 @@
-﻿
-using GatewayApi.Clients.Models;
+﻿using GatewayApi.Domain.Clients.OrdersApi;
+using GatewayApi.Domain.Clients.ProductsApi;
 
 namespace GatewayApi.Models
 {
@@ -10,7 +10,7 @@ namespace GatewayApi.Models
 
         public OrderItemViewModel(Product product, OrderItem orderItem)
         {
-            Quantity = orderItem.Quantity;
+            Quantity = orderItem.Quantity.Value;
             Product = new ProductViewModel(product);
         }
     }

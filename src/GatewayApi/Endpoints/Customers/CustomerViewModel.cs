@@ -1,5 +1,4 @@
-﻿
-using GatewayApi.Clients.Models;
+﻿using GatewayApi.Domain.Clients.CustomersApi;
 
 namespace GatewayApi.Models
 {
@@ -11,7 +10,7 @@ namespace GatewayApi.Models
 
         public CustomerViewModel(Customer customer)
         {
-            Id = customer.Id;
+            Id = customer.Id.Value;
             FirstName = customer.FirstName;
             LastName = customer.LastName;
         }

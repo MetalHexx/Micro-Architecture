@@ -1,5 +1,4 @@
-﻿
-using GatewayApi.Clients.Models;
+﻿using GatewayApi.Domain.Clients.ProductsApi;
 
 namespace GatewayApi.Models
 {
@@ -7,13 +6,13 @@ namespace GatewayApi.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         public ProductViewModel(Product product)
         {
-            Id = product.Id;
+            Id = product.Id.Value;
             Name = product.Name;
-            Price = product.Price;
+            Price = product.Price.Value;
         }
     }
 }

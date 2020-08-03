@@ -50,6 +50,7 @@ namespace GatewayApi
                     Version = "v1",
                     Title = "Gateway API"                    
                 });
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

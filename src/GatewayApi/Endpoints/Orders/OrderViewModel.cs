@@ -1,4 +1,5 @@
-﻿using GatewayApi.Clients.Models;
+﻿using GatewayApi.Domain.Clients.OrdersApi;
+using GatewayApi.Domain.Clients.ProductsApi;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace GatewayApi.Models
 
         public OrderViewModel(Order order, List<Product> products = null)
         {
-            OrderId = order.Id;
+            OrderId = order.Id.Value;
             OrderDate = order.OrderDate.ToString();
             Items = order.Items.Select(item => new OrderItemViewModel
             (

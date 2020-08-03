@@ -1,4 +1,6 @@
-﻿using GatewayApi.Clients;
+﻿using GatewayApi.Domain.Clients.CustomersApi;
+using GatewayApi.Domain.Clients.OrdersApi;
+using GatewayApi.Domain.Clients.ProductsApi;
 using GatewayApi.Models;
 using System;
 using System.Collections.Generic;
@@ -18,11 +20,11 @@ namespace GatewayApi.Controllers.CustomerOrders
     /// </summary>
     public class CustomerOrdersService : ICustomerOrdersService
     {
-        private readonly CustomersClient _customersClient;
-        private readonly OrdersClient _ordersClient;
-        private readonly ProductsClient _productsClient;
+        private readonly CustomersApiClient _customersClient;
+        private readonly OrdersApiClient _ordersClient;
+        private readonly ProductsApiClient _productsClient;
 
-        public CustomerOrdersService(CustomersClient customersClient, OrdersClient ordersClient, ProductsClient productsClient)
+        public CustomerOrdersService(CustomersApiClient customersClient, OrdersApiClient ordersClient, ProductsApiClient productsClient)
         {
             _customersClient = customersClient;
             _ordersClient = ordersClient;
@@ -40,7 +42,7 @@ namespace GatewayApi.Controllers.CustomerOrders
                 var ordersResult = await _ordersClient.GetCustomerOrdersAsync(customerId);
 
                 var productIds = ordersResult
-                    .SelectMany(o => o.Items.Select(oi => oi.ProductId))
+                    .SelectMany(o => o.Items.Select(oi => oi.ProductId.Value))
                     .ToList();
 
                 var productsResult = await _productsClient.GetProductsAsync(productIds);

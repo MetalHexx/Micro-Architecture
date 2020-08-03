@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GatewayApi.Clients;
-using GatewayApi.Clients.Models;
+using GatewayApi.Domain.Clients.OrdersApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +11,9 @@ namespace GatewayApi.Controllers
     [ApiController]
     public class OrdersController : BaseGatewayController
     {
-        private readonly OrdersClient _ordersClient;
+        private readonly OrdersApiClient _ordersClient;
 
-        public OrdersController(OrdersClient ordersClient)
+        public OrdersController(OrdersApiClient ordersClient)
         {
             _ordersClient = ordersClient;
         }
@@ -57,7 +56,7 @@ namespace GatewayApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IdResult>> CreateOrder([FromBody] Order order)
+        public async Task<ActionResult<int>> CreateOrder([FromBody] Order order)
         {
             try
             {

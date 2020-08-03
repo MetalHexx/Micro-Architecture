@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using GatewayApi.Clients;
-using GatewayApi.Clients.Models;
+using GatewayApi.Domain.Clients.ProductsApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +13,9 @@ namespace GatewayApi.Controllers
     [ApiController]
     public class ProductsController : BaseGatewayController
     {
-        private readonly ProductsClient _productsClient;
+        private readonly ProductsApiClient _productsClient;
 
-        public ProductsController(ProductsClient productsClient)
+        public ProductsController(ProductsApiClient productsClient)
         {
             _productsClient = productsClient;
         }

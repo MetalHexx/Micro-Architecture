@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GatewayApi.Clients;
-using GatewayApi.Clients.Models;
+using GatewayApi.Domain.Clients.CustomersApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,9 +12,9 @@ namespace GatewayApi.Controllers
     [ApiController]
     public class CustomersController : BaseGatewayController
     {
-        private readonly CustomersClient _customerClient;
+        private readonly CustomersApiClient _customerClient;
 
-        public CustomersController(CustomersClient customerClient)
+        public CustomersController(CustomersApiClient customerClient)
         {
             _customerClient = customerClient;
         }

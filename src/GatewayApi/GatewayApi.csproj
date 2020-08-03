@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GatewayApi.Application\GatewayApi.Application.csproj" />
     <ProjectReference Include="..\GatewayApi.Domain\GatewayApi.Domain.csproj" />
   </ItemGroup>
 

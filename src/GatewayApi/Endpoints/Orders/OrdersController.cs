@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GatewayApi.Application.Common.Exceptions;
 using GatewayApi.Domain.Clients.OrdersApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

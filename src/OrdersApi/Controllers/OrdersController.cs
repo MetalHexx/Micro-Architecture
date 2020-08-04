@@ -50,7 +50,7 @@ namespace OrdersApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<IdResult> PostOrder([FromBody] Order order)
+        public ActionResult<int> PostOrder([FromBody] Order order)
         {
             var result = _postValidator.Validate(order);
             result.AddToModelState(ModelState, null);
@@ -66,7 +66,7 @@ namespace OrdersApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(new IdResult { Id = repoResult.Entity.Id });
+            return Ok(repoResult.Entity.Id);
         }
 
         [HttpPut("{id}")]

@@ -7,14 +7,13 @@ namespace GatewayApi.Models
     public class CustomerOrdersViewModel
     {
         public CustomerViewModel Customer { get; set; }
-        public List<OrderViewModel> Orders { get; set; }
+        public IEnumerable<OrderViewModel> Orders { get; set; }
 
-        public CustomerOrdersViewModel(Customer customer, List<Order> orders, List<Product>products)
+        public CustomerOrdersViewModel(Customer customer, IEnumerable<Order> orders, IEnumerable<Product>products)
         {
             Customer = new CustomerViewModel(customer);
             Orders = orders
-                .Select(o => new OrderViewModel(o, products))
-                .ToList();
+                .Select(o => new OrderViewModel(o, products));
         }
     }
 }

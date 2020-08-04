@@ -31,8 +31,8 @@ namespace GatewayApi.Application.CustomerOrders.Queries
     public class CustomerOrdersWithProductsResponse
     {
         public Customer Customer { get; set; }
-        public List<Order> CustomerOrders { get; set; }
-        public List<Product> OrderProducts { get; set; }
+        public IEnumerable<Order> CustomerOrders { get; set; }
+        public IEnumerable<Product> OrderProducts { get; set; }
     }
 
     public class GetCustomerOrdersProductsHandler : IRequestHandler<GetCustomerOrdersWithProducts, CustomerOrdersWithProductsResponse>
@@ -80,12 +80,10 @@ namespace GatewayApi.Application.CustomerOrders.Queries
                 Customer = _mapper.Map<ApiCustomer, Customer>(customerResult),
 
                 CustomerOrders = orderProductResult.OrdersResult
-                    .Select(o => _mapper.Map<ApiOrder, Order>(o))
-                    .ToList(),
-                
+                    .Select(o => _mapper.Map<ApiOrder, Order>(o)),                    
+
                 OrderProducts = orderProductResult.ProductsResult
                     .Select(p => _mapper.Map<ApiProduct, Product>(p))
-                .ToList()
             };
         }
     }

@@ -8,9 +8,9 @@ namespace GatewayApi.Models
     {
         public int OrderId { get; set; }
         public string OrderDate { get; set; }
-        public List<OrderItemViewModel> Items { get; set; }
+        public IEnumerable<OrderItemViewModel> Items { get; set; }
 
-        public OrderViewModel(Order order, List<Product> products = null)
+        public OrderViewModel(Order order, IEnumerable<Product> products = null)
         {
             OrderId = order.Id.Value;
             OrderDate = order.OrderDate.ToString();

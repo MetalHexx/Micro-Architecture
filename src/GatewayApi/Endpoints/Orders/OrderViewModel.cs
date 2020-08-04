@@ -1,5 +1,5 @@
-﻿using GatewayApi.Domain.Clients.OrdersApi;
-using GatewayApi.Domain.Clients.ProductsApi;
+﻿using GatewayApi.Infrastructure.Clients.OrdersApi;
+using GatewayApi.Infrastructure.Clients.ProductsApi;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,4 +1,5 @@
-﻿using GatewayApi.Domain.Clients.ProductsApi;
+﻿
+using GatewayApi.Infrastructure.Clients.ProductsApi;
 
 namespace GatewayApi.Models
 {

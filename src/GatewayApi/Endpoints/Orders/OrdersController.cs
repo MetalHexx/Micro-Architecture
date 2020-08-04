@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GatewayApi.Application.Common.Exceptions;
-using GatewayApi.Domain.Clients.OrdersApi;
+using GatewayApi.Infrastructure.Clients.OrdersApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +12,9 @@ namespace GatewayApi.Controllers
     [ApiController]
     public class OrdersController : BaseGatewayController
     {
-        private readonly OrdersApiClient _ordersClient;
+        private readonly IOrdersApiClient _ordersClient;
 
-        public OrdersController(OrdersApiClient ordersClient)
+        public OrdersController(IOrdersApiClient ordersClient)
         {
             _ordersClient = ordersClient;
         }

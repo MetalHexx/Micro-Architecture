@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GatewayApi.Controllers;
 using GatewayApi.Controllers.CustomerOrders;
-using GatewayApi.Domain.Clients.CustomersApi;
+using GatewayApi.Infrastructure.Clients.CustomersApi;
 using GatewayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +15,9 @@ namespace GatewayApi.Infrastructure
     public class CustomerOrdersController : BaseGatewayController
     {
         private readonly ICustomerOrdersService _service;
-        private readonly CustomersApiClient _customersClient;
+        private readonly ICustomersApiClient _customersClient;
 
-        public CustomerOrdersController(ICustomerOrdersService customerOrdersService, CustomersApiClient customersClient)
+        public CustomerOrdersController(ICustomerOrdersService customerOrdersService, ICustomersApiClient customersClient)
         {
             _service = customerOrdersService;
             _customersClient = customersClient;
@@ -28,12 +28,6 @@ namespace GatewayApi.Infrastructure
         {
             try
             {
-                var randomError = new Random().Next(0, 10);
-                if (randomError > 6)
-                {
-                    throw new Exception();
-                }
-
                 var result = await _service.GetCustomerOrdersAsync(customerId);
                 var customerOrders = new CustomerOrdersViewModel
                 (

@@ -1,7 +1,7 @@
 ﻿using GatewayApi.Clients;
-using GatewayApi.Domain.Clients.CustomersApi;
-using GatewayApi.Domain.Clients.OrdersApi;
-using GatewayApi.Domain.Clients.ProductsApi;
+using GatewayApi.Infrastructure.Clients.CustomersApi;
+using GatewayApi.Infrastructure.Clients.OrdersApi;
+using GatewayApi.Infrastructure.Clients.ProductsApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -29,19 +29,19 @@ namespace GatewayApi
                 .Get<ApiSettings>();
 
 
-            services.AddHttpClient<CustomersApiClient>(client =>
+            services.AddHttpClient<ICustomersApiClient, CustomersApiClient>(client =>
                 client.BaseAddress = new Uri(apiSettings.CustomersApiBaseUrl))
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryWithBackoffPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
-            services.AddHttpClient<OrdersApiClient>(client =>
+            services.AddHttpClient<IOrdersApiClient, OrdersApiClient>(client =>
                 client.BaseAddress = new Uri(apiSettings.OrdersApiBaseUrl))
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryWithBackoffPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 
-            services.AddHttpClient<ProductsApiClient>(client =>
+            services.AddHttpClient<IProductsApiClient, ProductsApiClient>(client =>
                 client.BaseAddress = new Uri(apiSettings.ProductsApiBaseUrl))
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddPolicyHandler(GetRetryWithBackoffPolicy())

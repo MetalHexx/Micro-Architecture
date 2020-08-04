@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using GatewayApi.Clients;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -60,12 +62,6 @@ namespace GatewayApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.Use(async (context, next) =>
-            {
-                Thread.Sleep(new Random().Next(0, 2000));
-                await next.Invoke();                
-            });
-
             app.UseCors("CorsPolicy");
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -84,6 +80,23 @@ namespace GatewayApi
             }
 
             app.UseHttpsRedirection();
+
+            app.Use(async (context, next) =>
+            {
+                Thread.Sleep(new Random().Next(0, 2000));
+                var randomError = new Random().Next(0, 10);
+                if (randomError < 10)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.WriteAsync("Artificial Error");
+                }
+                else
+                {
+                    await next.Invoke();
+                }
+                
+            });
+
             app.UseMvc();
         }
     }

@@ -27,9 +27,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GatewayApi", "GatewayApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi.Domain", "src\GatewayApi.Domain\GatewayApi.Domain.csproj", "{440897A2-7FB4-4E1A-B0FB-D871F93C3D8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayApi.Infrastructure", "src\GatewayApi.Infrastructure\GatewayApi.Infrastructure.csproj", "{458DCE0B-1BCC-4F0E-A15E-1B9239538762}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi.Infrastructure", "src\GatewayApi.Infrastructure\GatewayApi.Infrastructure.csproj", "{458DCE0B-1BCC-4F0E-A15E-1B9239538762}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayApi.Application", "src\GatewayApi.Application\GatewayApi.Application.csproj", "{23FDE9D8-F2D9-4FC4-A03A-1125734C1CF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi.Application", "src\GatewayApi.Application\GatewayApi.Application.csproj", "{23FDE9D8-F2D9-4FC4-A03A-1125734C1CF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

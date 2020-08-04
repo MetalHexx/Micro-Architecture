@@ -1,6 +1,6 @@
-﻿using GatewayApi.Domain.Clients.CustomersApi;
-using GatewayApi.Domain.Clients.OrdersApi;
-using GatewayApi.Domain.Clients.ProductsApi;
+﻿using GatewayApi.Infrastructure.Clients.CustomersApi;
+using GatewayApi.Infrastructure.Clients.OrdersApi;
+using GatewayApi.Infrastructure.Clients.ProductsApi;
 using GatewayApi.Models;
 using System;
 using System.Collections.Generic;
@@ -20,11 +20,11 @@ namespace GatewayApi.Controllers.CustomerOrders
     /// </summary>
     public class CustomerOrdersService : ICustomerOrdersService
     {
-        private readonly CustomersApiClient _customersClient;
-        private readonly OrdersApiClient _ordersClient;
-        private readonly ProductsApiClient _productsClient;
+        private readonly ICustomersApiClient _customersClient;
+        private readonly IOrdersApiClient _ordersClient;
+        private readonly IProductsApiClient _productsClient;
 
-        public CustomerOrdersService(CustomersApiClient customersClient, OrdersApiClient ordersClient, ProductsApiClient productsClient)
+        public CustomerOrdersService(ICustomersApiClient customersClient, IOrdersApiClient ordersClient, IProductsApiClient productsClient)
         {
             _customersClient = customersClient;
             _ordersClient = ordersClient;

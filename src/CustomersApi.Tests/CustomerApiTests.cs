@@ -71,7 +71,7 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = (await controller.GetCustomers()).Result as ObjectResult;
+            var actualResult = (await controller.GetCustomers(default)).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -80,23 +80,26 @@ namespace CustomersApi.Tests
 
         [Theory]
         [ClassData(typeof(CustomerExistingTestData))]
-        public void WhenGetCustomerCalled_AndCustomerExists_ReturnsOkCustomer(Customer expectedCustomer)
+        public async Task WhenGetCustomerCalled_AndCustomerExists_ReturnsOkCustomer(Customer expectedCustomer)
         {
             //Arrange     
             var repoResult = new RepoResult<Customer>(expectedCustomer) { Type = RepoResultType.Success };
 
             var mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetCustomerById>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(repoResult);
 
             var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
             var controller = new CustomersController(                
-                repoMock.Object,
+                _blankRepositoryMock.Object,
                 mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.GetCustomer(0).Result as ObjectResult;
+            var actualResult = (await controller.GetCustomer(0, default)).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -104,11 +107,16 @@ namespace CustomersApi.Tests
         }
 
         [Fact]
-        public void WhenGetCustomerCalled_WithNonExistentCustomer_ReturnsNotFound()
+        public async Task WhenGetCustomerCalled_WithNonExistentCustomer_ReturnsNotFound()
         {
             //Arrange     
-            var mediatorMock = new Mock<IMediator>();
             var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
+            
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetCustomerById>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(repoResult);
+
             var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
             var controller = new CustomersController(
@@ -118,10 +126,10 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.GetCustomer(0).Result;
+            var actualResult = await controller.GetCustomer(0, default);
 
             //Assert
-            Assert.IsType<NotFoundResult>(actualResult);
+            Assert.IsType<NotFoundResult>(actualResult.Result);
         }
 
         [Theory]
@@ -153,7 +161,7 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.PostCustomer(newCustomer).Result as ObjectResult;
+            var actualResult = controller.PostCustomer(newCustomer, default).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -174,7 +182,7 @@ namespace CustomersApi.Tests
                 _failedPostValidatorMock.Object);
 
             //Act
-            var result = controller.PostCustomer(invalidCustomer).Result as ObjectResult;
+            var result = controller.PostCustomer(invalidCustomer, default).Result as ObjectResult;
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);            
@@ -196,7 +204,7 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.PutCustomer(existingCustomer.Id, existingCustomer);
+            var actualResult = controller.PutCustomer(existingCustomer.Id, existingCustomer, default);
 
             //Assert
             Assert.IsType<OkResult>(actualResult);
@@ -214,7 +222,7 @@ namespace CustomersApi.Tests
                 _failedPostValidatorMock.Object);
 
             //Act
-            var result = controller.PutCustomer(0, new Customer());
+            var result = controller.PutCustomer(0, new Customer(), default);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);            
@@ -237,7 +245,7 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var result = controller.PutCustomer(nonExistantCustomer.Id, nonExistantCustomer) as ActionResult;
+            var result = controller.PutCustomer(nonExistantCustomer.Id, nonExistantCustomer, default) as ActionResult;
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
@@ -259,7 +267,7 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.DeleteCustomer(existingCustomer.Id);
+            var actualResult = controller.DeleteCustomer(existingCustomer.Id, default);
 
             //Assert
             Assert.IsType<OkResult>(actualResult);
@@ -281,7 +289,7 @@ namespace CustomersApi.Tests
                 _successPostValidatorMock.Object);
 
             //Act
-            var result = controller.DeleteCustomer(nonExistentCustomer.Id);
+            var result = controller.DeleteCustomer(nonExistentCustomer.Id, default);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);

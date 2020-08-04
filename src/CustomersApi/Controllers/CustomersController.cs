@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CustomersApi.Controllers
@@ -33,9 +34,9 @@ namespace CustomersApi.Controllers
             _postValidator = postValidator;
         }
         [HttpGet()]
-        public async Task<ActionResult<List<Customer>>> GetCustomers()
+        public async Task<ActionResult<List<Customer>>> GetCustomers(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetAllCustomers());
+            var result = await _mediator.Send(new GetAllCustomers(), cancellationToken);
 
             if(result.Type == RepoResultType.NotFound)
             {
@@ -45,9 +46,9 @@ namespace CustomersApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Customer> GetCustomer(int id)
+        public async Task<ActionResult<Customer>> GetCustomer(int id, CancellationToken cancellationToken)
         {
-            var result = _customersRepo.GetCustomer(id);
+            var result = await _mediator.Send(new GetCustomerById(id), cancellationToken);
 
             if (result.Type == RepoResultType.NotFound)
             {
@@ -57,7 +58,7 @@ namespace CustomersApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<int> PostCustomer([FromBody] Customer customer)
+        public ActionResult<int> PostCustomer([FromBody] Customer customer, CancellationToken cancellationToken)
         {
             var results = _postValidator.Validate(customer);
             results.AddToModelState(ModelState, null);
@@ -76,7 +77,7 @@ namespace CustomersApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult PutCustomer([FromRoute]int id, [FromBody] Customer customer)
+        public ActionResult PutCustomer([FromRoute]int id, [FromBody] Customer customer, CancellationToken cancellationToken)
         {
             var results = _putValidator.Validate(customer);
             results.AddToModelState(ModelState, null);
@@ -95,7 +96,7 @@ namespace CustomersApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteCustomer(int id)
+        public ActionResult DeleteCustomer(int id, CancellationToken cancellationToken)
         {
             var result = _customersRepo.DeleteCustomer(id);
 

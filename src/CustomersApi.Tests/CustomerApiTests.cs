@@ -1,5 +1,4 @@
 using CustomersApi.Controllers;
-using CustomersApi.Vaildators;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -12,6 +11,7 @@ using Xunit;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 using CustomersApi.Domain;
 using CustomersApi.Infrastructure.Persistance;
+using CustomersApi.Application.Validations;
 
 namespace CustomersApi.Tests
 {

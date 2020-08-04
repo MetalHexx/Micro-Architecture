@@ -1,5 +1,5 @@
-﻿using CustomersApi.Domain;
-using CustomersApi.Validators;
+﻿using CustomersApi.Application.Validations;
+using CustomersApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;

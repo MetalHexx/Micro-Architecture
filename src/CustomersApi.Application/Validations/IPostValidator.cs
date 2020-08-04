@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CustomersApi.Vaildators
+namespace CustomersApi.Application.Validations
 {
     public interface IPostValidator : IValidator<Customer>
     {

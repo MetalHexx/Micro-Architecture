@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CustomersApi.Validators
+namespace CustomersApi.Application.Validations
 {
     public class CustomerValidator : AbstractValidator<Customer>
     {

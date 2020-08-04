@@ -5,7 +5,7 @@ namespace CustomersApi.Infrastructure.Persistance
 {
     //TODO: Update repository to return a status object and return a not found if the object
     //wasn't there
-    public class CustomersRepository: RepositoryBase<Customer>, ICustomersRespository
+    public class CustomersRepository: RepositoryBase<Customer>, ICustomersRepository
     {
         public CustomersRepository()
         {

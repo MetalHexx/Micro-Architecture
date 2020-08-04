@@ -12,12 +12,16 @@ using ValidationResult = FluentValidation.Results.ValidationResult;
 using CustomersApi.Domain;
 using CustomersApi.Infrastructure.Persistance;
 using CustomersApi.Application.Validations;
+using MediatR;
+using CustomersApi.Application.Queries;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace CustomersApi.Tests
 {
     public class CustomerApiTests
     {
-        private Mock<ICustomersRespository> _blankRepositoryMock;
+        private Mock<ICustomersRepository> _blankRepositoryMock;
         private Mock<IPutValidator> _successPutValidatorMock;
         private Mock<IPostValidator> _successPostValidatorMock;
         private Mock<IPutValidator> _failedPutValidatorMock;
@@ -43,25 +47,31 @@ namespace CustomersApi.Tests
             _failedPostValidatorMock = new Mock<IPostValidator>();
             _failedPostValidatorMock.Setup(v => v.Validate(It.IsAny<Customer>())).Returns(failedValidationResult);
 
-            _blankRepositoryMock = new Mock<ICustomersRespository>();
+            _blankRepositoryMock = new Mock<ICustomersRepository>();
         }
 
         [Theory]
         [ClassData(typeof(CustomerListValidTestData))]
-        public void WhenGetCustomersCalled_ReturnsOkCustomerList(List<Customer> expectedCustomers)
+        public async Task WhenGetCustomersCalled_ReturnsOkCustomerList(List<Customer> expectedCustomers)
         {
             //Arrange     
-            var repoResult = new RepoResult<IEnumerable<Customer>>(expectedCustomers) { Type = RepoResultType.Success };
+            var repoResult = new RepoResult<IEnumerable<Customer>>(expectedCustomers) { Type = RepoResultType.Success };            
             
-            var repoMock = new Mock<ICustomersRespository>();
-            repoMock.Setup(repo => repo.GetCustomers()).Returns(repoResult);
-            var controller = new CustomersController(
-                repoMock.Object, 
+            var mediatorMock = new Mock<IMediator>();
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetAllCustomers>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(repoResult);
+
+
+            var controller = new CustomersController(                
+                _blankRepositoryMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object, 
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.GetCustomers().Result as ObjectResult;
+            var actualResult = (await controller.GetCustomers()).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -75,10 +85,13 @@ namespace CustomersApi.Tests
             //Arrange     
             var repoResult = new RepoResult<Customer>(expectedCustomer) { Type = RepoResultType.Success };
 
-            var repoMock = new Mock<ICustomersRespository>();
+            var mediatorMock = new Mock<IMediator>();
+
+            var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
-            var controller = new CustomersController(
+            var controller = new CustomersController(                
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
@@ -94,11 +107,13 @@ namespace CustomersApi.Tests
         public void WhenGetCustomerCalled_WithNonExistentCustomer_ReturnsNotFound()
         {
             //Arrange     
+            var mediatorMock = new Mock<IMediator>();
             var repoResult = new RepoResult<Customer>(null) { Type = RepoResultType.NotFound };
-            var repoMock = new Mock<ICustomersRespository>();
+            var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.GetCustomer(It.IsAny<int>())).Returns(repoResult);
             var controller = new CustomersController(
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
@@ -126,12 +141,14 @@ namespace CustomersApi.Tests
                 FirstName = nonExistingCustomer.FirstName,
                 LastName = nonExistingCustomer.LastName
             };
-            var expectedId = repoCustomer.Id;           
+            var expectedId = repoCustomer.Id;
+            var mediatorMock = new Mock<IMediator>();
             var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
-            var repoMock = new Mock<ICustomersRespository>();
+            var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
             var controller = new CustomersController(
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
@@ -148,8 +165,11 @@ namespace CustomersApi.Tests
         public void WhenPostCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(Customer invalidCustomer)
         {
             //Arrange
+            var mediatorMock = new Mock<IMediator>();
+
             var controller = new CustomersController(
                 _blankRepositoryMock.Object,
+                mediatorMock.Object,
                 _failedPutValidatorMock.Object,
                 _failedPostValidatorMock.Object);
 
@@ -166,10 +186,12 @@ namespace CustomersApi.Tests
         {
             //Arrange
             var repoResult = new RepoResult<Customer>(existingCustomer) { Type = RepoResultType.Success };
-            var repoMock = new Mock<ICustomersRespository>();
+            var mediatorMock = new Mock<IMediator>();
+            var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
             var controller = new CustomersController(
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
@@ -183,8 +205,11 @@ namespace CustomersApi.Tests
         [Fact]
         public void WhenPutCustomerCalled_WithInvalidCustomer_ReturnsBadRequest()
         {
+            var mediatorMock = new Mock<IMediator>();
+
             var controller = new CustomersController(
                 _blankRepositoryMock.Object,
+                mediatorMock.Object,
                 _failedPutValidatorMock.Object,
                 _failedPostValidatorMock.Object);
 
@@ -201,11 +226,13 @@ namespace CustomersApi.Tests
         public void WhenPutCustomerCalled_WithNonExistantCustomer_ReturnsNotFound(Customer nonExistantCustomer)
         {
             //Arrange
+            var mediatorMock = new Mock<IMediator>();
             var repoResult = new RepoResult<Customer>(nonExistantCustomer) { Type = RepoResultType.NotFound };
-            var repoMock = new Mock<ICustomersRespository>();
+            var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.UpdateCustomer(It.IsAny<Customer>())).Returns(repoResult);
             var controller = new CustomersController(
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
@@ -222,10 +249,12 @@ namespace CustomersApi.Tests
         {
             //Arrange
             var repoResult = new RepoResult<Customer>(existingCustomer) { Type = RepoResultType.Success };
-            var repoMock = new Mock<ICustomersRespository>();
+            var repoMock = new Mock<ICustomersRepository>();
+            var mediatorMock = new Mock<IMediator>();
             repoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
             var controller = new CustomersController(
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
@@ -242,10 +271,12 @@ namespace CustomersApi.Tests
         {
             //Arrange
             var repoResult = new RepoResult<Customer>(nonExistentCustomer) { Type = RepoResultType.NotFound };
-            var repoMock = new Mock<ICustomersRespository>();
+            var repoMock = new Mock<ICustomersRepository>();
             repoMock.Setup(repo => repo.DeleteCustomer(It.IsAny<int>())).Returns(repoResult);
+            var mediatorMock = new Mock<IMediator>();
             var controller = new CustomersController(
                 repoMock.Object,
+                mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 

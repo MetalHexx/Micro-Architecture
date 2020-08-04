@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CustomersApi.Infrastructure.Persistance
 {
-    public interface ICustomersRespository
+    public interface ICustomersRepository
     {
         RepoResult<IEnumerable<Customer>> GetCustomers();
         RepoResult<Customer> GetCustomer(int id);

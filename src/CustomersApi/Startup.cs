@@ -15,6 +15,9 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using CustomersApi.Infrastructure.Persistance;
 using CustomersApi.Application.Validations;
+using CustomersApi.Application.Queries;
+using MediatR;
+using System.Reflection;
 
 namespace CustomersApi
 {
@@ -30,6 +33,8 @@ namespace CustomersApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(GetAllCustomers).GetTypeInfo().Assembly);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -40,7 +45,7 @@ namespace CustomersApi
             });
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSingleton<ICustomersRespository, CustomersRepository>();
+            services.AddSingleton<ICustomersRepository, CustomersRepository>();
             services.AddSingleton<IPutValidator, PutValidator>();
             services.AddSingleton<IPostValidator, PostValidator>();
         }

@@ -6,15 +6,16 @@
 
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.5.1" />
+    <PackageReference Include="MediatR" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CustomersApi.Domain\CustomersApi.Domain.csproj" />
+    <ProjectReference Include="..\CustomersApi.Infrastructure\CustomersApi.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

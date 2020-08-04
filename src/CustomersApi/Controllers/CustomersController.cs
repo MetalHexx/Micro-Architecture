@@ -1,11 +1,14 @@
-﻿using CustomersApi.Application.Validations;
+﻿using CustomersApi.Application.Queries;
+using CustomersApi.Application.Validations;
 using CustomersApi.Domain;
 using CustomersApi.Infrastructure.Persistance;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CustomersApi.Controllers
 {
@@ -13,23 +16,26 @@ namespace CustomersApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomersRespository _customersRepo;
+        private readonly ICustomersRepository _customersRepo;
+        private readonly IMediator _mediator;
         private readonly IPutValidator _putValidator;
         private readonly IPostValidator _postValidator;
 
         public CustomersController(
-            ICustomersRespository customerRepo, 
+            ICustomersRepository customersRepo,
+            IMediator mediator,
             IPutValidator putValidator,
             IPostValidator postValidator)
         {
-            _customersRepo = customerRepo;
+            _customersRepo = customersRepo;
+            _mediator = mediator;
             _putValidator = putValidator;
             _postValidator = postValidator;
         }
         [HttpGet()]
-        public ActionResult<List<Customer>> GetCustomers()
+        public async Task<ActionResult<List<Customer>>> GetCustomers()
         {
-            var result = _customersRepo.GetCustomers();
+            var result = await _mediator.Send(new GetAllCustomers());
 
             if(result.Type == RepoResultType.NotFound)
             {

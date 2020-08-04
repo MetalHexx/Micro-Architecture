@@ -16,6 +16,7 @@ using MediatR;
 using CustomersApi.Application.Queries;
 using System.Threading.Tasks;
 using System.Threading;
+using CustomersApi.Application.Commands;
 
 namespace CustomersApi.Tests
 {
@@ -134,7 +135,7 @@ namespace CustomersApi.Tests
 
         [Theory]
         [ClassData(typeof(CustomerNonExistentTestData))]
-        public void WhenPostCustomerCalled_WithValidCustomer_ReturnsOkId(Customer nonExistingCustomer)
+        public async Task WhenPostCustomerCalled_WithValidCustomer_ReturnsOkId(Customer nonExistingCustomer)
         {
             //Arrange
             var newCustomer = new Customer()
@@ -149,19 +150,22 @@ namespace CustomersApi.Tests
                 FirstName = nonExistingCustomer.FirstName,
                 LastName = nonExistingCustomer.LastName
             };
-            var expectedId = repoCustomer.Id;
-            var mediatorMock = new Mock<IMediator>();
+            var expectedId = repoCustomer.Id;            
             var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
-            var repoMock = new Mock<ICustomersRepository>();
-            repoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock
+               .Setup(m => m.Send(It.IsAny<CreateCustomer>(), It.IsAny<CancellationToken>()))
+               .ReturnsAsync(repoResult);
+
             var controller = new CustomersController(
-                repoMock.Object,
+                _blankRepositoryMock.Object,
                 mediatorMock.Object,
                 _successPutValidatorMock.Object,
                 _successPostValidatorMock.Object);
 
             //Act
-            var actualResult = controller.PostCustomer(newCustomer, default).Result as ObjectResult;
+            var actualResult = (await controller.PostCustomer(newCustomer, default)).Result as ObjectResult;
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
@@ -170,7 +174,7 @@ namespace CustomersApi.Tests
 
         [Theory]
         [ClassData(typeof(CustomerInvalidTestData))]
-        public void WhenPostCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(Customer invalidCustomer)
+        public async Task WhenPostCustomerCalled_WithInvalidCustomer_ReturnsBadRequest(Customer invalidCustomer)
         {
             //Arrange
             var mediatorMock = new Mock<IMediator>();
@@ -182,10 +186,10 @@ namespace CustomersApi.Tests
                 _failedPostValidatorMock.Object);
 
             //Act
-            var result = controller.PostCustomer(invalidCustomer, default).Result as ObjectResult;
+            var result = await controller.PostCustomer(invalidCustomer, default);
 
             //Assert
-            Assert.IsType<BadRequestObjectResult>(result);            
+            Assert.IsType<BadRequestObjectResult>(result.Result as ObjectResult);            
         }
 
         [Theory]

@@ -1,4 +1,5 @@
-﻿using CustomersApi.Application.Queries;
+﻿using CustomersApi.Application.Commands;
+using CustomersApi.Application.Queries;
 using CustomersApi.Application.Validations;
 using CustomersApi.Domain;
 using CustomersApi.Infrastructure.Persistance;
@@ -58,7 +59,7 @@ namespace CustomersApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<int> PostCustomer([FromBody] Customer customer, CancellationToken cancellationToken)
+        public async Task<ActionResult<int>> PostCustomer([FromBody] Customer customer, CancellationToken cancellationToken)
         {
             var results = _postValidator.Validate(customer);
             results.AddToModelState(ModelState, null);
@@ -67,7 +68,7 @@ namespace CustomersApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = _customersRepo.InsertCustomer(customer);
+            var result = await _mediator.Send(new CreateCustomer(customer));
 
             if (result.Type == RepoResultType.NotFound)
             {

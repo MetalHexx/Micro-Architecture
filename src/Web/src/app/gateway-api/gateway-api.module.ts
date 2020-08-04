@@ -30,7 +30,7 @@ import { ProductsService } from './services/products.service';
   ],
 })
 export class GatewayApiModule {
-  static forRoot(customParams: GatewayApiConfigurationInterface): ModuleWithProviders<GatewayApiModule> {
+  static forRoot(customParams: GatewayApiConfigurationInterface): ModuleWithProviders {
     return {
       ngModule: GatewayApiModule,
       providers: [

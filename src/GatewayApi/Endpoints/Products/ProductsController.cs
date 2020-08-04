@@ -50,7 +50,7 @@ namespace GatewayApi.Controllers
         }
 
         [HttpPost()]
-        public async Task<ActionResult<IdResult>> CreateProduct([FromBody, Required]Product product)
+        public async Task<ActionResult<int>> CreateProduct([FromBody, Required]Product product)
         {
             try
             {

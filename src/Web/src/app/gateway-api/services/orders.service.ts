@@ -8,7 +8,6 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { Order } from '../models/order';
-import { IdResult } from '../models/id-result';
 @Injectable({
   providedIn: 'root',
 })
@@ -40,7 +39,7 @@ class OrdersService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/Orders/${encodeURIComponent(params.id)}`,
+      this.rootUrl + `/api/Orders/${params.id}`,
       __body,
       {
         headers: __headers,
@@ -83,7 +82,7 @@ class OrdersService extends __BaseService {
     __body = params.order;
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/api/Orders/${encodeURIComponent(params.id)}`,
+      this.rootUrl + `/api/Orders/${params.id}`,
       __body,
       {
         headers: __headers,
@@ -123,7 +122,7 @@ class OrdersService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/Orders/${encodeURIComponent(params.id)}`,
+      this.rootUrl + `/api/Orders/${params.id}`,
       __body,
       {
         headers: __headers,
@@ -163,7 +162,7 @@ class OrdersService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customers/${encodeURIComponent(params.customerId)}/orders`,
+      this.rootUrl + `/api/customers/${params.customerId}/orders`,
       __body,
       {
         headers: __headers,
@@ -198,7 +197,7 @@ class OrdersService extends __BaseService {
    *
    * @return Success
    */
-  CreateOrderResponse(params: OrdersService.CreateOrderParams): __Observable<__StrictHttpResponse<IdResult>> {
+  CreateOrderResponse(params: OrdersService.CreateOrderParams): __Observable<__StrictHttpResponse<number>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -210,13 +209,13 @@ class OrdersService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'text'
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<IdResult>;
+        return (_r as HttpResponse<any>).clone({ body: parseFloat((_r as HttpResponse<any>).body as string) }) as __StrictHttpResponse<number>
       })
     );
   }
@@ -227,9 +226,9 @@ class OrdersService extends __BaseService {
    *
    * @return Success
    */
-  CreateOrder(params: OrdersService.CreateOrderParams): __Observable<IdResult> {
+  CreateOrder(params: OrdersService.CreateOrderParams): __Observable<number> {
     return this.CreateOrderResponse(params).pipe(
-      __map(_r => _r.body as IdResult)
+      __map(_r => _r.body as number)
     );
   }
 }

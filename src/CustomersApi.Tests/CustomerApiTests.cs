@@ -126,7 +126,7 @@ namespace CustomersApi.Tests
                 FirstName = nonExistingCustomer.FirstName,
                 LastName = nonExistingCustomer.LastName
             };
-            var expectedIdResult = JsonConvert.SerializeObject(new IdResult { Id = repoCustomer.Id });           
+            var expectedIdResult = repoCustomer.Id;           
             var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
             var repoMock = new Mock<ICustomersRespository>();
             repoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
@@ -140,7 +140,7 @@ namespace CustomersApi.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedIdResult, JsonConvert.SerializeObject(actualResult.Value));
+            Assert.Equal(expectedIdResult, actualResult.Value);
         }
 
         [Theory]

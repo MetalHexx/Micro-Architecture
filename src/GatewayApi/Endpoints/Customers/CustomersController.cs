@@ -53,7 +53,7 @@ namespace GatewayApi.Controllers
         }
 
         [HttpPost()]
-        public async Task<ActionResult<IdResult>> CreateCustomer([FromBody]Customer customer)
+        public async Task<ActionResult<int>> CreateCustomer([FromBody]Customer customer)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace GatewayApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<IdResult>> UpdateCustomer(int id, [FromBody]Customer customer)
+        public async Task<ActionResult<int>> UpdateCustomer(int id, [FromBody]Customer customer)
         {
             try
             {

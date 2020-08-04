@@ -4,7 +4,6 @@ export { OrderViewModel } from './models/order-view-model';
 export { OrderItemViewModel } from './models/order-item-view-model';
 export { ProductViewModel } from './models/product-view-model';
 export { Customer } from './models/customer';
-export { IdResult } from './models/id-result';
 export { AppFeatures } from './models/app-features';
 export { Feature } from './models/feature';
 export { Order } from './models/order';

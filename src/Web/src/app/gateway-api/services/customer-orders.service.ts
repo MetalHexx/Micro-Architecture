@@ -8,11 +8,13 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { CustomerOrdersViewModel } from '../models/customer-orders-view-model';
+import { CustomerViewModel } from '../models/customer-view-model';
 @Injectable({
   providedIn: 'root',
 })
 class CustomerOrdersService extends __BaseService {
   static readonly GetCustomerOrdersPath = '/api/CustomerOrders/customers/{customerId}/orders';
+  static readonly GetCustomerListPath = '/api/CustomerOrders/customers';
 
   constructor(
     config: __Configuration,
@@ -35,7 +37,7 @@ class CustomerOrdersService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/CustomerOrders/customers/${encodeURIComponent(params.customerId)}/orders`,
+      this.rootUrl + `/api/CustomerOrders/customers/${params.customerId}/orders`,
       __body,
       {
         headers: __headers,
@@ -60,6 +62,39 @@ class CustomerOrdersService extends __BaseService {
   GetCustomerOrders(params: CustomerOrdersService.GetCustomerOrdersParams): __Observable<CustomerOrdersViewModel> {
     return this.GetCustomerOrdersResponse(params).pipe(
       __map(_r => _r.body as CustomerOrdersViewModel)
+    );
+  }
+
+  /**
+   * @return Success
+   */
+  GetCustomerListResponse(): __Observable<__StrictHttpResponse<Array<CustomerViewModel>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/CustomerOrders/customers`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<CustomerViewModel>>;
+      })
+    );
+  }
+  /**
+   * @return Success
+   */
+  GetCustomerList(): __Observable<Array<CustomerViewModel>> {
+    return this.GetCustomerListResponse().pipe(
+      __map(_r => _r.body as Array<CustomerViewModel>)
     );
   }
 }

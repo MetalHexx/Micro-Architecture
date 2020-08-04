@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GatewayApi.Application.CustomerOrders.Queries;
+using GatewayApi.Application.Customers.Queries;
 using GatewayApi.Controllers;
 using GatewayApi.Infrastructure.Clients.CustomersApi;
 using GatewayApi.Models;
@@ -47,12 +49,12 @@ namespace GatewayApi.Infrastructure
         }
 
         [HttpGet("customers")]
-        public async Task<ActionResult<CustomerOrdersViewModel>> GetCustomerList(int customerId)
+        public async Task<ActionResult<IEnumerable<CustomerViewModel>>> GetCustomerList()
         {
             try
             {
-                var result = await _customersClient.GetCustomersAsync();
-                return Ok(result);
+                var customers = await _mediator.Send(new GetAllCustomers());
+                return Ok(customers.Select(c => new CustomerViewModel(c)));
             }
             catch (Exception e)
             {

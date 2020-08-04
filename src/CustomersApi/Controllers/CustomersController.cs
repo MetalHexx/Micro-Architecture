@@ -52,7 +52,7 @@ namespace CustomersApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<IdResult> PostCustomer([FromBody] Customer customer)
+        public ActionResult<int> PostCustomer([FromBody] Customer customer)
         {
             var results = _postValidator.Validate(customer);
             results.AddToModelState(ModelState, null);
@@ -67,7 +67,7 @@ namespace CustomersApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(new IdResult { Id = result.Entity.Id });
+            return Ok(result.Entity.Id);
         }
 
         [HttpPut("{id}")]

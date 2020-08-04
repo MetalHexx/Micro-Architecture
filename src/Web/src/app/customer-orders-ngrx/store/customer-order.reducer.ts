@@ -1,13 +1,12 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as CustomerOrderActions from './customer-order.actions';
-import { Customer } from 'src/app/gateway-api/models/customer';
-import { CustomerOrdersViewModel, OrderViewModel } from 'src/app/gateway-api/models';
+import { CustomerOrdersViewModel, OrderViewModel, CustomerViewModel } from 'src/app/gateway-api/models';
 
 export const customerOrderFeatureKey = 'customerOrder';
 
 export interface CustomerOrderState {
-  customers: Customer[],
-  selectedCustomer: Customer,
+  customers: CustomerViewModel[],
+  selectedCustomer: CustomerViewModel,
   customersLoading: boolean,
   customersError: boolean
   orders: CustomerOrdersViewModel,

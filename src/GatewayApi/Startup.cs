@@ -57,7 +57,7 @@ namespace GatewayApi
                     Version = "v1",
                     Title = "Gateway API"                    
                 });
-                c.CustomSchemaIds(x => x.FullName);
+                c.CustomSchemaIds(x => x.Name);
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -93,7 +93,7 @@ namespace GatewayApi
                 if (randomError > 10)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.WriteAsync("Artificial Error");
+                    await context.Response.WriteAsync("Artificial Error");
                 }
                 else
                 {

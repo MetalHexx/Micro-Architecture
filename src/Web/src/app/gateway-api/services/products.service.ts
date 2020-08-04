@@ -8,7 +8,6 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { Product } from '../models/product';
-import { IdResult } from '../models/id-result';
 @Injectable({
   providedIn: 'root',
 })
@@ -75,7 +74,7 @@ class ProductsService extends __BaseService {
    *
    * @return Success
    */
-  CreateProductResponse(params: ProductsService.CreateProductParams): __Observable<__StrictHttpResponse<IdResult>> {
+  CreateProductResponse(params: ProductsService.CreateProductParams): __Observable<__StrictHttpResponse<number>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -87,13 +86,13 @@ class ProductsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'text'
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<IdResult>;
+        return (_r as HttpResponse<any>).clone({ body: parseFloat((_r as HttpResponse<any>).body as string) }) as __StrictHttpResponse<number>
       })
     );
   }
@@ -104,9 +103,9 @@ class ProductsService extends __BaseService {
    *
    * @return Success
    */
-  CreateProduct(params: ProductsService.CreateProductParams): __Observable<IdResult> {
+  CreateProduct(params: ProductsService.CreateProductParams): __Observable<number> {
     return this.CreateProductResponse(params).pipe(
-      __map(_r => _r.body as IdResult)
+      __map(_r => _r.body as number)
     );
   }
 
@@ -124,7 +123,7 @@ class ProductsService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/Products/${encodeURIComponent(params.id)}`,
+      this.rootUrl + `/api/Products/${params.id}`,
       __body,
       {
         headers: __headers,
@@ -167,7 +166,7 @@ class ProductsService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/api/Products/${encodeURIComponent(params.id)}`,
+      this.rootUrl + `/api/Products/${params.id}`,
       __body,
       {
         headers: __headers,
@@ -207,7 +206,7 @@ class ProductsService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/Products/${encodeURIComponent(params.id)}`,
+      this.rootUrl + `/api/Products/${params.id}`,
       __body,
       {
         headers: __headers,

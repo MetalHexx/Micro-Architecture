@@ -55,7 +55,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "GatewayApi.Domain.Clients.OrdersApi",
+      "namespace": "GatewayApi.Infrastructure.Clients.OrdersApi",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,

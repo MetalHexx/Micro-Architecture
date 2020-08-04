@@ -51,7 +51,7 @@ namespace ProductsApi.Controllers
         }
 
         [HttpPost()]
-        public ActionResult<IdResult> PostProduct([FromBody, Required]Product product)
+        public ActionResult<int> PostProduct([FromBody, Required]Product product)
         {
             var results = _postValidator.Validate(product);
             results.AddToModelState(ModelState, null);
@@ -67,7 +67,7 @@ namespace ProductsApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(new IdResult { Id = result.Entity.Id });
+            return Ok(result.Entity.Id);
         }
 
 

@@ -1,8 +1,8 @@
 /* tslint:disable */
 import { OrderItem } from './order-item';
 export interface Order {
-  customerId?: number;
   id?: number;
-  items?: Array<OrderItem>;
+  customerId?: number;
   orderDate?: string;
+  items?: Array<OrderItem>;
 }

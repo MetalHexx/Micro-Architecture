@@ -1,6 +1,4 @@
-﻿using GatewayApi.Infrastructure.Clients.CustomersApi;
-using GatewayApi.Infrastructure.Clients.OrdersApi;
-using GatewayApi.Infrastructure.Clients.ProductsApi;
+﻿using GatewayApi.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
 

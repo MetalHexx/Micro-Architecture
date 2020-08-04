@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using GatewayApi.Application.CustomerOrders.Queries;
 using GatewayApi.Controllers;
-using GatewayApi.Controllers.CustomerOrders;
 using GatewayApi.Infrastructure.Clients.CustomersApi;
 using GatewayApi.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,21 +16,22 @@ namespace GatewayApi.Infrastructure
     [ApiController]
     public class CustomerOrdersController : BaseGatewayController
     {
-        private readonly ICustomerOrdersService _service;
         private readonly ICustomersApiClient _customersClient;
+        private readonly IMediator _mediator;
 
-        public CustomerOrdersController(ICustomerOrdersService customerOrdersService, ICustomersApiClient customersClient)
+        public CustomerOrdersController(ICustomersApiClient customersClient, IMediator mediator)
         {
-            _service = customerOrdersService;
             _customersClient = customersClient;
+            _mediator = mediator;
         }
 
         [HttpGet("customers/{customerId}/orders")]
-        public async Task<ActionResult<CustomerOrdersViewModel>> GetCustomerOrders(int customerId)
+        public async Task<ActionResult<CustomerOrdersViewModel>> GetCustomerOrders(int customerId, CancellationToken cancellationToken)
         {
             try
             {
-                var result = await _service.GetCustomerOrdersAsync(customerId);
+                var result = await _mediator.Send(new GetCustomerOrdersWithProducts(customerId), cancellationToken);
+
                 var customerOrders = new CustomerOrdersViewModel
                 (
                     result.CustomerResult,
@@ -48,11 +51,6 @@ namespace GatewayApi.Infrastructure
         {
             try
             {
-                //var randomError = new Random().Next(0, 10);
-                //if(randomError > 6)
-                //{
-                //    throw new Exception();
-                //}
                 var result = await _customersClient.GetCustomersAsync();
                 return Ok(result);
             }

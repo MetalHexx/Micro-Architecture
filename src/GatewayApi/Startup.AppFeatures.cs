@@ -1,5 +1,4 @@
-﻿using GatewayApi.Controllers.CustomerOrders;
-using GatewayApi.Features;
+﻿using GatewayApi.Features;
 using GatewayApi.Features.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +17,6 @@ namespace GatewayApi
             services.Configure<AppFeaturesOptions>(Configuration.GetSection(AppFeaturesOptions.SectionName));
             services.Configure<AppFeaturesDatabaseSettings>(Configuration.GetSection(nameof(AppFeaturesDatabaseSettings)));
             services.AddSingleton<IAppFeaturesService, AppFeaturesService>();
-            services.AddSingleton<ICustomerOrdersService, CustomerOrdersService>();
         }
     }
 }

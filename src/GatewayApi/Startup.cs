@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using GatewayApi.Application.CustomerOrders.Queries;
 using GatewayApi.Clients;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +39,9 @@ namespace GatewayApi
         {            
             ConfigureAppFeatures(services);
             ConfigureClients(services);
+            ConfigureAutoMapper(services);
+
+            services.AddMediatR(typeof(GetCustomerOrdersWithProducts).GetTypeInfo().Assembly);
 
             services.AddCors(options =>
             {
@@ -85,7 +90,7 @@ namespace GatewayApi
             {
                 Thread.Sleep(new Random().Next(0, 2000));
                 var randomError = new Random().Next(0, 10);
-                if (randomError < 10)
+                if (randomError > 10)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.WriteAsync("Artificial Error");

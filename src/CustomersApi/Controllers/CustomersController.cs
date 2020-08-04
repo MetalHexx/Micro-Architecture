@@ -1,7 +1,7 @@
-﻿using CustomersApi.Vaildators;
+﻿using CustomersApi.Domain;
+using CustomersApi.Infrastructure.Persistance;
+using CustomersApi.Vaildators;
 using CustomersApi.Validators;
-using CustomersApi.Models;
-using CustomersApi.Repository;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,7 @@
-﻿using CustomersApi.Models;
+﻿using CustomersApi.Domain;
 using System.Collections.Generic;
 
-namespace CustomersApi.Repository
+namespace CustomersApi.Infrastructure.Persistance
 {
     public interface ICustomersRespository
     {

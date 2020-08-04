@@ -1,4 +1,4 @@
-﻿namespace CustomersApi.Models
+﻿namespace CustomersApi.Domain
 {
     public interface IEntity
     {

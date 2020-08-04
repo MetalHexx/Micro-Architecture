@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CustomersApi.Vaildators;
 using CustomersApi.Validators;
-using CustomersApi.Models;
-using CustomersApi.Repository;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using CustomersApi.Infrastructure.Persistance;
 
 namespace CustomersApi
 {

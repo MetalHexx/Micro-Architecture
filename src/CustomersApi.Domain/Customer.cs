@@ -1,7 +1,4 @@
-﻿using CustomersApi.Validators;
-using System;
-
-namespace CustomersApi.Models
+﻿namespace CustomersApi.Domain
 {
     public class Customer: IEntity
     {

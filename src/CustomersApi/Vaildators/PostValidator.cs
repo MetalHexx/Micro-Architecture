@@ -1,5 +1,5 @@
-﻿using CustomersApi.Vaildators;
-using CustomersApi.Models;
+﻿using CustomersApi.Domain;
+using CustomersApi.Vaildators;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

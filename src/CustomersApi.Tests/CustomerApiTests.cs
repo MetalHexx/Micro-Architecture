@@ -1,7 +1,5 @@
 using CustomersApi.Controllers;
 using CustomersApi.Vaildators;
-using CustomersApi.Models;
-using CustomersApi.Repository;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -12,6 +10,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
 using ValidationResult = FluentValidation.Results.ValidationResult;
+using CustomersApi.Domain;
+using CustomersApi.Infrastructure.Persistance;
 
 namespace CustomersApi.Tests
 {
@@ -111,7 +111,7 @@ namespace CustomersApi.Tests
 
         [Theory]
         [ClassData(typeof(CustomerNonExistentTestData))]
-        public void WhenPostCustomerCalled_WithValidCustomer_ReturnsOkIdResult(Customer nonExistingCustomer)
+        public void WhenPostCustomerCalled_WithValidCustomer_ReturnsOkId(Customer nonExistingCustomer)
         {
             //Arrange
             var newCustomer = new Customer()
@@ -126,7 +126,7 @@ namespace CustomersApi.Tests
                 FirstName = nonExistingCustomer.FirstName,
                 LastName = nonExistingCustomer.LastName
             };
-            var expectedIdResult = repoCustomer.Id;           
+            var expectedId = repoCustomer.Id;           
             var repoResult = new RepoResult<Customer>(repoCustomer) { Type = RepoResultType.Success };
             var repoMock = new Mock<ICustomersRespository>();
             repoMock.Setup(repo => repo.InsertCustomer(It.IsAny<Customer>())).Returns(repoResult);
@@ -140,7 +140,7 @@ namespace CustomersApi.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(actualResult);
-            Assert.Equal(expectedIdResult, actualResult.Value);
+            Assert.Equal(expectedId, actualResult.Value);
         }
 
         [Theory]

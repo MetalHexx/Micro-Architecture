@@ -1,8 +1,8 @@
-﻿using CustomersApi.Models;
+﻿using CustomersApi.Domain;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CustomersApi.Repository
+namespace CustomersApi.Infrastructure.Persistance
 {
     public abstract class RepositoryBase<T> where T: IEntity
     {

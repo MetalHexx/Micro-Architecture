@@ -1,4 +1,4 @@
-﻿using CustomersApi.Models;
+﻿using CustomersApi.Domain;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

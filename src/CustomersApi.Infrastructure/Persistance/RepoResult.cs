@@ -1,4 +1,4 @@
-﻿namespace CustomersApi.Repository
+﻿namespace CustomersApi.Infrastructure.Persistance
 {
     public class RepoResult<T>
     {

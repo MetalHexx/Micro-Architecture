@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CustomersApi.Domain\CustomersApi.Domain.csproj" />
+    <ProjectReference Include="..\CustomersApi.Infrastructure\CustomersApi.Infrastructure.csproj" />
     <ProjectReference Include="..\CustomersApi\CustomersApi.csproj" />
     <ProjectReference Include="..\OrdersApi\OrdersApi.csproj" />
   </ItemGroup>

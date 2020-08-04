@@ -36,9 +36,9 @@ namespace GatewayApi.Infrastructure
 
                 var customerOrders = new CustomerOrdersViewModel
                 (
-                    result.CustomerResult,
-                    result.OrderResult,
-                    result.ProductResult
+                    result.Customer,
+                    result.CustomerOrders,
+                    result.OrderProducts
                 );
                 return Ok(customerOrders);
             }

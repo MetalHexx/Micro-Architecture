@@ -21,12 +21,10 @@ namespace GatewayApi.Application.CustomerOrders.Queries
 {
     public class GetCustomerOrdersWithProducts: IRequest<CustomerOrdersWithProductsResponse> 
     {
-
         public GetCustomerOrdersWithProducts(int customerId)
         {
             CustomerId = customerId;
         }
-
         public int CustomerId { get; }
     }
 
